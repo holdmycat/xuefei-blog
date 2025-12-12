@@ -80,7 +80,7 @@ theme = ""  # using local layouts, leave empty
         weight = 3
       [[languages.en.menu.main]]
         name = "Now"
-        url = "/about/"
+        url = "/now/"
         weight = 4
 
   [languages.zh]
@@ -142,5 +142,5 @@ theme = ""  # using local layouts, leave empty
         weight = 3
       [[languages.zh.menu.main]]
         name = "Now"
-        url = "/about/"
+        url = "/now/"
         weight = 4

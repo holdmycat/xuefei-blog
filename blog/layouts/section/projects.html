@@ -2,31 +2,55 @@
   <section class="section">
     <div class="container">
       <header class="section-header">
-        <h1>Modular Skill System</h1>
-        <p class="lead">data-driven combat modules for rapid iteration</p>
+        <h1>Projects</h1>
+        <p class="lead">Focused case studies with production constraints.</p>
       </header>
 
-      <div class="case-card card">
-        <div class="case-body">
-          <h3>Problem</h3>
-          <p>Designers and engineers needed a reusable way to build, ship, and tune combat skills without rewriting code for every variant.</p>
+      <div class="projects-grid">
+        <article class="card case-card primary">
+          <h2>Modular Skill System (Core)</h2>
+          <p class="lead">Designer-first, data-driven combat skill framework for Unity (IL2CPP-friendly).</p>
 
-          <h3>Solution</h3>
-          <p>Built a modular skill runtime with data-first authoring, guardrails for determinism/AOT, and editor tooling for validation.</p>
+          <h3>What it is</h3>
+          <p>Modular runtime + data-first authoring for combat skills, with guardrails for determinism and AOT safety.</p>
 
-          <h3>Key Design Decisions</h3>
+          <h3>Why it matters</h3>
+          <p>Speeds iteration, keeps data consistent across designers, and ships safely on IL2CPP platforms.</p>
+
+          <h3>Key highlights</h3>
           <ul>
-            <li>Action modules compose spawn/FX/physics steps driven by ScriptableObject data.</li>
+            <li>Composable action modules (spawn/FX/physics/state) driven by ScriptableObject data.</li>
             <li>Editor validators catch reflection/AOT risks and missing assets before build.</li>
-            <li>Runtime prewarm for IL2CPP and deterministic math to support netcode/rollback.</li>
-            <li>Authoring timeline to preview timings and payloads without entering playmode.</li>
+            <li>Deterministic math + prewarm for IL2CPP; netcode/rollback-friendly.</li>
+            <li>Authoring timeline to preview timings/payloads without playmode.</li>
+            <li>Deploy guardrails: lint, bake, and report for skills per build.</li>
           </ul>
 
           <div class="case-links">
             <a class="btn-primary" href="https://github.com/holdmycat/Modular-Skill-System-Demo" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
             <a class="btn-secondary" href="https://www.youtube.com/watch?v=h6gxAE1EmuE" target="_blank" rel="noopener noreferrer">Demo</a>
           </div>
-        </div>
+        </article>
+
+        <article class="card case-card secondary">
+          <h2>Ebonor (Steam Project)</h2>
+          <p class="lead">3D action roguelite — shipped prototypes under real production constraints.</p>
+
+          <h3>What I built</h3>
+          <p>Combat/skill systems, tooling, and performance tuning for console/PC targets; pipelines for builds and patches.</p>
+
+          <h3>Evidence</h3>
+          <ul>
+            <li>Steam page live with marketing assets.</li>
+            <li>Modular skills integrated with authoring guardrails.</li>
+            <li>Profiling + budgets baked into daily workflow.</li>
+          </ul>
+
+          <div class="case-links">
+            <a class="btn-secondary" href="{{ .Site.Params.links.steam }}" target="_blank" rel="noopener noreferrer">Steam</a>
+            {{ with .Site.Params.links.gameRepo }}{{ if . }}<a class="btn-secondary" href="{{ . }}" target="_blank" rel="noopener noreferrer">Showcase Repo</a>{{ end }}{{ end }}
+          </div>
+        </article>
       </div>
     </div>
   </section>

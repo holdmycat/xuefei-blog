@@ -44,6 +44,41 @@ body {
   gap: 16px;
 }
 
+.post {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 4px 32px;
+}
+
+.post h1 {
+  margin: 10px 0 12px;
+}
+
+.post .lead {
+  color: var(--text-muted);
+}
+
+.post .content {
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.post .content p { margin: 14px 0; }
+.post .content h2, .post .content h3 { margin: 18px 0 10px; }
+.post .content code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-family: 'Space Mono', monospace;
+}
+.post .content pre {
+  background: #0f1419;
+  color: #e8ecf5;
+  padding: 14px;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
 .case-card {
   padding: 20px;
 }
@@ -67,6 +102,22 @@ body {
   gap: 10px;
   flex-wrap: wrap;
   margin-top: 12px;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+.projects-grid .primary {
+  grid-column: span 2;
+}
+
+@media (max-width: 900px) {
+  .projects-grid .primary {
+    grid-column: span 1;
+  }
 }
 
 .card {
