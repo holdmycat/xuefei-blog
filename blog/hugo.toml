@@ -37,7 +37,7 @@ theme = ""  # using local layouts, leave empty
       subtitle = "SkillForge PoE style skill authoring pipeline for Unity"
       subtitleLine1 = "SkillForge: PoE-style skill authoring pipeline for Unity"
       subtitleLine2 = "Designer-first workflow for faster iteration and cleaner data."
-        skillEditorImage = "/images/skill-editor.png"
+        skillEditorImage = "img/skill-editor.png"
         caption = "Used daily for 12 months in our 2-person pipeline — powering all skills, characters, and weapons (I maintain the system; my co-dev authors content)."
       [languages.en.params.links]
         demo = "https://www.youtube.com/watch?v=h6gxAE1EmuE"
@@ -96,10 +96,10 @@ theme = ""  # using local layouts, leave empty
         avatar = "/images/avatar.jpg"
       [languages.zh.params.hero]
         title = "高级 Unity 游戏与工具工程师"
-        subtitle = "SkillForge：类 PoE 的 Unity 技能编辑流水线"
-        subtitleLine1 = "SkillForge：类 PoE 的 Unity 技能编辑流水线"
-        subtitleLine2 = "以设计师为中心，加速迭代、保持数据干净。"
-        skillEditorImage = "/images/skill-editor.png"
+      subtitle = "SkillForge：类 PoE 的 Unity 技能编辑流水线"
+      subtitleLine1 = "SkillForge：类 PoE 的 Unity 技能编辑流水线"
+      subtitleLine2 = "以设计师为中心，加速迭代、保持数据干净。"
+        skillEditorImage = "img/skill-editor.png"
         caption = "在我们 2 人流水线中已日常使用 12 个月，覆盖所有技能、角色和武器（我维护系统，搭档创作内容）。"
       [languages.zh.params.links]
         demo = "#"
