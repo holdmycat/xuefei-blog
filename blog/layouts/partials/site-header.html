@@ -11,10 +11,10 @@
     <a class="brand-mark" href="{{ "/" | relLangURL }}">{{ .Site.Params.profile.name }}</a>
   </div>
   <nav class="nav-center">
-    {{ $currentPage := . }}
+    {{ $currentPage := .Page }}
     {{ range .Site.Menus.main }}
-      {{ $active := or (.IsMenuCurrent "main" $currentPage) (.HasMenuCurrent "main" $currentPage) }}
-      {{ $target := cond .Page ( .Page.RelPermalink ) (.URL | relLangURL) }}
+      {{ $active := or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}
+      {{ $target := cond .Page (.Page.RelPermalink) (.URL | relLangURL) }}
       <a class="nav-link{{ if $active }} active{{ end }}" href="{{ $target }}"{{ if $active }} aria-current="page"{{ end }}>{{ .Name }}</a>
     {{ end }}
   </nav>
