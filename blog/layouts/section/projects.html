@@ -10,7 +10,7 @@
           <article class="card case-card {{ if eq .Params.badge "Available" }}primary{{ else }}secondary{{ end }}">
             {{ with .Params.cover }}
               <div class="case-cover">
-                <img src="{{ . | relURL }}" alt="{{ .Title }} cover" loading="lazy" decoding="async">
+                <img src="{{ . | relURL }}" alt="{{ $.Title }} cover" loading="lazy" decoding="async">
                 {{ with $.Params.badge }}<span class="case-badge">{{ . }}</span>{{ end }}
               </div>
             {{ end }}
