@@ -1,0 +1,36 @@
+{{ $p := .Site.Params }}
+<section class="hero-shell">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <p class="eyebrow">Unity · Gameplay · Tools</p>
+      <h1 class="hero-title">{{ $p.hero.title }}</h1>
+      <p class="subtitle">
+        {{ with $p.hero.subtitleLine1 }}{{ . }}<br>{{ end }}
+        {{ with $p.hero.subtitleLine2 }}{{ . }}{{ else }}{{ $p.hero.subtitle }}{{ end }}
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="{{ $p.links.demo }}">Watch Demo</a>
+        <a class="btn secondary" href="{{ $p.links.resume }}">Download Resume</a>
+        <a class="btn ghost" href="{{ $p.links.github }}">View GitHub</a>
+      </div>
+      <div class="contact-links">
+        {{ with $p.links.email }}
+          <a class="email-link" href="mailto:{{ . }}" data-email="{{ . }}">Email: {{ . }}</a>
+          <button class="copy-btn" type="button" data-copy="{{ . }}">Copy</button>
+        {{ end }}
+        {{ if and $p.links.email $p.links.linkedin }}<span class="divider">•</span>{{ end }}
+        {{ with $p.links.linkedin }}<a class="linkedin-link" href="{{ . }}" target="_blank" rel="noopener noreferrer">LinkedIn<span class="external-icon">↗</span></a>{{ end }}
+        {{ if and $p.links.linkedin $p.links.steam }}<span class="divider">•</span>{{ end }}
+        {{ with $p.links.steam }}<a class="steam-link" href="{{ . }}" target="_blank" rel="noopener noreferrer">Steam<span class="external-icon">↗</span></a>{{ end }}
+        <span class="copy-toast" hidden>Copied</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="glass-card">
+        <img src="{{ $p.hero.skillEditorImage | relURL }}" alt="Skill Editor">
+        {{ with $p.hero.caption }}<p class="card-caption">{{ . }}</p>{{ end }}
+      </div>
+    </div>
+  </div>
+</section>

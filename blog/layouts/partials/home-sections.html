@@ -1,0 +1,87 @@
+{{ $p := .Site.Params.home }}
+
+<div class="home-sections-wrap">
+  <section class="home-cards">
+    <div class="section-header">
+      <h2>Evidence</h2>
+    </div>
+    <div class="card-grid">
+      {{ range $p.cards }}
+        <a class="evidence-card" href="{{ .href }}" target="_blank" rel="noopener noreferrer">
+          <div class="icon-circle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M8 12l2.5 2.5L16 9"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>{{ .title }}</h3>
+            <p>{{ .desc }}</p>
+            <span class="card-link">View Project ↗</span>
+          </div>
+        </a>
+      {{ end }}
+    </div>
+  </section>
+
+  {{ if ne $p.featured.enabled false }}
+    <section class="home-featured">
+      <div class="section-header">
+        <h2>{{ $p.featured.title }}</h2>
+      </div>
+      <div class="featured-card">
+        <div class="featured-media">
+          {{ with $p.featured.media }}
+            <a href="{{ $p.featured.demoHref }}" target="_blank" rel="noopener noreferrer">
+              <img src="{{ . | relURL }}" alt="Featured media">
+            </a>
+          {{ end }}
+        </div>
+        <div class="featured-content">
+          <div class="pill-row">
+            <span class="pill">Problem</span>
+            <p>{{ $p.featured.problem }}</p>
+          </div>
+          <div class="pill-row">
+            <span class="pill">Solution</span>
+            <p>{{ $p.featured.solution }}</p>
+          </div>
+          <div class="pill-row">
+            <span class="pill">Outcome</span>
+            <p>{{ $p.featured.outcome }}</p>
+          </div>
+          <div class="featured-actions">
+            {{ with $p.featured.demoHref }}<a class="btn ghost" href="{{ . }}" target="_blank" rel="noopener noreferrer">Watch Demo</a>{{ end }}
+            {{ with $p.featured.writeupHref }}<a class="btn outline" href="{{ . }}" target="_blank" rel="noopener noreferrer">Read the breakdown</a>{{ end }}
+          </div>
+        </div>
+      </div>
+    </section>
+  {{ end }}
+
+  <section class="home-writing">
+    <div class="section-header">
+      <h2>Latest Writing</h2>
+    </div>
+    <div class="writing-list">
+      {{ $posts := first 3 ((where .Site.RegularPages "Section" "posts").ByDate.Reverse) }}
+      {{ range $posts }}
+        <article class="writing-card">
+          <div class="meta">
+            <span>{{ .Date.Format "Jan 2, 2006" }}</span>
+            {{ with .Params.tags }}
+              <span class="dot">•</span>
+              {{ range . }}<span class="tag">#{{ . }}</span>{{ end }}
+            {{ end }}
+          </div>
+          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        </article>
+      {{ else }}
+        <p class="muted">No writing yet.</p>
+      {{ end }}
+    </div>
+    <div class="writing-footer">
+      {{ with $p.writing.moreHref }}<a class="small-link" href="{{ . }}">View all writing →</a>{{ end }}
+    </div>
+  </section>
+</div>

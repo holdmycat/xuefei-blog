@@ -7,3 +7,14 @@ description = "Shipped work and tools I keep revisiting."
 - **FrameScope** — lightweight frame budgeting HUD for Unity, tuned for consoles. Displays CPU/GPU slice breakdowns and budgets by system.
 - **AOT Guardrails** — build-time analyzer that flags reflection-heavy codepaths and suggests IL2CPP-friendly alternatives.
 - **Pipeline Stitcher** — CI templates for Unity game builds across platforms with cache-aware artifact reuse.
+
+## Game Project
+
+**Ebonor (Steam)** — 3D action roguelite prototype showcasing data-driven combat and modular skills.
+
+- Shipped a public Steam page and marketing assets.
+- Built core gameplay + tooling from 0 to 1 in a small team workflow.
+- Strong focus on iteration speed, maintainability, and performance.
+
+{{ with .Site.Params.links.steam }}[Steam Page ↗]({{ . }}){: target="_blank" rel="noopener noreferrer"}{{ end }}
+{{ with .Site.Params.links.gameRepo }}{{ if ne . "" }} · [Gameplay/Tools Repo ↗]({{ . }}){: target="_blank" rel="noopener noreferrer"}{{ end }}{{ end }}

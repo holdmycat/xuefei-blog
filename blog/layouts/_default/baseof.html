@@ -8,30 +8,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "css/theme.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "css/site.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "css/header.css" | relURL }}">
+  {{ if .IsHome }}
+    <link rel="stylesheet" href="{{ "css/home.css" | relURL }}">
+    <link rel="stylesheet" href="{{ "css/home-sections.css" | relURL }}">
+    <script src="{{ "js/home.js" | relURL }}" defer></script>
+  {{ end }}
 </head>
-<body>
+<body class="site dark{{ if .IsHome }} home-page{{ end }}">
   <header class="site-header">
-    <div class="brand">
-      <a href="{{ "/" | relLangURL }}">{{ .Site.Title }}</a>
-      <p class="subtitle">{{ .Site.Params.subtitle }}</p>
-    </div>
-    <div class="nav-wrap">
-      <nav class="menu">
-        {{ range .Site.Menus.main }}
-          <a href="{{ .URL | relLangURL }}" class="menu-link">{{ .Name }}</a>
-        {{ end }}
-      </nav>
-      <div class="lang-switch">
-        {{ $homes := slice .Site.Home }}
-        {{ range .Site.Home.AllTranslations }}
-          {{ $homes = $homes | append . }}
-        {{ end }}
-        {{ range $homes }}
-          <a href="{{ .RelPermalink }}" class="lang-link{{ if eq .Language.Lang $.Site.Language.Lang }} active{{ end }}">{{ .Language.LanguageName }}</a>
-        {{ end }}
-      </div>
-    </div>
+    {{ partial "site-header.html" . }}
   </header>
 
   <main class="site-main">

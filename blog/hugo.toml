@@ -28,6 +28,41 @@ theme = ""  # using local layouts, leave empty
     [languages.en.params]
       subtitle = "Game Systems · Unity · Performance Notes"
       description = "Notes on game systems, Unity tooling, performance, and experiments."
+      [languages.en.params.profile]
+        name = "Xuefei Zhao"
+        avatar = "/images/avatar.jpg"
+    [languages.en.params.hero]
+      title = "Senior Unity Gameplay and Tools Engineer"
+      subtitle = "SkillForge PoE style skill authoring pipeline for Unity"
+      subtitleLine1 = "SkillForge: PoE-style skill authoring pipeline for Unity"
+      subtitleLine2 = "Designer-first workflow for faster iteration and cleaner data."
+        skillEditorImage = "/images/skill-editor.png"
+        caption = "Used daily for 12 months in our 2-person pipeline — powering all skills, characters, and weapons (I maintain the system; my co-dev authors content)."
+      [languages.en.params.links]
+        demo = "https://www.youtube.com/watch?v=h6gxAE1EmuE"
+        github = "https://github.com/holdmycat/Modular-Skill-System-Demo"
+        resume = "/files/resume.pdf"
+        email = "clashancients@gmail.com"
+        linkedin = "https://www.linkedin.com/in/xuefei-zhao-gamedeveloper/"
+        steam = "https://store.steampowered.com/app/3680960/_/"
+        gameRepo = ""
+    [languages.en.params.home]
+      cards = [
+        { title = "SkillForge Pipeline", desc = "Designer-first skill authoring with deterministic runtime and guardrails.", href = "https://store.steampowered.com/app/3680960/_/" },
+        { title = "Modular Skill System", desc = "Data-driven combat modules for rapid iteration and reuse.", href = "https://github.com/holdmycat/Modular-Skill-System-Demo" },
+        { title = "Production Engineering", desc = "Pipelines, deploys, and profiling baked into daily workflows.", href = "https://www.linkedin.com/in/xuefei-zhao-gamedeveloper/" }
+      ]
+    [languages.en.params.home.featured]
+      enabled = false
+      title = "Designer-First Skill Pipeline (SkillForge)"
+      media = "/images/featured-media.png"
+      demoHref = "https://www.youtube.com/watch?v=h6gxAE1EmuE"
+      problem = "Content teams struggled to author and ship skills fast enough for live goals."
+      solution = "Built SkillForge: designer-first authoring, modular runtime, guardrails, and deploy tooling."
+      outcome = "Safer releases, faster iteration, and consistent performance across platforms."
+      writeupHref = "/posts/shipping-a-combat-skill-system-without-regrets/"
+      [languages.en.params.home.writing]
+        moreHref = "/posts/"
 
     [languages.en.menu]
       [[languages.en.menu.main]]
@@ -35,15 +70,15 @@ theme = ""  # using local layouts, leave empty
         url = "/"
         weight = 1
       [[languages.en.menu.main]]
-        name = "Posts"
-        url = "/posts/"
-        weight = 2
-      [[languages.en.menu.main]]
         name = "Projects"
         url = "/projects/"
+        weight = 2
+      [[languages.en.menu.main]]
+        name = "Writing"
+        url = "/posts/"
         weight = 3
       [[languages.en.menu.main]]
-        name = "About"
+        name = "Now"
         url = "/about/"
         weight = 4
 
@@ -55,6 +90,41 @@ theme = ""  # using local layouts, leave empty
     [languages.zh.params]
       subtitle = "游戏系统 · Unity · 性能笔记"
       description = "记录游戏系统、Unity 工具链、性能与流水线的实践。"
+      [languages.zh.params.profile]
+        name = "Xuefei Zhao"
+        avatar = "/images/avatar.jpg"
+      [languages.zh.params.hero]
+        title = "高级 Unity 游戏与工具工程师"
+        subtitle = "SkillForge：类 PoE 的 Unity 技能编辑流水线"
+        subtitleLine1 = "SkillForge：类 PoE 的 Unity 技能编辑流水线"
+        subtitleLine2 = "以设计师为中心，加速迭代、保持数据干净。"
+        skillEditorImage = "/images/skill-editor.png"
+        caption = "在我们 2 人流水线中已日常使用 12 个月，覆盖所有技能、角色和武器（我维护系统，搭档创作内容）。"
+      [languages.zh.params.links]
+        demo = "#"
+        github = "#"
+        resume = "#"
+        email = "clashancients@gmail.com"
+        linkedin = "https://www.linkedin.com/in/your-profile"
+        steam = "https://store.steampowered.com/app/000000/Ebonor/"
+        gameRepo = ""
+    [languages.zh.params.home]
+      cards = [
+        { title = "SkillForge Pipeline", desc = "面向设计师的技能编辑，确定性运行时与防护校验。", href = "https://store.steampowered.com/app/3680960/_/" },
+        { title = "Modular Skill System", desc = "数据驱动的战斗模块，便于快速迭代与复用。", href = "https://github.com/holdmycat/Modular-Skill-System-Demo" },
+        { title = "Production Engineering", desc = "流水线、部署与 Profiling 融入日常工作。", href = "https://www.linkedin.com/in/xuefei-zhao-gamedeveloper/" }
+      ]
+    [languages.zh.params.home.featured]
+      enabled = false
+      title = "面向设计师的技能流水线（SkillForge）"
+      media = "/images/featured-media.png"
+      demoHref = "https://www.youtube.com/watch?v=h6gxAE1EmuE"
+      problem = "策划需要更快迭代技能以满足上线节奏。"
+      solution = "构建 SkillForge：设计师优先的编辑、模块化运行时与防护、发布工具。"
+      outcome = "迭代更快、发布更稳、跨平台性能一致。"
+      writeupHref = "/posts/shipping-a-combat-skill-system-without-regrets/"
+      [languages.zh.params.home.writing]
+        moreHref = "/posts/"
 
     [languages.zh.menu]
       [[languages.zh.menu.main]]
@@ -62,14 +132,14 @@ theme = ""  # using local layouts, leave empty
         url = "/"
         weight = 1
       [[languages.zh.menu.main]]
-        name = "文章"
-        url = "/posts/"
-        weight = 2
-      [[languages.zh.menu.main]]
         name = "项目"
         url = "/projects/"
+        weight = 2
+      [[languages.zh.menu.main]]
+        name = "文章"
+        url = "/posts/"
         weight = 3
       [[languages.zh.menu.main]]
-        name = "关于"
+        name = "Now"
         url = "/about/"
         weight = 4
