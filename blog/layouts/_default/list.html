@@ -4,7 +4,7 @@
   {{ $pages = where site.RegularPages "Lang" site.Language.Lang }}
 {{ end }}
 {{ $paginator := .Paginate $pages }}
-{{ $base := trimSuffix "/" .Site.BaseURL }}
+{{ $base := replaceRE "/$" "" .Site.BaseURL }}
 
 <section class="hero">
   <div class="hero-label">{{ i18n "latest" }}</div>

@@ -1,6 +1,6 @@
 {{ define "main" }}
 <article class="post">
-  {{ $base := trimSuffix "/" .Site.BaseURL }}
+  {{ $base := replaceRE "/$" "" .Site.BaseURL }}
   <div class="meta">
     <span>{{ .Date.Format "Jan 2, 2006" }}</span>
     {{ with .Params.categories }}

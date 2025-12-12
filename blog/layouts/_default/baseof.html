@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
 </head>
 <body>
-  {{ $base := trimSuffix "/" .Site.BaseURL }}
+  {{ $base := replaceRE "/$" "" .Site.BaseURL }}
   <header class="site-header">
     <div class="brand">
       <a href="{{ printf "%s%s" $base .Site.LanguagePrefix }}">{{ .Site.Title }}</a>
