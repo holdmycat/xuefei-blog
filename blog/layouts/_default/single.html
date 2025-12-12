@@ -5,7 +5,7 @@
     {{ with .Params.categories }}
       <span class="dot">•</span>
       {{ range $index, $cat := . }}
-        <a href="{{ (printf "/categories/%s/" (urlize $cat)) | relLangURL }}" class="pill">{{ $cat }}</a>{{ if lt (add $index 1) (len .) }}{{ end }}
+        <a href="{{ (printf "/categories/%s/" (urlize $cat)) | absLangURL }}" class="pill">{{ $cat }}</a>{{ if lt (add $index 1) (len .) }}{{ end }}
       {{ end }}
     {{ end }}
   </div>
@@ -15,7 +15,7 @@
 
   {{ with .Params.tags }}
     <div class="tag-row">
-      {{ range . }}<a class="tag" href="{{ (printf "/tags/%s/" (urlize .)) | relLangURL }}">#{{ . }}</a>{{ end }}
+      {{ range . }}<a class="tag" href="{{ (printf "/tags/%s/" (urlize .)) | absLangURL }}">#{{ . }}</a>{{ end }}
     </div>
   {{ end }}
 </article>
