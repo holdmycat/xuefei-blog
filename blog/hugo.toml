@@ -2,7 +2,7 @@ baseURL = "https://holdmycat.github.io/xuefei-blog/"
 title = "Xuefei Blog"
 languageCode = "en-us"
 defaultContentLanguage = "en"
-defaultContentLanguageInSubdir = true
+defaultContentLanguageInSubdir = false
 
 [pagination]
   pagerSize = 10
