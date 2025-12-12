@@ -19,15 +19,15 @@
         {{ with .Params.categories }}
           <span class="dot">•</span>
           {{ range $index, $cat := . }}
-            <a href="{{ (printf "/categories/%s/" (urlize $cat)) | relURL }}" class="pill">{{ $cat }}</a>{{ if lt (add $index 1) (len .) }}{{ end }}
+            <a href="{{ (printf "/categories/%s/" (urlize $cat)) | relLangURL }}" class="pill">{{ $cat }}</a>{{ if lt (add $index 1) (len .) }}{{ end }}
           {{ end }}
         {{ end }}
       </div>
-      <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+      <h2><a href="{{ (printf "/posts/%s/" .Slug) | relLangURL }}">{{ .Title }}</a></h2>
       <p>{{ with .Summary }}{{ . }}{{ else }}{{ .Plain }}{{ end }}</p>
       {{ with .Params.tags }}
         <div class="tag-row">
-          {{ range . }}<a class="tag" href="{{ (printf "/tags/%s/" (urlize .)) | relURL }}">#{{ . }}</a>{{ end }}
+          {{ range . }}<a class="tag" href="{{ (printf "/tags/%s/" (urlize .)) | relLangURL }}">#{{ . }}</a>{{ end }}
         </div>
       {{ end }}
     </article>
