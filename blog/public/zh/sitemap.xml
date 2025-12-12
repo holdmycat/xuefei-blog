@@ -2,137 +2,137 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/zh/tags/aot/</loc>
+    <loc>http://example.org/zh/tags/aot/</loc>
     <lastmod>2024-02-10T10:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/tags/aot/"
+                href="http://example.org/en/tags/aot/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/zh/tags/aot/"
+                href="http://example.org/zh/tags/aot/"
                 />
   </url><url>
-    <loc>http://localhost:1313/zh/categories/</loc>
+    <loc>http://example.org/zh/categories/</loc>
     <lastmod>2024-02-10T10:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/categories/"
+                href="http://example.org/en/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/zh/categories/"
+                href="http://example.org/zh/categories/"
                 />
   </url><url>
-    <loc>http://localhost:1313/zh/categories/game-systems/</loc>
+    <loc>http://example.org/zh/categories/game-systems/</loc>
     <lastmod>2024-02-10T10:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/categories/game-systems/"
+                href="http://example.org/en/categories/game-systems/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/zh/categories/game-systems/"
+                href="http://example.org/zh/categories/game-systems/"
                 />
   </url><url>
-    <loc>http://localhost:1313/zh/tags/il2cpp/</loc>
+    <loc>http://example.org/zh/tags/il2cpp/</loc>
     <lastmod>2024-02-10T10:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/tags/il2cpp/"
+                href="http://example.org/en/tags/il2cpp/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/zh/tags/il2cpp/"
+                href="http://example.org/zh/tags/il2cpp/"
                 />
   </url><url>
-    <loc>http://localhost:1313/zh/tags/performance/</loc>
+    <loc>http://example.org/zh/tags/performance/</loc>
     <lastmod>2024-02-10T10:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/tags/performance/"
+                href="http://example.org/en/tags/performance/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/zh/tags/performance/"
+                href="http://example.org/zh/tags/performance/"
                 />
   </url><url>
-    <loc>http://localhost:1313/zh/tags/skillsystem/</loc>
+    <loc>http://example.org/zh/tags/skillsystem/</loc>
     <lastmod>2024-02-10T10:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/tags/skillsystem/"
+                href="http://example.org/en/tags/skillsystem/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/zh/tags/skillsystem/"
+                href="http://example.org/zh/tags/skillsystem/"
                 />
   </url><url>
-    <loc>http://localhost:1313/zh/tags/</loc>
+    <loc>http://example.org/zh/tags/</loc>
     <lastmod>2024-02-10T10:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/tags/"
+                href="http://example.org/en/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/zh/tags/"
+                href="http://example.org/zh/tags/"
                 />
   </url><url>
-    <loc>http://localhost:1313/zh/tags/unity/</loc>
+    <loc>http://example.org/zh/tags/unity/</loc>
     <lastmod>2024-02-10T10:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/tags/unity/"
+                href="http://example.org/en/tags/unity/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/zh/tags/unity/"
+                href="http://example.org/zh/tags/unity/"
                 />
   </url><url>
-    <loc>http://localhost:1313/zh/zh/</loc>
+    <loc>http://example.org/zh/zh/</loc>
     <lastmod>2024-02-10T10:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/zh/"
+                href="http://example.org/en/zh/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/zh/zh/"
+                href="http://example.org/zh/zh/"
                 />
   </url><url>
-    <loc>http://localhost:1313/zh/zh/posts/combat-skill-system-zh/</loc>
+    <loc>http://example.org/zh/zh/posts/combat-skill-system-zh/</loc>
     <lastmod>2024-02-10T10:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/zh/</loc>
+    <loc>http://example.org/zh/</loc>
     <lastmod>2024-02-10T10:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/"
+                href="http://example.org/en/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/zh/"
+                href="http://example.org/zh/"
                 />
   </url>
 </urlset>
