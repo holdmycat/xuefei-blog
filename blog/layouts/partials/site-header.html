@@ -11,9 +11,11 @@
     <a class="brand-mark" href="{{ "/" | relLangURL }}">{{ .Site.Params.profile.name }}</a>
   </div>
   <nav class="nav-center">
+    {{ $currentPage := . }}
     {{ range .Site.Menus.main }}
-      {{ $active := or (eq $.RelPermalink (.URL | relLangURL)) (eq $.Permalink (.URL | absLangURL)) }}
-      <a class="nav-link{{ if $active }} active{{ end }}" href="{{ .URL | relLangURL }}"{{ if $active }} aria-current="page"{{ end }}>{{ .Name }}</a>
+      {{ $active := or (.IsMenuCurrent "main" $currentPage) (.HasMenuCurrent "main" $currentPage) }}
+      {{ $target := cond .Page ( .Page.RelPermalink ) (.URL | relLangURL) }}
+      <a class="nav-link{{ if $active }} active{{ end }}" href="{{ $target }}"{{ if $active }} aria-current="page"{{ end }}>{{ .Name }}</a>
     {{ end }}
   </nav>
   <div class="nav-right">

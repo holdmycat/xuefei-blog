@@ -68,19 +68,19 @@ theme = ""  # using local layouts, leave empty
     [languages.en.menu]
       [[languages.en.menu.main]]
         name = "Home"
-        url = "/"
+        pageRef = "/"
         weight = 1
       [[languages.en.menu.main]]
         name = "Projects"
-        url = "/projects/"
+        pageRef = "/projects"
         weight = 2
       [[languages.en.menu.main]]
         name = "Writing"
-        url = "/posts/"
+        pageRef = "/posts"
         weight = 3
       [[languages.en.menu.main]]
         name = "Now"
-        url = "/now/"
+        pageRef = "/now"
         weight = 4
 
   [languages.zh]
@@ -130,17 +130,17 @@ theme = ""  # using local layouts, leave empty
     [languages.zh.menu]
       [[languages.zh.menu.main]]
         name = "首页"
-        url = "/"
+        pageRef = "/"
         weight = 1
       [[languages.zh.menu.main]]
         name = "项目"
-        url = "/projects/"
+        pageRef = "/projects"
         weight = 2
       [[languages.zh.menu.main]]
         name = "文章"
-        url = "/posts/"
+        pageRef = "/posts"
         weight = 3
       [[languages.zh.menu.main]]
         name = "Now"
-        url = "/now/"
+        pageRef = "/now"
         weight = 4
