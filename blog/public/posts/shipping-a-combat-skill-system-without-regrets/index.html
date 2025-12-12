@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shipping a Combat Skill System Without Regrets · Xuefei Blog</title>
+  <meta name="description" content="Notes on game systems, Unity tooling, performance, and experiments.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <a href="/">Xuefei Blog</a>
+      <p class="subtitle">Game Systems · Unity · Performance Notes</p>
+    </div>
+    <nav class="menu">
+      
+        <a href="/" class="menu-link">Home</a>
+      
+        <a href="/posts/" class="menu-link">Posts</a>
+      
+        <a href="/projects/" class="menu-link">Projects</a>
+      
+        <a href="/about/" class="menu-link">About</a>
+      
+    </nav>
+  </header>
+
+  <main class="site-main">
+    
+<article class="post">
+  <div class="meta">
+    <span>Feb 10, 2024</span>
+    
+      <span class="dot">•</span>
+      
+        <a href="/categories/game-systems/" class="pill">Game Systems</a>
+      
+    
+  </div>
+  <h1>Shipping a Combat Skill System Without Regrets</h1>
+  <p class="lead">Notes from building a deterministic, designer-friendly skill system that still runs inside tight frame budgets.</p>
+  <div class="content"><p>Designing combat systems under IL2CPP means juggling determinism, readability, and tool support.</p>
+<h2 id="architecture-sketch">Architecture sketch</h2>
+<ul>
+<li><strong>Data-first</strong>: drive skills from <code>ScriptableObject</code> assets with immutable payloads.</li>
+<li><strong>Deterministic core</strong>: keep the runtime graph free of <code>DateTime</code>, floats that drift, and thread-unsafe caches.</li>
+<li><strong>Authoring safety</strong>: add editor validators that fail builds when designers leave stray reflection calls.</li>
+</ul>
+<h2 id="useful-patterns">Useful patterns</h2>
+<ol>
+<li><strong>Action atoms</strong> — tiny, composable commands (spawn VFX, apply force, queue follow-ups) stitched by data.</li>
+<li><strong>State mirroring</strong> — mirror combat state into a pure struct world for rollback or replays.</li>
+<li><strong>AOT hygiene</strong> — prewarm generic instantiations and avoid late-bound reflection in skill effects.</li>
+</ol>
+<h2 id="checklist-before-shipping">Checklist before shipping</h2>
+<ul>
+<li>Burst-compiled hot paths profiled on target hardware.</li>
+<li>Determinism checks passing across platforms.</li>
+<li>Skill authoring validators green in CI.</li>
+<li>Network payload sizes recorded and budgeted.</li>
+</ul>
+<p>This site will collect more focused notes on Unity tooling, pipelines, and AI-assisted workflows soon.</p>
+</div>
+
+  
+    <div class="tag-row">
+      <a class="tag" href="/tags/skillsystem/">#SkillSystem</a><a class="tag" href="/tags/unity/">#Unity</a><a class="tag" href="/tags/performance/">#Performance</a><a class="tag" href="/tags/aot/">#AOT</a><a class="tag" href="/tags/il2cpp/">#IL2CPP</a>
+    </div>
+  
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Built with Hugo · 2025</p>
+  </footer>
+</body>
+</html>

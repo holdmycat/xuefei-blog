@@ -1,0 +1,37 @@
+{{ define "main" }}
+{{ $pages := where .Site.RegularPages "Lang" .Site.Language.Lang }}
+{{ $paginator := .Paginate $pages }}
+
+<section class="hero">
+  <div class="hero-label">{{ i18n "latest" }}</div>
+  <h1>{{ if .IsHome }}{{ i18n "homeTitle" }}{{ else }}{{ .Title }}{{ end }}</h1>
+  {{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
+</section>
+
+<section class="post-list">
+  {{ range $paginator.Pages }}
+    <article class="post-card">
+      <div class="meta">
+        <span>{{ .Date.Format "Jan 2, 2006" }}</span>
+        {{ with .Params.categories }}
+          <span class="dot">•</span>
+          {{ range $index, $cat := . }}
+            <a href="{{ (printf "/categories/%s/" (urlize $cat)) | relURL }}" class="pill">{{ $cat }}</a>{{ if lt (add $index 1) (len .) }}{{ end }}
+          {{ end }}
+        {{ end }}
+      </div>
+      <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+      <p>{{ with .Summary }}{{ . }}{{ else }}{{ .Plain }}{{ end }}</p>
+      {{ with .Params.tags }}
+        <div class="tag-row">
+          {{ range . }}<a class="tag" href="{{ (printf "/tags/%s/" (urlize .)) | relURL }}">#{{ . }}</a>{{ end }}
+        </div>
+      {{ end }}
+    </article>
+  {{ else }}
+    <p>{{ i18n "noPosts" }}</p>
+  {{ end }}
+</section>
+
+{{ template "partials/pagination.html" . }}
+{{ end }}

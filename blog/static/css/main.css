@@ -1,0 +1,148 @@
+:root {
+  --bg: #fdfaf6;
+  --card: #ffffff;
+  --ink: #0f1419;
+  --muted: #5b6673;
+  --accent: #f18f01;
+  --accent-deep: #d86b04;
+  --border: #e6e1d9;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+  padding: 32px 0 64px;
+}
+a { color: var(--ink); text-decoration: none; }
+a:hover { color: var(--accent-deep); }
+
+.site-header {
+  max-width: 900px;
+  margin: 0 auto 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding: 0 16px 12px;
+}
+.brand a {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+}
+.subtitle {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.menu {
+  display: flex;
+  gap: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.menu-link { padding: 6px 0; border-bottom: 2px solid transparent; }
+.menu-link:hover { border-color: var(--accent); }
+.nav-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  background: #f6efe5;
+  border-radius: 999px;
+}
+.lang-link {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 4px 8px;
+  border-radius: 999px;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+.lang-link:hover { color: var(--accent-deep); }
+.lang-link.active { background: var(--ink); color: #fff; }
+
+.site-main { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+
+.hero { margin: 12px 0 24px; }
+.hero-label {
+  display: inline-block;
+  background: var(--ink);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.hero h1 {
+  margin: 12px 0 8px;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 4vw, 44px);
+}
+.lead { color: var(--muted); max-width: 720px; }
+
+.post-list { display: grid; gap: 18px; }
+.post-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 10px 25px rgba(15, 20, 25, 0.04);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.post-card:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(15, 20, 25, 0.06); }
+.post-card h2 { margin: 8px 0; font-family: 'Playfair Display', serif; font-size: 24px; }
+.post-card p { margin: 6px 0 0; color: var(--muted); }
+
+.meta { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 14px; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f6efe5;
+  color: var(--accent-deep);
+  font-weight: 600;
+  font-size: 12px;
+}
+.dot { color: var(--border); }
+.tag-row { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); }
+.tag:hover { color: var(--accent-deep); }
+
+.post h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 4vw, 46px);
+  margin: 10px 0 4px;
+}
+.post .lead { margin: 6px 0 20px; }
+.post .content { margin-top: 20px; color: var(--ink); }
+.post .content p { margin: 16px 0; }
+.post .content h2, .post .content h3 { margin: 22px 0 10px; font-family: 'Playfair Display', serif; }
+.post .content code { background: #f1ece4; padding: 2px 6px; border-radius: 6px; }
+.post .content pre { background: #0f1419; color: #fdfaf6; padding: 16px; border-radius: 12px; overflow-x: auto; }
+
+.pagination { display: flex; justify-content: space-between; align-items: center; margin: 24px 0; padding: 12px 0; border-top: 1px solid var(--border); }
+.page-link { color: var(--accent-deep); font-weight: 700; }
+.page-link.disabled { color: var(--border); cursor: not-allowed; }
+.page-status { color: var(--muted); font-size: 14px; }
+
+.site-footer { max-width: 900px; margin: 40px auto 0; padding: 0 16px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--border); padding-top: 16px; }
+
+@media (max-width: 720px) {
+  body { padding-top: 16px; }
+  .site-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .nav-wrap { width: 100%; flex-wrap: wrap; }
+  .menu { flex-wrap: wrap; }
+  .post-card { padding: 16px; }
+}

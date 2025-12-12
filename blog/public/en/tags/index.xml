@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Xuefei Blog</title>
+    <link>http://localhost:1313/en/tags/</link>
+    <description>Recent content in Tags on Xuefei Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 10 Feb 2024 10:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/en/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AOT</title>
+      <link>http://localhost:1313/en/tags/aot/</link>
+      <pubDate>Sat, 10 Feb 2024 10:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/aot/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>IL2CPP</title>
+      <link>http://localhost:1313/en/tags/il2cpp/</link>
+      <pubDate>Sat, 10 Feb 2024 10:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/il2cpp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Performance</title>
+      <link>http://localhost:1313/en/tags/performance/</link>
+      <pubDate>Sat, 10 Feb 2024 10:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/performance/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>SkillSystem</title>
+      <link>http://localhost:1313/en/tags/skillsystem/</link>
+      <pubDate>Sat, 10 Feb 2024 10:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/skillsystem/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Unity</title>
+      <link>http://localhost:1313/en/tags/unity/</link>
+      <pubDate>Sat, 10 Feb 2024 10:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/unity/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

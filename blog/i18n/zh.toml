@@ -1,0 +1,20 @@
+[latest]
+other = "最新"
+
+[homeTitle]
+other = "笔记与实验"
+
+[noPosts]
+other = "暂无文章"
+
+[newer]
+other = "更新"
+
+[older]
+other = "更早"
+
+[pageStatus]
+other = "第 {{ .current }} / {{ .total }} 页"
+
+[builtWith]
+other = "使用"

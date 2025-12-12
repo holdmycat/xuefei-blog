@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>雪飞的博客</title>
+    <link>http://localhost:1313/zh/</link>
+    <description>Recent content on 雪飞的博客</description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Sat, 10 Feb 2024 10:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/zh/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>无遗憾地交付战斗技能系统</title>
+      <link>http://localhost:1313/zh/zh/posts/combat-skill-system-zh/</link>
+      <pubDate>Sat, 10 Feb 2024 10:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/zh/posts/combat-skill-system-zh/</guid>
+      <description>在 IL2CPP 下做确定性、设计师友好且性能可控的技能系统的一些笔记。</description>
+    </item>
+  </channel>
+</rss>

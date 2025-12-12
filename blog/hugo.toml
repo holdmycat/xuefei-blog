@@ -1,0 +1,73 @@
+baseURL = "https://<USERNAME>.github.io/blog/"
+title = "Xuefei Blog"
+languageCode = "en-us"
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = true
+
+[pagination]
+  pagerSize = 10
+
+theme = ""  # using local layouts, leave empty
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+[permalinks]
+  posts = "/posts/:slug/"
+
+[outputs]
+  home = ["HTML", "RSS"]
+
+[languages]
+  [languages.en]
+    languageName = "English"
+    weight = 1
+    title = "Xuefei Blog"
+    [languages.en.params]
+      subtitle = "Game Systems · Unity · Performance Notes"
+      description = "Notes on game systems, Unity tooling, performance, and experiments."
+
+    [languages.en.menu]
+      [[languages.en.menu.main]]
+        name = "Home"
+        url = "/"
+        weight = 1
+      [[languages.en.menu.main]]
+        name = "Posts"
+        url = "/posts/"
+        weight = 2
+      [[languages.en.menu.main]]
+        name = "Projects"
+        url = "/projects/"
+        weight = 3
+      [[languages.en.menu.main]]
+        name = "About"
+        url = "/about/"
+        weight = 4
+
+  [languages.zh]
+    languageName = "中文"
+    weight = 2
+    title = "雪菲的博客"
+    [languages.zh.params]
+      subtitle = "游戏系统 · Unity · 性能笔记"
+      description = "记录游戏系统、Unity 工具链、性能与流水线的实践。"
+
+    [languages.zh.menu]
+      [[languages.zh.menu.main]]
+        name = "首页"
+        url = "/"
+        weight = 1
+      [[languages.zh.menu.main]]
+        name = "文章"
+        url = "/posts/"
+        weight = 2
+      [[languages.zh.menu.main]]
+        name = "项目"
+        url = "/projects/"
+        weight = 3
+      [[languages.zh.menu.main]]
+        name = "关于"
+        url = "/about/"
+        weight = 4

@@ -1,0 +1,20 @@
+[latest]
+other = "Latest"
+
+[homeTitle]
+other = "Notes & Experiments"
+
+[noPosts]
+other = "No posts yet."
+
+[newer]
+other = "Newer"
+
+[older]
+other = "Older"
+
+[pageStatus]
+other = "Page {{ .current }} of {{ .total }}"
+
+[builtWith]
+other = "Built with"
