@@ -24,6 +24,7 @@ theme = ""  # using local layouts, leave empty
     languageName = "English"
     weight = 1
     title = "Xuefei Blog"
+    contentDir = "content/en"
     [languages.en.params]
       subtitle = "Game Systems · Unity · Performance Notes"
       description = "Notes on game systems, Unity tooling, performance, and experiments."
@@ -50,6 +51,7 @@ theme = ""  # using local layouts, leave empty
     languageName = "中文"
     weight = 2
     title = "雪飞的博客"
+    contentDir = "content/zh"
     [languages.zh.params]
       subtitle = "游戏系统 · Unity · 性能笔记"
       description = "记录游戏系统、Unity 工具链、性能与流水线的实践。"
