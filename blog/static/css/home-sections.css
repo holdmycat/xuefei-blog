@@ -7,12 +7,12 @@ body.home-page {
 .home-sections-wrap {
   background: rgba(255, 255, 255, 0.02);
   border-top: 1px solid rgba(255, 255, 255, 0.035);
-  padding-top: 20px;
+  padding: 20px 0 8px;
 }
 
-.home-cards, .home-featured, .home-writing {
+.home-writing {
   max-width: 1100px;
-  margin: 0 auto 38px;
+  margin: 0 auto 32px;
   padding: 0 18px;
 }
 
@@ -21,109 +21,6 @@ body.home-page {
   font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   letter-spacing: 0.01em;
   margin-bottom: 12px;
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
-}
-
-.evidence-card {
-  display: flex;
-  gap: 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  padding: 14px;
-  text-decoration: none;
-  color: #e8ecf5;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.32);
-  transition: transform 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease;
-}
-
-.evidence-card:hover {
-  transform: translateY(-1px);
-  border-color: rgba(122, 165, 255, 0.6);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.38);
-}
-
-.icon-circle {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(122, 165, 255, 0.12);
-  border: 1px solid rgba(122, 165, 255, 0.4);
-  display: grid;
-  place-items: center;
-  color: #7aa5ff;
-  flex-shrink: 0;
-}
-
-.card-body h3 {
-  margin: 0 0 4px;
-  font-size: 17px;
-}
-
-.card-body p {
-  margin: 0 0 6px;
-  color: #b9c5e5;
-  font-size: 14px;
-}
-
-.card-link {
-  color: #7aa5ff;
-  font-weight: 700;
-}
-
-.home-featured .featured-card {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 18px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.36);
-}
-
-.featured-media img {
-  width: 100%;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.featured-content .pill-row {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 8px;
-  align-items: flex-start;
-  margin-bottom: 10px;
-}
-
-.featured-content .pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(122, 165, 255, 0.14);
-  color: #e8ecf5;
-  font-weight: 700;
-  border: 1px solid rgba(122, 165, 255, 0.35);
-  font-size: 12px;
-}
-
-.featured-content p {
-  margin: 0;
-  color: #b9c5e5;
-  line-height: 1.55;
-}
-
-.featured-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
-  flex-wrap: wrap;
 }
 
 .home-writing .writing-list {

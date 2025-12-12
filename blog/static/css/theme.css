@@ -44,6 +44,31 @@ body {
   gap: 16px;
 }
 
+.case-card {
+  padding: 20px;
+}
+
+.case-card h3 {
+  margin: 16px 0 6px;
+}
+
+.case-card p {
+  margin: 0 0 8px;
+  color: var(--text-muted);
+}
+
+.case-card ul {
+  margin: 6px 0 12px 20px;
+  color: var(--text-muted);
+}
+
+.case-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
 .card {
   background: var(--surface);
   border: 1px solid var(--surface-border);
