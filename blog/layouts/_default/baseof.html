@@ -11,15 +11,16 @@
   <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
 </head>
 <body>
+  {{ $base := trimSuffix "/" .Site.BaseURL }}
   <header class="site-header">
     <div class="brand">
-      <a href="{{ "/" | absLangURL }}">{{ .Site.Title }}</a>
+      <a href="{{ printf "%s%s" $base .Site.LanguagePrefix }}">{{ .Site.Title }}</a>
       <p class="subtitle">{{ .Site.Params.subtitle }}</p>
     </div>
     <div class="nav-wrap">
       <nav class="menu">
         {{ range .Site.Menus.main }}
-          <a href="{{ .URL | absLangURL }}" class="menu-link">{{ .Name }}</a>
+          <a href="{{ printf "%s%s" $base (.URL | relLangURL) }}" class="menu-link">{{ .Name }}</a>
         {{ end }}
       </nav>
       <div class="lang-switch">
