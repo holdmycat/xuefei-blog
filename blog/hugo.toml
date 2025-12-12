@@ -1,4 +1,4 @@
-baseURL = "https://<USERNAME>.github.io/blog/"
+baseURL = "https://holdmycat.github.io/blog/"
 title = "Xuefei Blog"
 languageCode = "en-us"
 defaultContentLanguage = "en"

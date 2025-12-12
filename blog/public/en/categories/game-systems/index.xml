@@ -10,17 +10,10 @@
     <atom:link href="http://localhost:1313/en/categories/game-systems/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Shipping a Combat Skill System Without Regrets</title>
-      <link>http://localhost:1313/en/en/posts/first-post/</link>
+      <link>http://localhost:1313/en/en/posts/shipping-combat-skill-system/</link>
       <pubDate>Sat, 10 Feb 2024 10:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/en/en/posts/first-post/</guid>
+      <guid>http://localhost:1313/en/en/posts/shipping-combat-skill-system/</guid>
       <description>Notes from building a deterministic, designer-friendly skill system that still runs inside tight frame budgets.</description>
-    </item>
-    <item>
-      <title>无遗憾地交付战斗技能系统</title>
-      <link>http://localhost:1313/en/zh/posts/first-post/</link>
-      <pubDate>Sat, 10 Feb 2024 10:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/en/zh/posts/first-post/</guid>
-      <description>在 IL2CPP 下做确定性、设计师友好且性能可控的技能系统的一些笔记。</description>
     </item>
   </channel>
 </rss>
