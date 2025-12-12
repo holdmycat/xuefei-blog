@@ -4,8 +4,6 @@
   {{ $pages = where site.RegularPages "Lang" site.Language.Lang }}
 {{ end }}
 {{ $paginator := .Paginate $pages }}
-{{ $base := replaceRE "/$" "" .Site.BaseURL }}
-{{ $lang := $.Site.Language.Lang }}
 
 <section class="hero">
   <div class="hero-label">{{ i18n "latest" }}</div>
@@ -21,15 +19,15 @@
         {{ with .Params.categories }}
           <span class="dot">•</span>
           {{ range $index, $cat := . }}
-            <a href="{{ printf "%s/%s/categories/%s/" $base $lang (urlize $cat) }}" class="pill">{{ $cat }}</a>{{ if lt (add $index 1) (len .) }}{{ end }}
+            <a href="{{ (printf "/categories/%s/" (urlize $cat)) | relLangURL }}" class="pill">{{ $cat }}</a>{{ if lt (add $index 1) (len .) }}{{ end }}
           {{ end }}
         {{ end }}
       </div>
-      <h2><a href="{{ printf "%s/%s/posts/%s/" $base .Site.Language.Lang .Slug }}">{{ .Title }}</a></h2>
+      <h2><a href="{{ (printf "/posts/%s/" .Slug) | relLangURL }}">{{ .Title }}</a></h2>
       <p>{{ with .Summary }}{{ . }}{{ else }}{{ .Plain }}{{ end }}</p>
       {{ with .Params.tags }}
         <div class="tag-row">
-          {{ range . }}<a class="tag" href="{{ printf "%s/%s/tags/%s/" $base $lang (urlize .) }}">#{{ . }}</a>{{ end }}
+          {{ range . }}<a class="tag" href="{{ (printf "/tags/%s/" (urlize .)) | relLangURL }}">#{{ . }}</a>{{ end }}
         </div>
       {{ end }}
     </article>

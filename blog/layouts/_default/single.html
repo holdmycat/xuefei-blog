@@ -1,12 +1,11 @@
 {{ define "main" }}
 <article class="post">
-  {{ $base := replaceRE "/$" "" .Site.BaseURL }}
   <div class="meta">
     <span>{{ .Date.Format "Jan 2, 2006" }}</span>
     {{ with .Params.categories }}
       <span class="dot">•</span>
       {{ range $index, $cat := . }}
-        <a href="{{ printf "%s/%s/categories/%s/" $base $.Site.Language.Lang (urlize $cat) }}" class="pill">{{ $cat }}</a>{{ if lt (add $index 1) (len .) }}{{ end }}
+        <a href="{{ (printf "/categories/%s/" (urlize $cat)) | relLangURL }}" class="pill">{{ $cat }}</a>{{ if lt (add $index 1) (len .) }}{{ end }}
       {{ end }}
     {{ end }}
   </div>
@@ -16,7 +15,7 @@
 
   {{ with .Params.tags }}
     <div class="tag-row">
-      {{ range . }}<a class="tag" href="{{ printf "%s/%s/tags/%s/" $base $.Site.Language.Lang (urlize .) }}">#{{ . }}</a>{{ end }}
+      {{ range . }}<a class="tag" href="{{ (printf "/tags/%s/" (urlize .)) | relLangURL }}">#{{ . }}</a>{{ end }}
     </div>
   {{ end }}
 </article>
