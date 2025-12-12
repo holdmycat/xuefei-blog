@@ -2,55 +2,37 @@
   <section class="section">
     <div class="container">
       <header class="section-header">
-        <h1>Projects</h1>
-        <p class="lead">Focused case studies with production constraints.</p>
+        <h1>{{ .Title }}</h1>
+        {{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
       </header>
-
       <div class="projects-grid">
-        <article class="card case-card primary">
-          <h2>Modular Skill System (Core)</h2>
-          <p class="lead">Designer-first, data-driven combat skill framework for Unity (IL2CPP-friendly).</p>
+        {{ range .Pages }}
+          <article class="card case-card {{ if eq .Params.badge \"Available\" }}primary{{ else }}secondary{{ end }}">
+            {{ with .Params.cover }}
+              <div class="case-cover">
+                <img src="{{ . | relURL }}" alt="{{ .Title }} cover" loading="lazy" decoding="async">
+                {{ with $.Params.badge }}<span class="case-badge">{{ . }}</span>{{ end }}
+              </div>
+            {{ end }}
+            <h2>{{ .Title }}</h2>
+            {{ with .Params.subtitle }}<p class="lead">{{ . }}</p>{{ end }}
+            {{ with .Params.summary }}<p class="summary">{{ . }}</p>{{ end }}
 
-          <h3>What it is</h3>
-          <p>Modular runtime + data-first authoring for combat skills, with guardrails for determinism and AOT safety.</p>
+            {{ with .Params.highlights }}
+              <ul class="highlights">
+                {{ range first 3 . }}<li>{{ . }}</li>{{ end }}
+              </ul>
+            {{ end }}
 
-          <h3>Why it matters</h3>
-          <p>Speeds iteration, keeps data consistent across designers, and ships safely on IL2CPP platforms.</p>
-
-          <h3>Key highlights</h3>
-          <ul>
-            <li>Composable action modules (spawn/FX/physics/state) driven by ScriptableObject data.</li>
-            <li>Editor validators catch reflection/AOT risks and missing assets before build.</li>
-            <li>Deterministic math + prewarm for IL2CPP; netcode/rollback-friendly.</li>
-            <li>Authoring timeline to preview timings/payloads without playmode.</li>
-            <li>Deploy guardrails: lint, bake, and report for skills per build.</li>
-          </ul>
-
-          <div class="case-links">
-            <a class="btn-primary" href="https://github.com/holdmycat/Modular-Skill-System-Demo" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
-            <a class="btn-secondary" href="https://www.youtube.com/watch?v=h6gxAE1EmuE" target="_blank" rel="noopener noreferrer">Demo</a>
-          </div>
-        </article>
-
-        <article class="card case-card secondary">
-          <h2>Ebonor (Steam Project)</h2>
-          <p class="lead">3D action roguelite — shipped prototypes under real production constraints.</p>
-
-          <h3>What I built</h3>
-          <p>Combat/skill systems, tooling, and performance tuning for console/PC targets; pipelines for builds and patches.</p>
-
-          <h3>Evidence</h3>
-          <ul>
-            <li>Steam page live with marketing assets.</li>
-            <li>Modular skills integrated with authoring guardrails.</li>
-            <li>Profiling + budgets baked into daily workflow.</li>
-          </ul>
-
-          <div class="case-links">
-            <a class="btn-secondary" href="{{ .Site.Params.links.steam }}" target="_blank" rel="noopener noreferrer">Steam</a>
-            {{ with .Site.Params.links.gameRepo }}{{ if . }}<a class="btn-secondary" href="{{ . }}" target="_blank" rel="noopener noreferrer">Showcase Repo</a>{{ end }}{{ end }}
-          </div>
-        </article>
+            <div class="case-links">
+              {{ with .Params.links }}
+                {{ range . }}
+                  <a class="btn-secondary" href="{{ .href }}" target="_blank" rel="noopener noreferrer">{{ .label }}</a>
+                {{ end }}
+              {{ end }}
+            </div>
+          </article>
+        {{ end }}
       </div>
     </div>
   </section>

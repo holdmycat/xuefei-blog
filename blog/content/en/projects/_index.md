@@ -1,4 +1,6 @@
 +++
 title = "Projects"
-description = "A focused look at the Modular Skill System case study."
+description = "Focused case studies built for production constraints."
+type = "projects"
+layout = "projects"
 +++
