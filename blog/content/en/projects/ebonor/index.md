@@ -3,7 +3,7 @@ title = "Ebonor (Steam Project)"
 subtitle = "3D action roguelite — shipped prototypes under real constraints"
 summary = "Combat/skills, tooling, and performance work with pipelines for builds and patches."
 badge = "Planned"
-cover = "images/projects/ebonor.jpg"
+cover = "images/projects/ebonor.png"
 highlights = [
   "Steam page live with marketing assets and playable builds.",
   "Modular skills integrated with authoring guardrails and budgets.",

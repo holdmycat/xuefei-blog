@@ -3,7 +3,7 @@ title = "Ebonor（Steam 项目）"
 subtitle = "3D 动作 Roguelite——在真实约束下打磨原型"
 summary = "负责战斗/技能系统、工具链与性能，覆盖构建与补丁流水线。"
 badge = "Planned"
-cover = "images/projects/ebonor.jpg"
+cover = "images/projects/ebonor.png"
 highlights = [
   "Steam 页面上线并有可玩版本。",
   "模块化技能融合创作防护与预算。",
