@@ -1,0 +1,14 @@
+# Hugo build output
+/public/
+/resources/_gen/
+/hugo_stats.json
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+/.vscode/
+*.log
+
+# Node / tooling cache (如果后面用到前端工具再加)
+node_modules/
