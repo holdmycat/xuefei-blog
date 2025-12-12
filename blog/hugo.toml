@@ -18,6 +18,7 @@ theme = ""  # using local layouts, leave empty
 
 [outputs]
   home = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
 
 [languages]
   [languages.en]

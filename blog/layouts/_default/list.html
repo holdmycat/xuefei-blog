@@ -1,0 +1,27 @@
+{{ define "main" }}
+  <section class="section list-page">
+    <div class="container">
+      <header class="section-header">
+        <h1>{{ .Title }}</h1>
+        {{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
+      </header>
+      <div class="list-card-grid">
+        {{ $paginator := .Paginate .RegularPagesRecursive }}
+        {{ range $paginator.Pages }}
+          <article class="card">
+            <div class="meta">
+              <span>{{ .Date.Format "Jan 2, 2006" }}</span>
+              {{ with .Params.tags }}
+                <span class="dot">•</span>
+                {{ range . }}<span class="tag">#{{ . }}</span>{{ end }}
+              {{ end }}
+            </div>
+            <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+            {{ with .Summary }}<p>{{ . }}</p>{{ end }}
+          </article>
+        {{ end }}
+      </div>
+      {{ template "partials/pagination.html" . }}
+    </div>
+  </section>
+{{ end }}
