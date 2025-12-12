@@ -1,5 +1,8 @@
 {{ define "main" }}
-{{ $pages := where .Site.RegularPages "Language.Lang" .Site.Language.Lang }}
+{{ $pages := where site.RegularPages "Params.lang" site.Language.Lang }}
+{{ if eq (len $pages) 0 }}
+  {{ $pages = where site.RegularPages "Lang" site.Language.Lang }}
+{{ end }}
 {{ $paginator := .Paginate $pages }}
 
 <section class="hero">
