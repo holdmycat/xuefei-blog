@@ -31,7 +31,7 @@ theme = ""  # using local layouts, leave empty
       description = "Notes on game systems, Unity tooling, performance, and experiments."
       [languages.en.params.profile]
         name = "Xuefei Zhao"
-        avatar = "/images/avatar.jpg"
+        avatar = "img/avatar.jpg"
     [languages.en.params.hero]
       title = "Senior Unity Gameplay and Tools Engineer"
       subtitle = "SkillForge PoE style skill authoring pipeline for Unity"
@@ -42,7 +42,7 @@ theme = ""  # using local layouts, leave empty
       [languages.en.params.links]
         demo = "https://www.youtube.com/watch?v=h6gxAE1EmuE"
         github = "https://github.com/holdmycat/Modular-Skill-System-Demo"
-        resume = "/files/resume.pdf"
+        resume = "files/resume.pdf"
         email = "clashancients@gmail.com"
         linkedin = "https://www.linkedin.com/in/xuefei-zhao-gamedeveloper/"
         steam = "https://store.steampowered.com/app/3680960/_/"
@@ -93,7 +93,7 @@ theme = ""  # using local layouts, leave empty
       description = "记录游戏系统、Unity 工具链、性能与流水线的实践。"
       [languages.zh.params.profile]
         name = "Xuefei Zhao"
-        avatar = "/images/avatar.jpg"
+        avatar = "img/avatar.jpg"
       [languages.zh.params.hero]
         title = "高级 Unity 游戏与工具工程师"
       subtitle = "SkillForge：类 PoE 的 Unity 技能编辑流水线"
@@ -104,7 +104,7 @@ theme = ""  # using local layouts, leave empty
       [languages.zh.params.links]
         demo = "#"
         github = "#"
-        resume = "#"
+        resume = "files/resume.pdf"
         email = "clashancients@gmail.com"
         linkedin = "https://www.linkedin.com/in/your-profile"
         steam = "https://store.steampowered.com/app/000000/Ebonor/"
