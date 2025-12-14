@@ -1,7 +1,7 @@
 +++
 title = "Unity 的 AOT 安全 C#：在 IL2CPP 下做到零运行时反射"
 date = 2024-02-10T10:00:00Z
-summary = "面向生产环境的 AOT vs JIT 心智模型；解释为何 IL2CPP 下的“晚绑定泛型”容易失败；并给出用 Source Generator 生成确定性注册表、彻底替代运行时反射的落地方案。"
+summary = "面向生产环境的 AOT vs JIT 心智模型；解释为何 IL2CPP 下的“晚绑定泛型”容易失败；并给出用 Source Generator 生成确定性注册表、彻底替代运行时反射的落地方案（包含 Generator DLL 的构建与 Unity 集成步骤）。"
 categories = ["游戏系统", "工程实践"]
 tags = ["Unity", "CSharp", "AOT", "JIT", "IL2CPP", "Generics", "SourceGenerator", "Performance"]
 lang = "zh"
@@ -28,7 +28,7 @@ IL2CPP 会在运行前把托管代码编译为原生代码。这意味着：
 ## IL2CPP 下 `MakeGenericMethod` 的本质问题
 
 `MakeGenericMethod` 往往指向同一个根因：**晚绑定的泛型实例化**。  
-当泛型类型参数来自运行时数据（配置、网络协议、可扩展内容等）时，IL2CPP 可能并没有在 AOT 阶段生成对应的 closed generic specialization。
+当泛型类型参数来自运行时数据（配置、网络协议、内容包等）时，IL2CPP 可能并没有在 AOT 阶段生成对应的 closed generic specialization。
 
 **生产级建议：**
 - 避免在运行时构造泛型调用。
@@ -42,7 +42,7 @@ IL2CPP 会在运行前把托管代码编译为原生代码。这意味着：
 - 晚绑定泛型调用（运行时决定泛型参数）
 - 依赖元数据的自动注册，但没有确定性、构建期产物兜底
 
-如果你需要动态发现来提升策划/开发体验，请把它限制在**Editor**，并把结果导出为运行时可用的确定性资产或生成代码。
+如果你需要动态发现来提升策划/开发体验，请把它限制在 **Editor**，并把结果导出为运行时可用的确定性资产或生成代码。
 
 ## 平台策略：编辑器可以动态，运行时必须确定
 
@@ -66,6 +66,9 @@ IL2CPP 会在运行前把托管代码编译为原生代码。这意味着：
 静态注册是 IL2CPP 下最可靠的方案。
 
 ```csharp
+using System;
+using System.Collections.Generic;
+
 public sealed class Registry
 {
     private readonly Dictionary<string, Type> _map = new();
@@ -91,6 +94,9 @@ public static class RuntimeRegistry
 不要在运行时“构造泛型调用”，而是把已知类型映射到强类型 Handler。
 
 ```csharp
+using System;
+using System.Collections.Generic;
+
 public interface IHandler
 {
     void Apply(object target);
@@ -114,7 +120,7 @@ public static class HandlerMap
 }
 ```
 
-**收益：**无晚绑定泛型、行为可预期、性能更稳定  
+**收益：**无晚绑定泛型、行为可预期、性能稳定  
 **残留问题：**映射表规模大时的维护成本
 
 ### 模式 3：构建期代码生成（大规模推荐）
@@ -123,9 +129,16 @@ Source Generator 能兼顾“写起来方便”和“运行时确定”：
 - 构建期生成引用类型的注册代码
 - 运行时只调用一个生成入口
 
-## C# Source Generator：完整落地流程（Unity 版）
+---
 
-### 1）Runtime 工程：定义标记 Attribute
+## C# Source Generator：完整落地流程（Unity 版，补齐 DLL 生成与集成）
+
+一个 Source Generator **必须先被编译成 DLL（Analyzer DLL）**，再由 C# 编译器以 **Analyzer** 形式加载。  
+在 Unity 中：生成器在 **Editor 侧脚本编译阶段**运行，输出 `*.g.cs` 并参与编译；生成器 DLL 本身应当 **仅 Editor 使用**，不应该进入 Player 包体。
+
+### 1）Runtime 代码：定义标记 Attribute
+放在 Unity 的运行时代码（Assembly-CSharp 或 runtime asmdef）中。
+
 ```csharp
 using System;
 
@@ -137,7 +150,7 @@ public sealed class RegisterForRegistryAttribute : Attribute
 }
 ```
 
-### 2）Runtime 工程：给类型打标
+### 2）Runtime 代码：给类型打标
 ```csharp
 [RegisterForRegistry("skill.fireball")]
 public sealed class FireballSkill
@@ -146,13 +159,8 @@ public sealed class FireballSkill
 }
 ```
 
-### 3）Generator 工程：生成确定性注册代码
-生成器应当：
-- 收集所有被标记的类型
-- 做约束校验（ID 重复、非 public、缺少约定等）
-- 产出单文件，例如 `GeneratedRegistry.g.cs`
-
-示例生成代码（运行时可用）：
+### 3）生成器输出：确定性注册表代码
+生成器应当生成一个稳定入口（示例）：
 
 ```csharp
 public static class GeneratedRegistry
@@ -172,28 +180,110 @@ var registry = new Registry();
 GeneratedRegistry.RegisterAll(registry);
 ```
 
-### 4）优先使用 Incremental Generator
-推荐使用 `IIncrementalGenerator`，更快、更稳定。
+### 4）创建独立的生成器工程（`.csproj`）
+不要把生成器代码写进 Unity 脚本程序集，建议用标准 .NET 工程独立构建。
 
-生成器实现清单：
-- 禁止磁盘 I/O
-- 不依赖 UnityEditor
-- 命名空间/文件名稳定
-- 诊断信息可行动（能定位到源码行）
+推荐目录：
+```
+repo/
+  src/
+    Game.Generator/      (生成器工程)
+  UnityProject/
+```
 
-### 5）Unity 集成清单（实操）
-- 生成器独立 `.csproj` 构建（常见 `netstandard2.0`）
-- 将生成器 DLL 以 Roslyn Analyzer 的形式导入 Unity（Editor-only）
-- 确认脚本编译后能出现 `.g.cs` 输出效果
-- CI 增加 IL2CPP 构建与 smoke test，确保持续可用
+#### 最小 `Game.Generator.csproj`
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+
+    <!-- 关键：让输出成为 Analyzer -->
+    <OutputItemType>Analyzer</OutputItemType>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
+  </ItemGroup>
+</Project>
+```
+
+> 版本可调整。关键点是：Roslyn 包 + `OutputItemType=Analyzer` + `PrivateAssets=all`。
+
+### 5）构建生成器 DLL
+在生成器工程目录执行：
+
+**macOS/Linux**
+```bash
+dotnet restore
+dotnet build -c Release
+```
+
+**Windows（PowerShell）**
+```powershell
+dotnet restore
+dotnet build -c Release
+```
+
+常见输出路径：
+```
+Game.Generator/bin/Release/netstandard2.0/Game.Generator.dll
+```
+
+### 6）拷贝 DLL 到 Unity，并标记为 Analyzer（Editor-only）
+建议放置路径：
+```
+UnityProject/Assets/Plugins/RoslynAnalyzers/Game.Generator.dll
+```
+
+然后在 Unity Inspector 中对该 DLL 设置：
+- **仅 Editor**（Editor only）
+- 标记为 **Roslyn Analyzer**（不同 Unity 版本 UI 不同：可能是勾选项，也可能通过 Asset Label `RoslynAnalyzer`）
+
+之后触发脚本重编译，生成器将运行并参与编译。
+
+### 7）自动同步 DLL（避免手动复制遗漏）
+**macOS/Linux**
+```bash
+dotnet build -c Release src/Game.Generator/Game.Generator.csproj
+
+cp src/Game.Generator/bin/Release/netstandard2.0/Game.Generator.dll \
+   UnityProject/Assets/Plugins/RoslynAnalyzers/
+```
+
+**Windows（PowerShell）**
+```powershell
+dotnet build -c Release .\src\Game.Generator\Game.Generator.csproj
+
+Copy-Item .\src\Game.Generator\bin\Release\netstandard2.0\Game.Generator.dll `
+  .\UnityProject\Assets\Plugins\RoslynAnalyzers\ -Force
+```
+
+### 8）生产级生成器质量清单
+- 推荐 `IIncrementalGenerator`（更快更稳定）
+- 禁止任何磁盘 I/O
+- 输出命名稳定（namespace、文件名）
+- 输出可行动的诊断：
+  - ID 重复
+  - 非 public 类型
+  - 缺少约定接口/基类（如果你强制）
+
+### 9）CI 清单（最容易缺失的环节）
+- CI 构建 generator DLL
+- 同步到 Unity 工程
+- Unity batchmode 编译
+- 跑一次 IL2CPP build smoke test（让 AOT 失败尽早暴露）
 
 ## 上线前检查清单
 
-- **CI 里固定跑 IL2CPP 构建**（不是“发布前一周才跑”）
-- **启动预算**已测量（没有隐藏扫描成本）
-- **注册表正确性**已校验（ID 唯一、类型合法、必要时顺序确定）
-- **热点路径**在目标机型上完成 Profile（避免分配与间接调用过深）
-- **跨平台一致性**验证通过（同一份内容产出同一份注册结果）
+- CI 里固定跑 IL2CPP 构建（不是“发布前一周才跑”）
+- 启动预算已测量（无隐藏扫描成本）
+- 注册表正确性已校验（ID 唯一、类型合法）
+- 热点路径在目标机型上完成 Profile
+- 跨平台一致性验证通过
 
 ## 团队级规则建议
 
