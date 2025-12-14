@@ -1,6 +1,6 @@
 +++
 title = "AOT-Safe C# in Unity: IL2CPP Without Runtime Reflection"
-date = 2024-02-10T10:00:00Z
+date = 2025-12-14T10:00:00Z
 summary = "A production-oriented guide to AOT vs JIT, why late-bound generics fail on IL2CPP, and how to replace runtime reflection with deterministic registries generated at compile time (including how to build and integrate the generator DLL)."
 categories = ["Game Systems", "Engineering"]
 tags = ["Unity", "CSharp", "AOT", "JIT", "IL2CPP", "Generics", "SourceGenerator", "Performance"]
