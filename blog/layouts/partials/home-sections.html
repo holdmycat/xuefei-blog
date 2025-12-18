@@ -6,7 +6,17 @@
       <h2>Latest Writing</h2>
     </div>
     <div class="writing-list">
-      {{ $posts := first 3 ((where .Site.RegularPages "Section" "posts").ByDate.Reverse) }}
+      {{ $writingSection := site.GetPage "section" "posts" }}
+      {{ if not $writingSection }}
+        {{ $writingSection = site.GetPage "section" "writing" }}
+      {{ end }}
+
+      {{ $posts := slice }}
+      {{ if $writingSection }}
+        {{ $posts = first 3 ($writingSection.RegularPages.ByDate.Reverse) }}
+      {{ else }}
+        {{ $posts = first 3 ((where .Site.RegularPages "Section" "posts").ByDate.Reverse) }}
+      {{ end }}
       {{ range $posts }}
         <article class="writing-card">
           <div class="meta">
@@ -23,7 +33,9 @@
       {{ end }}
     </div>
     <div class="writing-footer">
-      {{ with $p.writing.moreHref }}<a class="small-link" href="{{ . }}">View all writing →</a>{{ end }}
+      {{ if $writingSection }}
+        <a class="small-link" href="{{ $writingSection.RelPermalink }}">View all writing →</a>
+      {{ end }}
     </div>
   </section>
 </div>

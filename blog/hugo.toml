@@ -9,6 +9,15 @@ defaultContentLanguageInSubdir = false
 
 theme = ""  # using local layouts, leave empty
 
+[params.links]
+  demo = "https://www.youtube.com/watch?v=h6gxAE1EmuE"
+  github = "https://github.com/holdmycat/Modular-Skill-System-Demo"
+  resume = "files/resume.pdf"
+  email = "clashancients@gmail.com"
+  linkedin = "https://www.linkedin.com/in/xuefei-zhao-gamedeveloper/"
+  steam = "https://store.steampowered.com/app/3680960/_/"
+  gameRepo = ""
+
 [taxonomies]
   category = "categories"
   tag = "tags"
@@ -39,14 +48,6 @@ theme = ""  # using local layouts, leave empty
       subtitleLine2 = "Designer-first workflow for faster iteration and cleaner data."
         skillEditorImage = "img/skill-editor.png"
         caption = "Used daily for 12 months in our 2-person pipeline — powering all skills, characters, and weapons (I maintain the system; my co-dev authors content)."
-      [languages.en.params.links]
-        demo = "https://www.youtube.com/watch?v=h6gxAE1EmuE"
-        github = "https://github.com/holdmycat/Modular-Skill-System-Demo"
-        resume = "files/resume.pdf"
-        email = "clashancients@gmail.com"
-        linkedin = "https://www.linkedin.com/in/xuefei-zhao-gamedeveloper/"
-        steam = "https://store.steampowered.com/app/3680960/_/"
-        gameRepo = ""
     [languages.en.params.home]
       cards = [
         { title = "SkillForge Pipeline", desc = "Designer-first skill authoring with deterministic runtime and guardrails.", href = "https://store.steampowered.com/app/3680960/_/" },
@@ -105,14 +106,6 @@ theme = ""  # using local layouts, leave empty
       subtitleLine2 = "以设计师为中心，加速迭代、保持数据干净。"
         skillEditorImage = "img/skill-editor.png"
         caption = "在我们 2 人流水线中已日常使用 12 个月，覆盖所有技能、角色和武器（我维护系统，搭档创作内容）。"
-      [languages.zh.params.links]
-        demo = "#"
-        github = "#"
-        resume = "files/resume.pdf"
-        email = "clashancients@gmail.com"
-        linkedin = "https://www.linkedin.com/in/your-profile"
-        steam = "https://store.steampowered.com/app/000000/Ebonor/"
-        gameRepo = ""
     [languages.zh.params.home]
       cards = [
         { title = "SkillForge Pipeline", desc = "面向设计师的技能编辑，确定性运行时与防护校验。", href = "https://store.steampowered.com/app/3680960/_/" },

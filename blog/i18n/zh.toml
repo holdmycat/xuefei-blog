@@ -18,3 +18,12 @@ other = "第 {{ .current }} / {{ .total }} 页"
 
 [builtWith]
 other = "使用"
+
+[watchDemo]
+other = "观看演示"
+
+[downloadResume]
+other = "下载简历"
+
+[viewGithub]
+other = "查看 GitHub"

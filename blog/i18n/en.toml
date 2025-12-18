@@ -18,3 +18,12 @@ other = "Page {{ .current }} of {{ .total }}"
 
 [builtWith]
 other = "Built with"
+
+[watchDemo]
+other = "Watch Demo"
+
+[downloadResume]
+other = "Download Resume"
+
+[viewGithub]
+other = "View GitHub"
