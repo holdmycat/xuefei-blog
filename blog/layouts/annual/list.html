@@ -1,0 +1,159 @@
+{{ define "main" }}
+  {{ $isZh := eq .Site.Language.Lang "zh" }}
+  {{ $years := .Sections }}
+  {{ $yearsSorted := sort $years "Title" "asc" }}
+
+  {{ $currentYear := now.Format "2006" }}
+  {{ $defaultYear := "" }}
+  {{ range $yearsSorted }}
+    {{ if eq .Title $currentYear }}{{ $defaultYear = $currentYear }}{{ end }}
+  {{ end }}
+  {{ if and (not $defaultYear) (gt (len $yearsSorted) 0) }}
+    {{ $defaultYear = (index $yearsSorted (sub (len $yearsSorted) 1)).Title }}
+  {{ end }}
+
+  <section class="section annual-page">
+    <div class="container">
+      <header class="section-header">
+        <h1>{{ .Title }}</h1>
+        {{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
+      </header>
+
+      {{ if not $yearsSorted }}
+        <p class="lead">{{ if $isZh }}还没有年份归档。{{ else }}No annual archives yet.{{ end }}</p>
+      {{ else }}
+        <nav class="annual-year-tabs" aria-label="{{ if $isZh }}年份{{ else }}Years{{ end }}">
+          {{ range $year := $yearsSorted }}
+            <button
+              class="annual-year-tab{{ if eq $year.Title $defaultYear }} is-active{{ end }}"
+              type="button"
+              data-year="{{ $year.Title }}"
+              aria-selected="{{ if eq $year.Title $defaultYear }}true{{ else }}false{{ end }}"
+            >
+              {{ $year.Title }}
+            </button>
+          {{ end }}
+        </nav>
+
+        <div class="annual-years" id="annualYears" data-default-year="{{ $defaultYear }}">
+          {{ range $year := $yearsSorted }}
+            {{ warnf "[annual] year=%s pages=%d regular=%d recursive=%d" $year.Title (len $year.Pages) (len $year.RegularPages) (len $year.RegularPagesRecursive) }}
+
+            {{ $reports := $year.RegularPages }}
+            {{ if eq (len $reports) 0 }}
+              {{ $reports = $year.RegularPagesRecursive }}
+            {{ end }}
+            {{ $reportsByName := sort $reports "File.ContentBaseName" "desc" }}
+            {{ $reportsSorted := sort $reportsByName "Date" "desc" }}
+
+            <section class="annual-year" data-year="{{ $year.Title }}"{{ if ne $year.Title $defaultYear }} style="display:none"{{ end }}>
+              <h2 class="annual-year-title">{{ $year.Title }}</h2>
+
+              {{ if not $reportsSorted }}
+                <p class="lead">{{ if $isZh }}暂无周报。{{ else }}No weekly reports yet.{{ end }}</p>
+              {{ else }}
+                <div class="annual-week-grid">
+                  {{ range $p := $reportsSorted }}
+                    {{ $base := "" }}
+                    {{ with $p.File }}{{ $base = .ContentBaseName }}{{ end }}
+                    {{ $weekLabel := "" }}
+                    {{ if and $base (findRE `^\\d{4}-W\\d{2}$` $base) }}
+                      {{ $weekLabel = replaceRE `^\\d{4}-(W\\d{2})$` `$1` $base }}
+                    {{ end }}
+
+                    <article class="card annual-week-card">
+                      <div class="meta">
+                        {{ if not $p.Date.IsZero }}<span>{{ $p.Date.Format "2006-01-02" }}</span>{{ end }}
+                        {{ if $weekLabel }}
+                          <span class="dot">•</span>
+                          <span>{{ $weekLabel }}</span>
+                        {{ end }}
+                      </div>
+
+                      {{ $title := $p.Title }}
+                      {{ if not $title }}{{ $title = $base }}{{ end }}
+                      <h3 class="annual-week-title"><a href="{{ $p.RelPermalink }}">{{ $title }}</a></h3>
+
+                      {{ $summary := "" }}
+                      {{ with $p.Params.summary }}{{ $summary = (printf "%v" .) | plainify }}{{ end }}
+                      {{ if not $summary }}
+                        {{ with $p.Summary }}{{ $summary = . | plainify }}{{ end }}
+                      {{ end }}
+                      {{ if not $summary }}
+                        {{ with $p.Description }}{{ $summary = . | plainify }}{{ end }}
+                      {{ end }}
+                      {{ if not $summary }}
+                        {{ $summary = $p.Plain | plainify }}
+                      {{ end }}
+                      {{ if $summary }}<p class="summary">{{ truncate 120 $summary }}</p>{{ end }}
+                    </article>
+                  {{ end }}
+                </div>
+              {{ end }}
+            </section>
+          {{ end }}
+        </div>
+
+        <script>
+          (function () {
+            var storageKey = "annual.selectedYear";
+            var yearsRoot = document.getElementById("annualYears");
+            if (!yearsRoot) return;
+
+            var tabs = Array.prototype.slice.call(
+              document.querySelectorAll(".annual-year-tab")
+            );
+            var yearSections = Array.prototype.slice.call(
+              yearsRoot.querySelectorAll(".annual-year")
+            );
+            if (tabs.length === 0 || yearSections.length === 0) return;
+
+            function setActiveYear(year) {
+              tabs.forEach(function (tab) {
+                var active = tab.getAttribute("data-year") === year;
+                tab.classList.toggle("is-active", active);
+                tab.setAttribute("aria-selected", active ? "true" : "false");
+              });
+              yearSections.forEach(function (sec) {
+                sec.style.display = sec.getAttribute("data-year") === year ? "" : "none";
+              });
+
+              try {
+                window.localStorage.setItem(storageKey, year);
+              } catch (e) {}
+            }
+
+            var years = tabs.map(function (t) { return t.getAttribute("data-year"); });
+            var params = new URLSearchParams(window.location.search);
+            var requested = params.get("year");
+            var fromStorage = null;
+            try {
+              fromStorage = window.localStorage.getItem(storageKey);
+            } catch (e) {}
+
+            var defaultYear = yearsRoot.getAttribute("data-default-year");
+            var initial =
+              (requested && years.indexOf(requested) >= 0) ? requested :
+              (fromStorage && years.indexOf(fromStorage) >= 0) ? fromStorage :
+              (defaultYear && years.indexOf(defaultYear) >= 0) ? defaultYear :
+              years[0];
+
+            setActiveYear(initial);
+
+            tabs.forEach(function (tab) {
+              tab.addEventListener("click", function () {
+                var y = tab.getAttribute("data-year");
+                if (!y) return;
+                setActiveYear(y);
+
+                var next = new URL(window.location.href);
+                next.searchParams.set("year", y);
+                window.history.replaceState({}, "", next.toString());
+              });
+            });
+          })();
+        </script>
+      {{ end }}
+    </div>
+  </section>
+{{ end }}

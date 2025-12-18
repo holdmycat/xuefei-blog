@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="{{ "css/theme.css" | relURL }}">
   <link rel="stylesheet" href="{{ "css/site.css" | relURL }}">
   <link rel="stylesheet" href="{{ "css/header.css" | relURL }}">
+  {{ if and .IsSection (eq .Section "annual") }}
+    <link rel="stylesheet" href="{{ "css/annual.css" | relURL }}">
+  {{ end }}
   {{ if .IsHome }}
     <link rel="stylesheet" href="{{ "css/home.css" | relURL }}">
     <link rel="stylesheet" href="{{ "css/home-sections.css" | relURL }}">

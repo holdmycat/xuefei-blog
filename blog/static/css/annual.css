@@ -1,0 +1,75 @@
+:root {
+  --annual-gap: 18px;
+}
+
+.annual-year-tabs {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  overflow-x: auto;
+  padding: 6px 2px;
+  margin: 14px 0 18px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.annual-year-tabs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.annual-year-tabs::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}
+
+.annual-year-tab {
+  flex: 0 0 auto;
+  border: 1px solid var(--surface-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+}
+
+.annual-year-tab:hover {
+  transform: translateY(-1px);
+  border-color: rgba(122, 165, 255, 0.6);
+}
+
+.annual-year-tab.is-active {
+  background: linear-gradient(135deg, rgba(122, 165, 255, 0.22), rgba(129, 216, 255, 0.12));
+  border-color: rgba(122, 165, 255, 0.55);
+}
+
+.annual-year-title {
+  margin-top: 10px;
+  margin-bottom: 14px;
+}
+
+.annual-week-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--annual-gap);
+}
+
+@media (max-width: 900px) {
+  .annual-week-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.annual-week-card {
+  padding: 14px;
+}
+
+.annual-week-title {
+  margin: 8px 0 0;
+}
+
+.annual-week-card .summary {
+  margin-top: 8px;
+}
