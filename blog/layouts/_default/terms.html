@@ -1,16 +1,18 @@
 {{ define "main" }}
   <section class="section list-page">
     <div class="container">
+      {{ $data := .Data }}
+      {{ $terms := $data.Terms }}
       <header class="section-header">
         <h1>{{ .Title }}</h1>
-        {{ with .Data.Plural }}
-          <p class="lead">{{ printf "%s · %d" (title .) (len .Data.Terms) }}</p>
+        {{ with $data.Plural }}
+          <p class="lead">{{ printf "%s · %d" (title .) (len $terms) }}</p>
         {{ end }}
       </header>
 
-      {{ if gt (len .Data.Terms) 0 }}
+      {{ if gt (len $terms) 0 }}
         <div class="tag-list">
-          {{ range .Data.Terms.Alphabetical }}
+          {{ range $terms.Alphabetical }}
             <a class="pill" href="{{ .Page.RelPermalink }}">{{ .Page.LinkTitle }} ({{ .Count }})</a>
           {{ end }}
         </div>
