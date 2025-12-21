@@ -216,6 +216,17 @@ body {
 
 .btn-secondary:hover { transform: translateY(-1px); }
 
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  min-width: 0;
+}
+
+.tag-row {
+  margin-top: 16px;
+}
+
 .tag, .pill {
   display: inline-flex;
   align-items: center;
@@ -226,6 +237,17 @@ body {
   font-weight: 700;
   border: 1px solid rgba(122, 165, 255, 0.35);
   font-size: 12px;
+  min-width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tag-more {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: rgba(122, 165, 255, 0.25);
 }
 
 .divider-line {

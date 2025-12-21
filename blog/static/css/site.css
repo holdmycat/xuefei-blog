@@ -46,7 +46,16 @@ a:hover { color: var(--accent); }
 .menu-link { padding: 6px 0; border-bottom: 2px solid transparent; color: var(--text); }
 .menu-link:hover { border-color: var(--accent); }
 
-.meta { display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 14px; }
+.meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 8px;
+  row-gap: 6px;
+  color: var(--text-muted);
+  font-size: 14px;
+  min-width: 0;
+}
 .dot { color: var(--divider); }
 
 .site-main { max-width: 1100px; margin: 0 auto; padding: 0 18px; }

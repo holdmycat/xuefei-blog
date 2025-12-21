@@ -12,8 +12,16 @@
             <div class="meta">
               <span>{{ .Date.Format "Jan 2, 2006" }}</span>
               {{ with .Params.tags }}
+                {{ $tags := . }}
+                {{ $maxTags := 6 }}
+                {{ $total := len $tags }}
                 <span class="dot">•</span>
-                {{ range . }}<span class="tag">#{{ . }}</span>{{ end }}
+                <div class="tag-list">
+                  {{ range first $maxTags $tags }}<span class="tag">#{{ . }}</span>{{ end }}
+                  {{ if gt $total $maxTags }}
+                    <span class="tag tag-more">+{{ sub $total $maxTags }}</span>
+                  {{ end }}
+                </div>
               {{ end }}
             </div>
             <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>

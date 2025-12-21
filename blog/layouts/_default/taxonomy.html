@@ -1,0 +1,38 @@
+{{ define "main" }}
+  <section class="section list-page">
+    <div class="container">
+      <header class="section-header">
+        <h1>{{ .Title }}</h1>
+        {{ $count := len .Pages }}
+        {{ with .Data.Singular }}
+          <p class="lead">{{ printf "%s · %d" (title .) $count }}</p>
+        {{ end }}
+      </header>
+
+      {{ $paginator := .Paginate (.Pages.ByDate.Reverse) }}
+      {{ if gt $count 0 }}
+        <div class="list-card-grid">
+          {{ range $paginator.Pages }}
+            <article class="card">
+              <div class="meta">
+                <span>{{ .Date.Format "Jan 2, 2006" }}</span>
+                {{ with (.GetTerms "tags") }}
+                  <span class="dot">•</span>
+                  <div class="tag-list">
+                    {{ range . }}<a class="tag" href="{{ .RelPermalink }}">#{{ .LinkTitle }}</a>{{ end }}
+                  </div>
+                {{ end }}
+              </div>
+              <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+              {{ with .Summary }}<p>{{ . }}</p>{{ end }}
+            </article>
+          {{ end }}
+        </div>
+      {{ else }}
+        <p class="lead">{{ i18n "noContent" | default "Nothing here yet." }}</p>
+      {{ end }}
+
+      {{ template "partials/pagination.html" . }}
+    </div>
+  </section>
+{{ end }}
