@@ -10,7 +10,6 @@
         {{ with $p.hero.subtitleLine2 }}{{ . }}{{ else }}{{ $p.hero.subtitle }}{{ end }}
       </p>
       <div class="hero-actions">
-        {{ with $p.links.demo }}<a class="btn primary" href="{{ . }}">{{ i18n "watchDemo" }}</a>{{ end }}
         {{ with $p.links.resume }}<a class="btn secondary" href="{{ . | relURL }}">{{ i18n "downloadResume" }}</a>{{ end }}
         {{ with $p.links.github }}<a class="btn ghost" href="{{ . }}">{{ i18n "viewGithub" }}</a>{{ end }}
       </div>
