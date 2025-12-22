@@ -5,30 +5,15 @@
         <h1>{{ .Title }}</h1>
         {{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
       </header>
-      <div class="list-card-grid">
-        {{ $paginator := .Paginate .RegularPagesRecursive }}
+      {{ $paginator := .Paginate .RegularPagesRecursive }}
+      <ul class="post-list">
         {{ range $paginator.Pages }}
-          <article class="card">
-            <div class="meta">
-              <span>{{ .Date.Format "Jan 2, 2006" }}</span>
-              {{ with .Params.tags }}
-                {{ $tags := . }}
-                {{ $maxTags := 6 }}
-                {{ $total := len $tags }}
-                <span class="dot">•</span>
-                <div class="tag-list">
-                  {{ range first $maxTags $tags }}<span class="tag">#{{ . }}</span>{{ end }}
-                  {{ if gt $total $maxTags }}
-                    <span class="tag tag-more">+{{ sub $total $maxTags }}</span>
-                  {{ end }}
-                </div>
-              {{ end }}
-            </div>
-            <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-            {{ with .Summary }}<p>{{ . }}</p>{{ end }}
-          </article>
+          <li class="post-row">
+            <a class="post-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+            <time class="post-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+          </li>
         {{ end }}
-      </div>
+      </ul>
       {{ template "partials/pagination.html" . }}
     </div>
   </section>

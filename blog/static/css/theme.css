@@ -37,6 +37,47 @@ body {
   margin: 0 0 16px;
 }
 
+.post-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.post-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.post-row:first-child {
+  border-top: 1px solid var(--surface-border);
+}
+
+.post-title {
+  flex: 1;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.post-date {
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .post-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .post-date {
+    white-space: normal;
+  }
+}
+
 .list-page .card-grid,
 .list-card-grid {
   display: grid;
