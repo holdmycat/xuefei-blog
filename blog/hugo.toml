@@ -1,7 +1,7 @@
 baseURL = "https://holdmycat.github.io/xuefei-blog/"
 title = "Xuefei Blog"
 languageCode = "en-us"
-defaultContentLanguage = "en"
+defaultContentLanguage = "zh"
 defaultContentLanguageInSubdir = false
 
 [pagination]
@@ -32,7 +32,7 @@ theme = ""  # using local layouts, leave empty
 [languages]
   [languages.en]
     languageName = "English"
-    weight = 1
+    weight = 2
     title = "Xuefei Blog"
     contentDir = "content/en"
     [languages.en.params]
@@ -90,7 +90,7 @@ theme = ""  # using local layouts, leave empty
 
   [languages.zh]
     languageName = "中文"
-    weight = 2
+    weight = 1
     title = "雪飞的博客"
     contentDir = "content/zh"
     [languages.zh.params]
