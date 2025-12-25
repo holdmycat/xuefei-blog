@@ -1,103 +1,101 @@
 ---
-title: "网络架构重构：从继承到组合 (From Inheritance to Composition)"
-date: 2025-12-21T11:00:00+08:00
+title: "网络架构重构：集中式分发与指挥官层级"
+date: 2025-12-25
+tags: ["Architecture", "Unity", "SLG"]
 draft: false
-tags: ["Unity", "Architecture", "Networking", "Refactoring"]
-categories: ["Tech"]
-summary: "深入解析为何我们放弃了继承式 NetworkMonoBehaviour，转而采用组合模式来构建更灵活、内存安全的 Unity 网络架构。"
 ---
 
-## 1. 背景与问题
+# 网络架构重构：集中式分发与指挥官层级
 
-项目的网络层雏形是基于简单的 RPC 广播和继承式组件。随着“双世界”架构（Server Logic / Client View）的深入，原有的设计暴露出了三个主要问题：
+## 1. 背景 (Context)
 
-1. **参数传输僵化**：`RpcSpawnObject` 只支持基本类型，无法灵活传递复杂的初始化数据（如队伍及内部 Squad 配置）。
-2. **基类膨胀与耦合**：为了复用 `BindId` 逻辑，`ClientRoomManager` 被迫继承 `NetworkMonoBehaviour`，但这引入了不需要的 MonoBehaviour 生命周期开销，且限制了继承链。
-3. **生命周期缺失**：网络对象没有统一的销毁回调，导致 Client 端在对象销毁后，RPC 监听器仍然驻留在总线中，造成内存泄漏。
+在早期的开发阶段，我们的网络对象生成逻辑较为分散。`ClientRoomManager` 负责监听所有的网络生成事件，并尝试组装各种游戏对象。随着引入 SLG 玩法中的层级结构（Commander -> Legion -> Squad -> Unit），这种扁平化的生成方式暴露出了以下问题：
 
-## 2. 解决方案
+1. **监听器地狱 (Listener Hell)**: 每个网络对象都需要手动注册 RPC 监听器，且容易遗漏。
+2. **层级混乱**: `ClientRoomManager` 需要手动维护 ID 映射来构建父子关系，逻辑复杂且脆弱。
+3. **时序问题**: 无法保证父对象（如 Commander）在子对象（如 Legion）之前初始化完毕。
 
-### 2.1 协议升级：基于 Payload 的通用传输
+我们需要一种更健壮、符合 "Server-Authoritative" 且支持深层级对象生成的网络架构。
 
-引入泛型序列化与 Payload 结构，解耦了“生成指令”与“生成数据”。
+## 2. 架构决策 (Decision)
+
+我们决定实施 **集中式分发 (Centralized Dispatch)** 和 **指挥官中心化生成 (Commander-Centric Spawning)** 模式。
+
+### 2.1 集中式分发 (Centralized Dispatch)
+
+引入 **路由器 (Router)** 概念。网络消息不再广播，而是由特定的“路由器”对象接收并分发。
+
+- **根路由器 (`ClientRoomManager`)**:
+  - 监听固定 ID (`ROOM_MANAGER_NET_ID`)。
+  - **职责**: 仅负责处理顶级对象（如 `Player/Commander`）的生成。
+  - 对于非顶级对象（如 `Legion`），它会忽略，交由下级路由器处理。
+
+- **二级路由器 (`ClientCommander`)**:
+  - 监听服务器分配给它的动态 NetId。
+  - **职责**: 负责处理归属于它的子对象（如 `Legion`）的生成。
+
+### 2.2 自动装配 (Auto-Wiring)
+
+在 `SimulatedNetworkBus` 中增强了 `RegisterSpawns` 方法。
+
+- **决策**: 当注册一个网络对象时，默认自动将其 `OnRpc` 方法注册为该 NetId 的监听器。
+- **收益**: 开发者只需调用一次注册，即可确保对象能收到发往其 NetId 的所有消息，杜绝了手动注册遗漏的问题。
+
+## 3. 细节与示例 (Details)
+
+### 3.1 核心流程时序
+
+```mermaid
+sequenceDiagram
+    participant S_Cmd as ServerCommander
+    participant Bus as SimulatedNetworkBus
+    participant C_RM as ClientRoomManager
+    participant C_Cmd as ClientCommander
+    participant C_Legion as ClientLegion
+
+    Note over S_Cmd, C_RM: 1. 顶级对象生成 (由 RoomManager 路由)
+    Server->>Bus: RpcSpawnObject(Type=Player, NetId=100)
+    Bus->>C_RM: OnRpc(Spawn Player)
+    C_RM->>C_Cmd: Create & Init(NetId=100)
+    Note right of C_Cmd:ClientCommander 现在成为 NetId:100 的路由器
+
+    Note over S_Cmd, C_Legion: 2. 子对象生成 (由 Commander 路由)
+    S_Cmd->>Bus: RpcSpawnObject(Type=Legion, NetId=101)
+    Bus->>C_Cmd: OnRpc(Spawn Legion)
+    C_Cmd->>C_Legion: Create & Init(NetId=101)
+    C_Legion->>C_Legion: SetParent(ClientCommander)
+```
+
+### 3.2 代码变更关键点
+
+**ClientRoomManager.cs**:
 
 ```csharp
-// 网络包定义
-public struct RpcSpawnObject : IRpc
+public override void OnRpc(IRpc rpc)
 {
-    public NetworkPrefabType Type;
-    public uint NetId;
-    public byte[] Payload; // 序列化后的二进制数据
-}
-
-// 具体的生成数据包
-public struct TeamSpawnPayload
-{
-    public FactionType Faction;
-    public long TeamId;
-    public uint OwnerNetId; // 动态归属权 ID
-    public List<long> SquadList;
+    if (rpc is RpcSpawnObject spawnMsg && spawnMsg.Type == NetworkPrefabType.Player)
+    {
+        // 只处理 Commander 生成
+        OnSpawnObject(spawnMsg);
+    }
+    // 忽略 Legion/Squad，它们由 ClientCommander 处理
 }
 ```
 
-**优势**：
-
-* **灵活性**：新增 prefab 类型只需增加对应的 Payload struct，无需修改 RPC 定义。
-* **归属权动态化**：通过 payload 传递 `OwnerNetId`，Client 端可以在运行时查找并链接任意 Owner（Player 或 AI），打破了之前“默认链接本地玩家”的硬编码限制。
-
-### 2.2 架构解耦：组合优于继承 (Composition over Inheritance)
-
-废弃了 `NetworkMonoBehaviour` 基类，改用组合模式。
+**ClientCommander.cs**:
 
 ```csharp
-// 抽取 ID 逻辑到独立 Handle
-public struct NetworkIdHandle
+public override void OnRpc(IRpc rpc)
 {
-    private uint _netid;
-    public uint NetId => _netid;
-    public void BindId(uint netid) { ... }
-}
-
-// ClientRoomManager 现在的样子
-public class ClientRoomManager : MonoBehaviour, IRoomManager
-{
-    private NetworkIdHandle _netHandle; // 组合使用
-    public void BindId(uint id) => _netHandle.BindId(id);
-    
-    // ...
+    if (rpc is RpcSpawnObject spawnMsg && spawnMsg.Type == NetworkPrefabType.Legion)
+    {
+        // 收到发给自己的消息，要求生成下属 Legion
+        var legion = _legionFactory.Create();
+        // ... 初始化并注册 ...
+    }
 }
 ```
 
-**优势**：
+## 4. 总结 (Summary)
 
-* **清晰的继承链**：`ClientRoomManager` 回归纯净的 `MonoBehaviour`。
-* **逻辑复用**：`NetworkIdHandle` 可以被任何类（包括纯 C# 类）持有，复用性更强。
-
-### 2.3 生命周期标准化
-
-在接口层面强制约束生命周期。
-
-```csharp
-public interface INetworkBehaviour
-{
-    uint NetId { get; }
-    
-    // 初始化 (Async)
-    UniTask InitAsync(); 
-    
-    // 逻辑帧
-    void Tick(int tick);
-    
-    // 销毁清理 (必须实现)
-    UniTask ShutdownAsync();
-}
-```
-
-**优势**：
-
-* **防止泄漏**：`ClientRoomManager.OnDestroyObject` 统一调用 `ShutdownAsync`，确保 RPC 监听器被注销。
-* **统一调度**：Bus 层可以统一管理所有网络对象的 Tick 更新。
-
-## 3. 总结
-
-这次重构不仅是代码层面的清理，更是架构思想的转变。通过消除不必要的继承，我们让每个组件的职责更加单一；通过标准化的生命周期，我们保证了系统的健壮性。这为后续更复杂的技能系统（NP_Tree）接入打下了坚实基础。
+本次重构通过将网络消息分发权下放，构建了清晰的 **Server -> Client Router -> Sub-Router** 的层级结构。这不仅解决了代码耦合问题，还天然保证了 SLG 复杂的对象层级关系在网络同步中的正确性。
