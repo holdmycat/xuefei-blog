@@ -30,7 +30,7 @@ jobs:
 
       - name: Build site
         working-directory: blog
-        run: hugo --minify --baseURL "https://holdmycat.github.io/xuefei-blog/"
+        run: hugo --minify --buildDrafts --buildFuture --baseURL "https://holdmycat.github.io/xuefei-blog/"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
