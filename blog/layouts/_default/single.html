@@ -1,5 +1,9 @@
 {{ define "main" }}
 <article class="post">
+  {{ $summary := .Summary }}
+  {{ $content := .Content }}
+  {{ $showSummary := and $summary (ne (plainify $summary) (plainify $content)) }}
+
   <div class="meta">
     <span>{{ .Date.Format "Jan 2, 2006" }}</span>
     {{ with (.GetTerms "categories") }}
@@ -12,8 +16,8 @@
     {{ end }}
   </div>
   <h1>{{ .Title }}</h1>
-  {{ with .Summary }}<p class="lead">{{ . }}</p>{{ end }}
-  <div class="content">{{ .Content }}</div>
+  {{ if $showSummary }}<p class="lead">{{ $summary }}</p>{{ end }}
+  <div class="content">{{ $content }}</div>
 
   {{ with (.GetTerms "tags") }}
     <div class="tag-row tag-list">
