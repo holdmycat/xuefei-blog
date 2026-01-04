@@ -54,16 +54,19 @@ Instead of blindly serializing the entire tree, use the idea of **"Layered Cloni
 
 4. **Utility Integration**
     - `NPDataCloneUtility.CloneNode` prioritizes calling the object's `Clone()` method.
-    - Fallback schemes are considered only when the object does not implement special `Clone` logic (rare cases), although the goal is to completely remove serialization.
+    - **Fallback Mechanism**: Currently, serialization fallback is retained for a minority of uncovered types (Nodes/BBValues that haven't implemented `Clone`). The goal is to eventually "completely remove" serialization; remaining types can be implemented on an as-needed basis.
 
-### 3.3 Pros and Cons
+### 3.3 Pros and Cons & Performance Bottlenecks
 
 - **Pros**:
   - **Zero Pollution**: Mechanically guarantees the independence of runtime data.
   - **High Performance**: Removes expensive reflection and serialization/deserialization steps, performing only necessary memory copying.
-  - **Controllability**: Developers can precisely control which fields need to be cloned and which need to be reset.
-- **Cons**:
-  - **Development Cost**: When adding complex data structures, one must remember to implement the `Clone()` method (but this conforms to standard C# / Prototype Pattern practices).
+  - **No Lock Contention**: The manual clone path eliminates the global lock contention issues found in BSON serialization libraries, leaving only pure memory allocation and data copying.
+- **Cons & Remaining Bottlenecks**:
+  - **Development Cost**: When adding complex data structures, one must remember to implement the `Clone()` method (conforming to Prototype Pattern).
+  - **Memory Allocation**: The performance bottleneck of manual cloning is now primarily **memory allocation and copying** (linear growth).
+- **Future Optimization**:
+  - For massive-scale (10k+) unit creation, strategies like **Object Pooling** or **Shared Immutable Data (Flyweight)** can be introduced to further reduce memory allocation.
 
 ## 4. Conclusion
 
