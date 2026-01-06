@@ -58,7 +58,7 @@ tags: ["Architecture", "Zenject", "Unity", "BehaviorTree", "FSM"]
 graph TD
     subgraph "Lifecycle (BaseSquad/ServerSquad)"
         Init[InitAsync] -->|1. Create Factory| FSM[SquadStackFsm]
-        Init -->|2. Register States| RegStates[Register State: Born/Idle/Death]
+        Init -->|2. Register States| RegStates["Register State: Born/Idle/Death"]
         Init -->|3. Register Network| Net[NetworkBus]
     end
 
@@ -68,17 +68,17 @@ graph TD
         
         BT -- "Action: TransitionState(NewState)" --> FSM
         
-        FSM -->|1. Change Active Stack| Stack[[Active State Stack]]
-        Stack -->|2. OnEnter| StateObj[SquadStateBase (Born/Idle/Death)]
+        FSM -->|1. Change Active Stack| Stack[["Active State Stack"]]
+        Stack -->|2. OnEnter| StateObj["SquadStateBase (Born/Idle/Death)"]
         
         StateObj -->|3. Set Blackboard| BB
         StateObj -- "4. OnStateChanged" --> Net
     end
 
     subgraph "State Details"
-        StateObj -- "Start" --> S_Enter[OnEnter: Write BB]
-        S_Enter --> S_Update[OnUpdate: Logic]
-        S_Update --> S_Remove[OnRemove: Cleanup/Reset BB]
+        StateObj -- "Start" --> S_Enter["OnEnter: Write BB"]
+        S_Enter --> S_Update["OnUpdate: Logic"]
+        S_Update --> S_Remove["OnRemove: Cleanup/Reset BB"]
     end
 
     subgraph "Client Logic"
