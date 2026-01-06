@@ -52,6 +52,45 @@ This document details the current collaborative framework, design rules, and con
 - **Inversion of Control**: Action Nodes trigger FSM state changes by calling `NP_ChangeSquadStackStateAction`, `NP_RemoveSquadStackStateAction`, or `NP_ClearSquadStackStateAction`.
 - **Pacing Control**: Uses nodes like Log and Wait to control the pacing of business logic (e.g., waiting 0.5s for a spawn animation).
 
+## 1.5 Collaboration Flowchart
+
+```mermaid
+graph TD
+    subgraph "Lifecycle (BaseSquad/ServerSquad)"
+        Init[InitAsync] -->|1. Create Factory| FSM[SquadStackFsm]
+        Init -->|2. Register States| RegStates[Register State: Born/Idle/Death]
+        Init -->|3. Register Network| Net[NetworkBus]
+    end
+
+    subgraph "Server Logic"
+        BT[Behavior Tree] -->|Check Condition| BB((Blackboard))
+        BB -->|Return State| BT
+        
+        BT -- "Action: TransitionState(NewState)" --> FSM
+        
+        FSM -->|1. Change Active Stack| Stack[[Active State Stack]]
+        Stack -->|2. OnEnter| StateObj[SquadStateBase (Born/Idle/Death)]
+        
+        StateObj -->|3. Set Blackboard| BB
+        StateObj -- "4. OnStateChanged" --> Net
+    end
+
+    subgraph "State Details"
+        StateObj -- "Start" --> S_Enter[OnEnter: Write BB]
+        S_Enter --> S_Update[OnUpdate: Logic]
+        S_Update --> S_Remove[OnRemove: Cleanup/Reset BB]
+    end
+
+    subgraph "Client Logic"
+        Net -->|RPC: RpcSquadStackStateChanged| ClientFSM[Client SquadStackFsm]
+        ClientFSM -->|TransitionState| ClientStack[[Client Active Stack]]
+        ClientStack -->|Sync Visuals| Visuals[Animation/VFX]
+    end
+
+    classDef code font-family:Courier New,font-size:14px;
+    class Init,FSM,RegStates,Step1,Step2,Stack,StateObj,BB,BT,Net,ClientFSM,ClientStack,Visuals,S_Enter,S_Update,S_Remove code;
+```
+
 ## 2. Design Rules
 
 1. **Blackboard as Single Source of Truth**:

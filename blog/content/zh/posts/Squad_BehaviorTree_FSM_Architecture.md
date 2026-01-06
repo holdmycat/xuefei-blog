@@ -52,6 +52,45 @@ tags: ["Architecture", "Zenject", "Unity", "BehaviorTree", "FSM"]
 - **反向控制**: 行为树节点（Action Node）调用 `NP_ChangeSquadStackStateAction`、`NP_RemoveSquadStackStateAction` 或 `NP_ClearSquadStackStateAction` 来触发 FSM 的状态变更。
 - **节奏控制**: 利用 Log、Wait 等节点控制业务逻辑的执行节奏（如播放出生动画等待 0.5s）。
 
+## 1.5 协同工作流程图 (Collaboration Flowchart)
+
+```mermaid
+graph TD
+    subgraph "Lifecycle (BaseSquad/ServerSquad)"
+        Init[InitAsync] -->|1. Create Factory| FSM[SquadStackFsm]
+        Init -->|2. Register States| RegStates[Register State: Born/Idle/Death]
+        Init -->|3. Register Network| Net[NetworkBus]
+    end
+
+    subgraph "Server Logic"
+        BT[Behavior Tree] -->|Check Condition| BB((Blackboard))
+        BB -->|Return State| BT
+        
+        BT -- "Action: TransitionState(NewState)" --> FSM
+        
+        FSM -->|1. Change Active Stack| Stack[[Active State Stack]]
+        Stack -->|2. OnEnter| StateObj[SquadStateBase (Born/Idle/Death)]
+        
+        StateObj -->|3. Set Blackboard| BB
+        StateObj -- "4. OnStateChanged" --> Net
+    end
+
+    subgraph "State Details"
+        StateObj -- "Start" --> S_Enter[OnEnter: Write BB]
+        S_Enter --> S_Update[OnUpdate: Logic]
+        S_Update --> S_Remove[OnRemove: Cleanup/Reset BB]
+    end
+
+    subgraph "Client Logic"
+        Net -->|RPC: RpcSquadStackStateChanged| ClientFSM[Client SquadStackFsm]
+        ClientFSM -->|TransitionState| ClientStack[[Client Active Stack]]
+        ClientStack -->|Sync Visuals| Visuals[Animation/VFX]
+    end
+
+    classDef code font-family:Courier New,font-size:14px;
+    class Init,FSM,RegStates,Step1,Step2,Stack,StateObj,BB,BT,Net,ClientFSM,ClientStack,Visuals,S_Enter,S_Update,S_Remove code;
+```
+
 ## 2. 设计规则
 
 1. **黑板单一判定源**:
