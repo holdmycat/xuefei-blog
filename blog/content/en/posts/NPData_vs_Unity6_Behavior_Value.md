@@ -34,7 +34,11 @@ tags: ["Architecture", "Unity", "AI", "LLM", "Strategy"]
 
 - **Black Box & Limitations**: Core logic is encapsulated within the Package. Modifying low-level execution flow (e.g., inserting specific network sync frames) is extremely difficult.
 - **Architectural Coupling**: Strongly relies on ECS or specific Mono encapsulation. If the project uses a **Dual World (Logic/View Separation)** or **Lockstep** architecture, reusing its Runtime directly is very hard.
-- **Closed Data Format**: Although graph-based, the serialization format often changes with Unity versions, making text-level merging or direct generation by external tools (Python/LLM) difficult.
+- **Closed Data Format (Critical Pain Point)**:
+  - Unity 6 exports a **Proprietary Binary Stream**, also known as "Baked Data".
+  - **Non-Customizable**: Developers cannot intervene in its underlying serialization Schema (field arrangement, metadata).
+  - **Broken Toolchain**: This is strategically extremely closed. It means we **absolutely cannot** use Python, Go, or LLMs (ChatGPT) to read, analyze, or batch-modify these assets.
+  - *This is a taboo for general-purpose plugins*: It attempts to mask "closedness" with "generality," causing us to lose control over core assets. Once we need to build a large-scale AI automation pipeline (e.g., using Python scripts to batch adjust monster stats), the Unity solution becomes a direct blocker.
 
 ### 2. In-House NPData Behavior (Current System)
 
