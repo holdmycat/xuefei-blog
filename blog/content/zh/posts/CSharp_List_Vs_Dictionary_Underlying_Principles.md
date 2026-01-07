@@ -1,6 +1,6 @@
 ---
 title: "C# 集合底层原理：Dictionary 与 List 的实现机制解析"
-date: 2026-01-07T11:09:04+08:00
+date: 2026-01-07T11:11:46+08:00
 draft: false
 tags: ["CSharp", "DotNet", "Performance", "DataStructures", "Interview"]
 ---

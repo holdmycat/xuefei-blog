@@ -1,6 +1,6 @@
 ---
 title: "Underlying Principles of C# Collections: List vs Dictionary Implementation Analysis"
-date: 2026-01-07T11:09:04+08:00
+date: 2026-01-07T11:11:46+08:00
 draft: false
 tags: ["CSharp", "DotNet", "Performance", "DataStructures", "Interview"]
 ---
