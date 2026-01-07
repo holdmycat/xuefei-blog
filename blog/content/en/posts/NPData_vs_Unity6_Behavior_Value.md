@@ -54,7 +54,9 @@ tags: ["Architecture", "Unity", "AI", "LLM", "Strategy"]
 **Cons**:
 
 - **Maintenance Cost**: Requires maintaining Editor code (GraphView); Unity upgrades might break Editor APIs.
-- **Performance Ceiling**: Without rewriting the Runtime using Burst/Job, pure C# interpretation performance at 5000+ units might differ from Unity 6 native.
+- **Current Runtime Implementation (Temporary Gap)**: Currently, the runtime uses pure C# execution.
+  - *Note: This is independent of the graphical tool itself, but rather a difference in the underlying executor.*
+  - Unity 6 native solution comes with Burst/Job optimization. However, since our data structure is **Pure Data**, we can absolutely implement a "DOTS Runtime" in the future to consume this data, closing or even exceeding this performance gap. This is exactly the advantage of a white-box architecture.
 
 ---
 

@@ -55,7 +55,9 @@ tags: ["Architecture", "Unity", "AI", "LLM", "Strategy"]
 **劣势**：
 
 - **维护成本**：需要自己维护编辑器代码 (GraphView)，Unity 升级可能会破坏编辑器 API。
-- **性能上限**：如果没有用 Burst/Job 重写 Runtime，单纯 C# 解释执行在 5000+ 单位时可能不如 Unity 6 原生。
+- **当前 Runtime 实现 (暂时的差距)**：目前 Runtime 采用纯 C# 执行。
+  - *注：这与图形化工具无关，而是底层执行器的实现差异。*
+  - Unity 6 原生自带 Burst/Job 优化。但由于我们的数据结构是 **纯数据 (Pure Data)**，未来我们完全可以编写一个 "DOTS Runtime" 来读取这份数据，从而抹平甚至超越这个性能差距。这也正是白盒架构的优势。
 
 ---
 
