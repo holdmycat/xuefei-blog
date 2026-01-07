@@ -34,6 +34,10 @@ tags: ["Architecture", "Unity", "AI", "LLM", "Strategy"]
 **劣势 (对于特定项目)**：
 
 - **黑盒与限制**：核心逻辑封装在 Package 内部，修改底层执行流（如插入特定的网络同步帧）极其困难。
+- **隐性重度依赖 (Project Contamination)**：
+  - 虽然 **表面上** 支持 GameObject，不需要写 ECS 代码。
+  - 但 **底层** 引入了大量 DOTS 相关包 (Burst, Collections, Serialization, Properties)。
+  - 这让项目被迫背负沉重的各种 DOTS 依赖包，增加了构建体积和升级风险。对于只要一个轻量 AI 的项目来说，是“大炮打蚊子”。
 - **架构强绑定**：强依赖 ECS 或者特定的 Mono 封装。如果项目是 **双端逻辑分离** (Dual World) 或 **帧同步** 架构，很难直接复用其 Runtime。
 - **数据格式封闭 (核心痛点)**：
   - Unity 6 导出的是 **专有二进制流 (Proprietary Binary Stream)**，即 "Baked Data"。

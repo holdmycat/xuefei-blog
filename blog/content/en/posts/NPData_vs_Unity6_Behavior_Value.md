@@ -33,6 +33,10 @@ tags: ["Architecture", "Unity", "AI", "LLM", "Strategy"]
 **Cons (For specific projects)**:
 
 - **Black Box & Limitations**: Core logic is encapsulated within the Package. Modifying low-level execution flow (e.g., inserting specific network sync frames) is extremely difficult.
+- **Implicit Heavy Dependency (Project Contamination)**:
+  - While it **superficially** supports GameObjects without writing ECS code.
+  - **Underlyingly**, it imports massive DOTS-related packages (Burst, Collections, Serialization, Properties).
+  - This forces the project to carry heavy DOTS dependencies, increasing build size and upgrade risks. For a project needing lightweight AI, it's "using a cannon to kill a mosquito".
 - **Architectural Coupling**: Strongly relies on ECS or specific Mono encapsulation. If the project uses a **Dual World (Logic/View Separation)** or **Lockstep** architecture, reusing its Runtime directly is very hard.
 - **Closed Data Format (Critical Pain Point)**:
   - Unity 6 exports a **Proprietary Binary Stream**, also known as "Baked Data".
