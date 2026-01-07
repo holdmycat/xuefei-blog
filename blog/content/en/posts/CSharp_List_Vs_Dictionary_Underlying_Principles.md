@@ -1,11 +1,11 @@
 ---
-title: "Underlying Principles of C# Collections: List vs Dictionary"
-date: 2026-01-07T11:03:27+08:00
+title: "Underlying Principles of C# Collections: List vs Dictionary Implementation Analysis"
+date: 2026-01-07T11:09:04+08:00
 draft: false
 tags: ["CSharp", "DotNet", "Performance", "DataStructures", "Interview"]
 ---
 
-# Underlying Principles of C# Collections: List vs Dictionary
+# Underlying Principles of C# Collections: List vs Dictionary Implementation Analysis
 
 > This article systematically introduces the two most commonly used collections in C#: **List<T> and Dictionary<TKey, TValue>**, from four perspectives: **underlying data structures, time complexity, memory layout, and engineering practices**.
 
