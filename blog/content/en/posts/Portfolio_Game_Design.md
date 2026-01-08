@@ -41,14 +41,19 @@ The game features no traditional Lobby, adopting a "Linear Roguelite" structure.
 
 Total of 5 stages, indexed `Stage 0` to `Stage 4`.
 
-#### A. Battle Phase
+#### A. Battle Phase - "Whiteout Survival" Style
 
-* **Load**: Minimal change in camera/scene, or simply refreshing the Monster `Spawner` config.
-* **Process**: Auto-combat. Player can only observe, adjust camera, and inspect unit info (Debug Panel).
-* **End Condition**:
-  * **Win**: All enemies dead.
-  * **Lose**: All allies dead (or timeout).
-  * **Handle**: Regardless of result, proceed to [B. Result Phase].
+* **Core Mechanics**:
+  * **Formation**: Front Row takes damage (Tank), Back Row deals damage/supports (DPS/Support).
+  * **Commander & Legion**: Commanders lead Legions into battle.
+  * **Energy & Skills**: Commanders accumulate **Energy** via attacking/taking damage. Ultimate Skills auto-cast when Energy is full.
+  * **Auto-Targeting**: Combat is purely AI-driven based on aggro/position. Player **cannot manually cast skills**.
+* **Win/Loss Condition**:
+  * **Time Limit**: Fail if enemy is not wiped out within 90s.
+  * **Wipe Out**: All units of one side reach 0 HP.
+* **Flow**:
+  * Countdown -> Entry/Spawn -> Auto-Battle -> Slow Motion Finish -> Settlement.
+  * Proceed to [B. Result Phase] regardless of result (Roguelite rule adjustment).
 
 #### B. Result & Upgrade
 
