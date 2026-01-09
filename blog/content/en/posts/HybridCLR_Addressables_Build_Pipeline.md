@@ -102,124 +102,100 @@ Combining Addressables and HybridCLR, we divide the environment into four levels
 
 ## 3. Version Control & Rollback Strategy
 
-To address the common synchronization issues between resources and code in hot updates, we adopt a strict **Four-Track Versioning + Unified Strategy**.
+We adopt a strict **Four-Track Versioning** strategy combined with **Server-Side Manifest Control**.
 
-### 3.1 Responsibilities & Rules
+### 3.1 Version Definition & Execution Rules
 
-#### 1) appVersion (Package Version)
+#### 1) UpdateManifest.json Template
 
-**Definition**: Corresponds to the native application version (Major.Minor.Patch).
-**Update Rule**: Updates ONLY when **Package Content Changes**.
-
-- AOT code / Main project code (non-hotfix) changes.
-- Engine upgrade, PlayerSettings changes.
-- Addressables initialization logic changes.
-- **Does NOT** update for hotfix DLL or resource updates.
-
-#### 2) dllVersion (Logic Version)
-
-**Definition**: Hot update code version (Integer or Hash).
-**Update Rule**: Updates ONLY when **HotUpdate DLL Changes**.
-
-- Recompilation of HotUpdate assemblies (Ebonor.*).
-- Logic bug fixes, numerical formula adjustments.
-- **Does NOT** update for resource changes.
-
-#### 3) contentVersion (Resource Version)
-
-**Definition**: Addressables resource content version.
-**Update Rule**: Updates ONLY when **Addressables Content Changes**.
-
-- Addition, modification, or removal of Prefabs/Textures/Audio.
-- **Does NOT** update for DLL changes.
-
-#### 4) catalogVersion (Index Version)
-
-**Definition**: The Catalog version produced by Addressables Build.
-**Update Rule**:
-
-- Essentially a mirror of `contentVersion`.
-- If DLL updates but resources don't, `catalogVersion` can remain unchanged.
-- **Recommended Strategy**: Keep `catalogVersion` ≈ `contentVersion` to avoid confusion.
-
-### 3.2 Dependencies & Constraints
-
-To ensure version compatibility, adhere to the following constraints:
-
-1. **dllVersion MUST be compatible with appVersion**
-    - Hot update DLLs depend on APIs exported by AOT. If there are breaking API changes in the main project, `appVersion` MUST be upgraded, and old `dllVersion` deprecated.
-2. **contentVersion MUST be compatible with catalogVersion**
-    - This is a strong internal binding of Addressables. It is recommended to keep them consistent.
-
-### 3.3 Version Update Trigger Table
-
-| Change Content | appVersion | dllVersion | contentVersion | catalogVersion |
-| :--- | :--- | :--- | :--- | :--- |
-| **Hotfix Code Only** | Unchanged | **+1** | Unchanged | Unchanged |
-| **Assets Only** | Unchanged | Unchanged | **+1** | **+1** |
-| **Code + Assets** | Unchanged | **+1** | **+1** | **+1** |
-| **AOT / Main Project** | **+1** | (Reset/Compat) | (Optional) | (Optional) |
-
-### 3.4 Recommended: Unified Versioning Strategy
-
-To simplify management, it is recommended to maintain only three main versions in the Manifest:
-
-- **appVersion**
-- **hotfixVersion** (= dllVersion)
-- **contentVersion** (= catalogVersion)
-
-**Update Example**:
-Assume current state: `App: 1.2.0`, `Hotfix: 12`, `Content: 8`.
-
-1. **Scenario: Fixed a combat formula Bug only** (DLL change only)
-    - App: `1.2.0`
-    - Hotfix: `13` (+1)
-    - Content: `8` (Unchanged)
-
-2. **Scenario: Changed a background image only** (Resource change only)
-    - App: `1.2.0`
-    - Hotfix: `13` (Unchanged)
-    - Content: `9` (+1)
-
-### 3.5 Startup Process & Manifest (UpdateManifest)
-
-Client downloads `UpdateManifest.json` on startup:
+The client requests the remote version manifest upon startup. The structure is as follows:
 
 ```json
 {
   "appVersion": "1.2.0",
-  "minAppVersion": "1.0.0",
-  "packages": {
-    "windows": {
-      "contentVersion": 9,
-      "hotfixVersion": 13,
-      "catalogUrl": "http://cdn/.../catalog_v9.json",
-      "dlls": [
-        {"name": "HotFix.dll", "md5": "...", "version": 13}
-      ]
-    }
-  }
+  "dllVersion": 13,
+  "contentVersion": 9,
+  "catalogVersion": 9,
+  "minSupportedAppVersion": "1.2.0",
+  "forceRollback": false,
+  "rollbackTarget": {
+    "dllVersion": 12,
+    "contentVersion": 8,
+    "catalogVersion": 8
+  },
+  "download": {
+    "baseUrl": "https://cdn.example.com/game",
+    "env": "OnlineTest",
+    "channel": "android"
+  },
+  "buildTime": "2025-02-10T12:00:00Z",
+  "notes": "fix combat logic + update tower assets"
 }
 ```
 
-**Update Check Logic**:
+#### 2) Version Change Rules
 
-1. **App Check**: If `Remote.minAppVersion > Local.appVersion` -> Force Store Update.
-2. **Manifest Comparison**:
-    - If `Remote.hotfixVersion > Local.hotfixVersion` -> Download DLL.
-    - If `Remote.contentVersion > Local.contentVersion` -> Update Addressables Catalog.
-    - **Atomicity**: Only enter the game after BOTH (if needed) are downloaded/ready, preventing Code v13 from accessing non-existent Resource v9.
+| Version | Trigger | Dependencies |
+| :--- | :--- | :--- |
+| **appVersion** | Package Content Change (AOT/Settings/Unity) | Must be >= `minSupportedAppVersion`, otherwise block hotfix and force full update |
+| **contentVersion** | Addressables Asset Change | Any asset change increments contentVersion + 1, **Strong Binding** with catalogVersion |
+| **catalogVersion** | Addressables Build Output | Recommended to always be **SAME** as contentVersion to avoid confusion |
+| **dllVersion** | Hotfix DLL Logic Change | Increment +1 on any DLL change, **Independent** of contentVersion |
 
-### 3.6 Rollback Strategy
+### 3.2 Client Verification Flow
 
-- **Server-side Rollback**: Modify `UpdateManifest` to point back to old `hotfixVersion` or `contentVersion`.
-- **Client Handling**: Client detects version change (even if lower), redownloads corresponding Catalog/DLL and overwrites cache.
-- **Disaster Backup**: Always keep historical version directories on CDN (e.g., `/v8/`, `/v9/`), DO NOT overwrite files in the original path.
+1. **Fetch Manifest**: Client fetches remote `UpdateManifest.json`.
+2. **App Version Check**:
+    - Check `Local.appVersion >= Remote.minSupportedAppVersion`.
+    - **Failed** → Prompt forced update URL, block game entry.
+3. **Force Rollback Check**:
+    - If `forceRollback == true` → Immediately ignore current version info, use version config from `rollbackTarget`.
+    - Logically equivalent to "downgrading" the remote version.
+4. **Version Comparison & Download**:
+    - **DLL**: If `Target.dllVersion > Local.dllVersion` → Download HotUpdate DLL.
+    - **Content**: If `Target.contentVersion > Local.contentVersion` → Addressables Update Catalog & Download Assets.
+5. **Cache & Launch**:
+    - After download and verification (MD5/Hash), write version info to local cache (`PlayerPrefs` or Local Manifest).
+    - Enter game (may require Domain Reload).
+
+### 3.3 Rollback Strategy
+
+#### 1) Client Auto-Fallback
+
+The client should maintain a `"LastGoodVersion"` (the last version that successfully started and ran).
+- **Trigger**: If startup fails after hotfix (Crash or Logic Timeout).
+- **Action**: Automatically fallback to `LastGoodVersion` or the initial version in `StreamingAssets`.
+
+#### 2) Server Force Rollback
+
+* **Trigger**: Severe Bug found online (e.g., numerical error, logic crash).
+- **Action**: Ops/Designers modify `UpdateManifest.json`, set `forceRollback` to `true`, and fill in `rollbackTarget`.
+- **Effect**: All clients will forcibly rollback to the specified old version (e.g., v12/v8) on next startup, and strictly forbid downloading new resources.
 
 ---
 
-## 4. Next Steps
+## 4. Configuration Summary
+
+### 3.4 Version Update Trigger Table
+
+| Change Content | appVersion | dllVersion | contentVersion | catalogVersion | behavior |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Hotfix Code Only** | Unchanged | **+1** | Unchanged | Unchanged | Download DLL only |
+| **Assets Only** | Unchanged | Unchanged | **+1** | **+1** | Update Catalog & Assets only |
+| **Code + Assets** | Unchanged | **+1** | **+1** | **+1** | Download Both |
+| **AOT / Main Project** | **+1** | N/A | N/A | N/A | Force Full Package Update |
+
+### 3.5 Recommended Unified Strategy
+
+To reduce cognitive load, we recommend:
+- **CatalogVersion == ContentVersion** (Always Sync)
+- **DllVersion** Independent Increment
+- **AppVersion** Semantic Management
+
+---
+
+## 5. Next Steps
 
 1. **Implement Addressables Replacement**: Modify `BuildAssetsCommand.cs`, remove `BuildPipeline`, integrate `AddressableAssetSettings.BuildPlayerContent()`.
-2. **Develop Update Manager**: Implement the aforementioned Manifest check, download, and verification logic.
+2. **Develop Update Manager**: Implement the Manifest parsing, ForceRollback, and LastGood fallback logic.
 3. **Setup CI/CD**: Script the above Local/QA/Release processes (Jenkins/GitHub Actions).
