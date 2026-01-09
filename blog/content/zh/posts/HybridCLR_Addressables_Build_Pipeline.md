@@ -60,8 +60,8 @@ tags: ["Build Pipeline", "HybridCLR", "Addressables", "Unity", "Hotfix"]
 **操作步骤**:
 
 1. **HybridCLR Generate**: 生成 AOT/Bridge 代码。
-2. **Addressables Build**: Profile 选 `Default Local Group`，构建到 `StreamingAssets`。
-3. **Copy DLLs**: 将热更 DLL (Dlls/HotUpdate/*.dll) 和 AOT DLL 复制到 `StreamingAssets/Dlls`。
+2. **Addressables Build**: Profile 选 `Default Local Group`, 构建到 `StreamingAssets`.
+3. **Copy DLLs**: 将热更 DLL (Dlls/HotUpdate/*.dll) 和 AOT DLL 复制到 `StreamingAssets/Dlls`.
 4. **Build Player**: 构建 EXE/APK，此时所有资源均在包内。
 
 #### 2) LocalCDN (本地模拟热更)
@@ -71,7 +71,7 @@ tags: ["Build Pipeline", "HybridCLR", "Addressables", "Unity", "Hotfix"]
 
 1. **HybridCLR Generate**.
 2. **Addressables Build**: Profile 选 `Remote Profile` (Load Path 指向 `http://127.0.0.1:Port/`).
-3. **Host Server**: 启动本地 HTTP Server (SimpleHttpServer 或 Addressables Hosting)。
+3. **Host Server**: 启动本地 HTTP Server (SimpleHttpServer 或 Addressables Hosting).
 4. **Deploy DLLs**: 将 DLLs 复制到 HTTP Server 的对应目录 (如 `ServerData/Windows/v1.0.0/Dlls`).
 5. **App Run**: 运行 App，App 读取远端 Catalog，下载更新的资源和 DLL。
 
@@ -102,80 +102,124 @@ tags: ["Build Pipeline", "HybridCLR", "Addressables", "Unity", "Hotfix"]
 
 ## 3. 版本控制与回滚策略 (Version Control & Rollback)
 
-为解决热更中常见的资源代码不同步问题，建议采用 **App、资源、代码三轨版本号** 策略。
+为解决热更中常见的资源代码不同步问题，我们采用严格的 **四轨版本号 + 统一策略** 方案。
 
-### 3.1 版本结构结构
+### 3.1 版本职责与变更规则 (Rules & Responsibilities)
 
-建议在 `StreamingAssets` 和远端 CDN 根目录下维护一个 `UpdateManifest.json`。
+#### 1) appVersion (包体版本)
 
-| 字段 | 说明 | 示例 |
-| :--- | :--- | :--- |
-| `appVersion` | 原生包版本 (Major.Minor.Patch) | `1.0.0` |
-| `resVersion` | Addressables 资源版本 (Catalog Hash 或时间戳) | `20240109_1530` |
-| `dllVersion` | 代码版本 (Hash 或编译计数) | `v15` |
-| `minAppVersion` | 强制整包更新的最低 App 版本 | `0.9.5` |
+**定义**: 对应原生应用版本 (Major.Minor.Patch)。
+**变更规则**: 只在 **包体内容变化** 时升级。
 
-**Manifest 示例**:
+- AOT 代码/主工程代码 (non-hotfix) 改动
+- 引擎升级、PlayerSettings 变更
+- Addressables 初始化逻辑变更
+- **不需要** 因为 hotfix DLL 或资源更新。
+
+#### 2) dllVersion (逻辑版本)
+
+**定义**: 热更代码版本 (整数或 Hash)。
+**变更规则**: 只在 **HotUpdate DLL 改动** 时升级。
+
+- HotUpdate 程序集 (Ebonor.*) 重新编译
+- 逻辑 Bug 修复、数值公式调整
+- **不需要** 因为资源变更。
+
+#### 3) contentVersion (资源版本)
+
+**定义**: Addressables 资源内容版本。
+**变更规则**: 只在 **Addressables 内容变更** 时升级。
+
+- Prefab/Texture/Audio 等资源的新增、修改、删除
+- **不需要** 因为 DLL 变更。
+
+#### 4) catalogVersion (索引版本)
+
+**定义**: Addressables Build 产出的 Catalog 版本。
+**变更规则**:
+
+- 本质上是 contentVersion 的镜像。
+- 如果 DLL 更新但资源没变，catalogVersion 可以不变。
+- **推荐策略**: 让 `catalogVersion` ≈ `contentVersion`，保持同步以避免混淆。
+
+### 3.2 依赖关系与依赖约束
+
+为了保证版本兼容性，遵循以下约束：
+
+1. **dllVersion 必须兼容 appVersion**
+    - 热更 DLL 依赖 AOT 导出的 API。如果主工程有破坏性 API 修改，必须升级 `appVersion`，并废弃旧的 `dllVersion`。
+2. **contentVersion 必须兼容 catalogVersion**
+    - 这是 Addressables 的内部强绑定，建议两者保持一致。
+
+### 3.3 版本更新触发规则表
+
+| 变更内容 | appVersion | dllVersion | contentVersion | catalogVersion |
+| :--- | :--- | :--- | :--- | :--- |
+| **仅热更逻辑** (Hotfix Code) | 不变 | **+1** | 不变 | 不变 |
+| **仅资源内容** (Assets) | 不变 | 不变 | **+1** | **+1** |
+| **逻辑 + 资源** | 不变 | **+1** | **+1** | **+1** |
+| **AOT/主工程改动** | **+1** | (重置或兼容) | (可选) | (可选) |
+
+### 3.4 推荐：统一版本号策略 (Unified Strategy)
+
+为了简化管理，建议在 Manifest 中只维护三个主要版本号：
+
+- **appVersion**
+- **hotfixVersion** (= dllVersion)
+- **contentVersion** (= catalogVersion)
+
+**更新示例**:
+假设当前状态: `App: 1.2.0`, `Hotfix: 12`, `Content: 8`.
+
+1. **场景: 只修了一个战斗公式 Bug** (仅 DLL 变)
+    - App: `1.2.0`
+    - Hotfix: `13` (+1)
+    - Content: `8` (不变)
+
+2. **场景: 只换了一张背景图** (仅资源变)
+    - App: `1.2.0`
+    - Hotfix: `13` (不变)
+    - Content: `9` (+1)
+
+### 3.5 启动流程与清单 (UpdateManifest)
+
+客户端启动时下载 `UpdateManifest.json`：
 
 ```json
 {
-  "appVersion": "1.0.0",
+  "appVersion": "1.2.0",
   "minAppVersion": "1.0.0",
   "packages": {
     "windows": {
-      "resVersion": "20240109_01",
-      "dllVersion": "20240109_01",
-      "catalogHash": "a1b2c3d4...",
+      "contentVersion": 9,
+      "hotfixVersion": 13,
+      "catalogUrl": "http://cdn/.../catalog_v9.json",
       "dlls": [
-        {"name": "HotFix.dll", "hash": "...", "url": "..."}
+        {"name": "HotFix.dll", "md5": "...", "version": 13}
       ]
     }
   }
 }
 ```
 
-### 3.2 启动与检查流程
+**更新检查逻辑**:
 
-1. **Check Manifest**: App 启动，请求远端 `UpdateManifest.json`。
-2. **App Version Check**:
-   - `Remote.minAppVersion > Local.appVersion`: **强制更新 App** (跳转商店)。
-   - `Remote.appVersion == Local.appVersion`: 继续热更检查。
-3. **Resource/DLL Update**:
-   - 对比 `Local.resVersion` vs `Remote.resVersion`。
-   - 对比 `Local.dllVersion` vs `Remote.dllVersion`。
-   - **重要**: 必须确保 DLL 和 资源是**原子性更新**。即：如果 DLL 更新了，必须确保对应版本的资源也就位，否则可能出现代码访问不存在的资源。
-4. **Download**:
-   - `Addressables.UpdateCatalogs()`
-   - 下载新 DLL 到持久化目录 (`Application.persistentDataPath/Dlls`)。
-5. **Reload/Enter Game**: 下载完成后，如果是 DLL 更新，通常需要重启 App 或（在 HybridCLR 中）重新加载域。
+1. **App 检查**: 若 `Remote.minAppVersion > Local.appVersion` -> 强制去商店更新。
+2. **Manifest 对比**:
+    - 若 `Remote.hotfixVersion > Local.hotfixVersion` -> 下载 DLL。
+    - 若 `Remote.contentVersion > Local.contentVersion` -> 更新 Addressables Catalog。
+    - **原子性**: 只有当两者都（如有需要）下载/准备完毕后，才进入游戏，防止 代码v13 读取了不存在的 资源v9。
 
-### 3.3 回滚策略 (Rollback Strategy)
+### 3.6 回滚策略 (Rollback)
 
-**场景**: 发布了 v1.0.1，发现严重 Crash。
+- **服务端回滚**: 修改 `UpdateManifest` 指回旧的 `hotfixVersion` 或 `contentVersion`。
+- **客户端处理**: 客户端感知到版本变化（即使变小），重新下载对应的 Catalog/DLL 并覆盖缓存。
+- **灾难备份**: CDN 上始终保留历史版本目录（如 `/v8/`, `/v9/`），不要直接在原路径覆盖文件。
 
-**方案**:
-
-1. **服务端回滚**: 修改远端 `UpdateManifest.json`，将 `resVersion` 和 `dllVersion` 指回 v1.0.0 的配置。
-2. **客户端处理**:
-   - 客户端检测到远端版本变更（即使是“降级”）。
-   - 重新下载 v1.0.0 的 Catalog 和 DLL。
-   - 覆盖本地缓存。
-3. **灾难恢复 (Force Fallback)**:
-   - 在 CD 流程中保留最近 3 个版本的完整文件 (Archive)。
-   - 如果 CDN 文件损坏，运维只需将 `Backup/v1.0.0` 覆盖回 `Release/Current`。
-
-### 3.4 常见问题解决方案 (FAQ)
-
-| 问题 | 解决方案 |
-| :--- | :--- |
-| **Q1: 热更 DLL 与 AOT 元数据不匹配** | **强绑定版本**: 打包 App 时生成的 AOT DLL 必须归档。每次热更 DLL 时，编译环境必须使用**完全一致**的 AOT DLL (即 commit hash 要对齐)。建议 CI/CD 中记录构建时的 commit id。 |
-| **Q2: Addressables Catalog 与资源不一致** | **Catalog 放在版本目录**: 不要覆盖根目录的 `catalog.json`，而是使用 `/v1.0.1/catalog.json`。`UpdateManifest` 指向具体的 catalog url。 |
-| **Q3: 缓存脏数据 (Dirty Cache)** | **Hash 校验**: 每次下载必须校验 MD5。若校验失败，删除该文件并重试。可以在 Debug 面板提供 "Clear Cache" 按钮。 |
-| **Q4: 热更过程中断网** | **断点续传 & 临时目录**: 文件下载到 `.temp`，全部下载 + 校验完毕后，再一次性 Move 到正式目录。避免只更新了一半的文件被加载。 |
-| **Q5: 更新后崩溃无法启动** | **安全模式 (Safe Mode)**: 记录 `LastSuccessVersion`。如果启动后连续 Crash 3 次，自动清理热更缓存，回滚到包内 `StreamingAssets` 的原始版本，并上报错误。 |
+---
 
 ## 4. 下一步行动建议
 
-1. **实施 Addressables 替换**: 修改 `BuildAssetsCommand.cs`，移除 `BuildPipeline`，接入 `AddressableAssetSettings.BuildPlayerContent()`。
+1. **实施 Addressables 替换**: 修改 `BuildAssetsCommand.cs`，移除 `BuildPipeline`，接入 `AddressableAssetSettings.BuildPlayerContent()`.
 2. **开发更新管理器 (UpdateManager)**: 实现上述的 Manifest 检查、下载、校验逻辑。
-3. **搭建 CI/CD**: 将上述 Local/QA/Release 流程脚本化 (Jenkins/GitHub Actions)。
+3. **搭建 CI/CD**: 将上述 Local/QA/Release 流程脚本化 (Jenkins/GitHub Actions).

@@ -102,77 +102,121 @@ Combining Addressables and HybridCLR, we divide the environment into four levels
 
 ## 3. Version Control & Rollback Strategy
 
-To solve the common synchronization issues between resources and code in hot updates, it is recommended to adopt a **three-track versioning** strategy for App, Resources, and Code.
+To address the common synchronization issues between resources and code in hot updates, we adopt a strict **Four-Track Versioning + Unified Strategy**.
 
-### 3.1 Version Structure
+### 3.1 Responsibilities & Rules
 
-It is recommended to maintain an `UpdateManifest.json` in `StreamingAssets` and the root directory of the remote CDN.
+#### 1) appVersion (Package Version)
 
-| Field | Description | Example |
-| :--- | :--- | :--- |
-| `appVersion` | Native App Version (Major.Minor.Patch) | `1.0.0` |
-| `resVersion` | Addressables Resource Version (Catalog Hash or Timestamp) | `20240109_1530` |
-| `dllVersion` | Code Version (Hash or Compile Count) | `v15` |
-| `minAppVersion` | Minimum App Version required for mandatory full update | `0.9.5` |
+**Definition**: Corresponds to the native application version (Major.Minor.Patch).
+**Update Rule**: Updates ONLY when **Package Content Changes**.
 
-**Manifest Example**:
+- AOT code / Main project code (non-hotfix) changes.
+- Engine upgrade, PlayerSettings changes.
+- Addressables initialization logic changes.
+- **Does NOT** update for hotfix DLL or resource updates.
+
+#### 2) dllVersion (Logic Version)
+
+**Definition**: Hot update code version (Integer or Hash).
+**Update Rule**: Updates ONLY when **HotUpdate DLL Changes**.
+
+- Recompilation of HotUpdate assemblies (Ebonor.*).
+- Logic bug fixes, numerical formula adjustments.
+- **Does NOT** update for resource changes.
+
+#### 3) contentVersion (Resource Version)
+
+**Definition**: Addressables resource content version.
+**Update Rule**: Updates ONLY when **Addressables Content Changes**.
+
+- Addition, modification, or removal of Prefabs/Textures/Audio.
+- **Does NOT** update for DLL changes.
+
+#### 4) catalogVersion (Index Version)
+
+**Definition**: The Catalog version produced by Addressables Build.
+**Update Rule**:
+
+- Essentially a mirror of `contentVersion`.
+- If DLL updates but resources don't, `catalogVersion` can remain unchanged.
+- **Recommended Strategy**: Keep `catalogVersion` ≈ `contentVersion` to avoid confusion.
+
+### 3.2 Dependencies & Constraints
+
+To ensure version compatibility, adhere to the following constraints:
+
+1. **dllVersion MUST be compatible with appVersion**
+    - Hot update DLLs depend on APIs exported by AOT. If there are breaking API changes in the main project, `appVersion` MUST be upgraded, and old `dllVersion` deprecated.
+2. **contentVersion MUST be compatible with catalogVersion**
+    - This is a strong internal binding of Addressables. It is recommended to keep them consistent.
+
+### 3.3 Version Update Trigger Table
+
+| Change Content | appVersion | dllVersion | contentVersion | catalogVersion |
+| :--- | :--- | :--- | :--- | :--- |
+| **Hotfix Code Only** | Unchanged | **+1** | Unchanged | Unchanged |
+| **Assets Only** | Unchanged | Unchanged | **+1** | **+1** |
+| **Code + Assets** | Unchanged | **+1** | **+1** | **+1** |
+| **AOT / Main Project** | **+1** | (Reset/Compat) | (Optional) | (Optional) |
+
+### 3.4 Recommended: Unified Versioning Strategy
+
+To simplify management, it is recommended to maintain only three main versions in the Manifest:
+
+- **appVersion**
+- **hotfixVersion** (= dllVersion)
+- **contentVersion** (= catalogVersion)
+
+**Update Example**:
+Assume current state: `App: 1.2.0`, `Hotfix: 12`, `Content: 8`.
+
+1. **Scenario: Fixed a combat formula Bug only** (DLL change only)
+    - App: `1.2.0`
+    - Hotfix: `13` (+1)
+    - Content: `8` (Unchanged)
+
+2. **Scenario: Changed a background image only** (Resource change only)
+    - App: `1.2.0`
+    - Hotfix: `13` (Unchanged)
+    - Content: `9` (+1)
+
+### 3.5 Startup Process & Manifest (UpdateManifest)
+
+Client downloads `UpdateManifest.json` on startup:
 
 ```json
 {
-  "appVersion": "1.0.0",
+  "appVersion": "1.2.0",
   "minAppVersion": "1.0.0",
   "packages": {
     "windows": {
-      "resVersion": "20240109_01",
-      "dllVersion": "20240109_01",
-      "catalogHash": "a1b2c3d4...",
+      "contentVersion": 9,
+      "hotfixVersion": 13,
+      "catalogUrl": "http://cdn/.../catalog_v9.json",
       "dlls": [
-        {"name": "HotFix.dll", "hash": "...", "url": "..."}
+        {"name": "HotFix.dll", "md5": "...", "version": 13}
       ]
     }
   }
 }
 ```
 
-### 3.2 Startup & Check Process
+**Update Check Logic**:
 
-1. **Check Manifest**: App starts, requests remote `UpdateManifest.json`.
-2. **App Version Check**:
-   - `Remote.minAppVersion > Local.appVersion`: **Force App Update** (Jump to Store).
-   - `Remote.appVersion == Local.appVersion`: Continue hotfix check.
-3. **Resource/DLL Update**:
-   - Compare `Local.resVersion` vs `Remote.resVersion`.
-   - Compare `Local.dllVersion` vs `Remote.dllVersion`.
-   - **Important**: Must ensure DLL and Resources are **atomically updated**. That is: if DLL is updated, the corresponding version of resources must also be in place, otherwise code might access non-existent resources.
-4. **Download**:
-   - `Addressables.UpdateCatalogs()`
-   - Download new DLLs to persistent directory (`Application.persistentDataPath/Dlls`).
-5. **Reload/Enter Game**: After download completes, if it's a DLL update, usually need to restart App or (in HybridCLR) reload domain.
+1. **App Check**: If `Remote.minAppVersion > Local.appVersion` -> Force Store Update.
+2. **Manifest Comparison**:
+    - If `Remote.hotfixVersion > Local.hotfixVersion` -> Download DLL.
+    - If `Remote.contentVersion > Local.contentVersion` -> Update Addressables Catalog.
+    - **Atomicity**: Only enter the game after BOTH (if needed) are downloaded/ready, preventing Code v13 from accessing non-existent Resource v9.
 
-### 3.3 Rollback Strategy
+### 3.6 Rollback Strategy
 
-**Scenario**: v1.0.1 released, severe Crash found.
+- **Server-side Rollback**: Modify `UpdateManifest` to point back to old `hotfixVersion` or `contentVersion`.
+- **Client Handling**: Client detects version change (even if lower), redownloads corresponding Catalog/DLL and overwrites cache.
+- **Disaster Backup**: Always keep historical version directories on CDN (e.g., `/v8/`, `/v9/`), DO NOT overwrite files in the original path.
 
-**Solution**:
-
-1. **Server-side Rollback**: Modify remote `UpdateManifest.json`, pointing `resVersion` and `dllVersion` back to v1.0.0 config.
-2. **Client Handling**:
-   - Client detects remote version change (even if "downgrade").
-   - Redownload v1.0.0 Catalog and DLL.
-   - Overwrite local cache.
-3. **Disaster Recovery (Force Fallback)**:
-   - Keep complete files of the last 3 versions in CD process (Archive).
-   - If CDN files are corrupted, Ops only need to overwrite `Backup/v1.0.0` back to `Release/Current`.
-
-### 3.4 FAQ Solutions
-
-| Issue | Solution |
-| :--- | :--- |
-| **Q1: Hotfix DLL and AOT metadata mismatch** | **Strong Version Binding**: AOT DLLs generated when packaging App must be archived. Every time hotfix DLL is compiled, the compile environment must use **exactly consistent** AOT DLLs (i.e., commit hash alignment). Recommended to record commit id in CI/CD. |
-| **Q2: Addressables Catalog and resources inconsistent** | **Catalog in Version Directory**: Do not overwrite root `catalog.json`, instead use `/v1.0.1/catalog.json`. `UpdateManifest` points to specific catalog url. |
-| **Q3: Dirty Cache** | **Hash Verification**: Every download must verify MD5. If verification fails, delete the file and retry. Can provide "Clear Cache" button in Debug panel. |
-| **Q4: Network interruption during hotfix** | **Resumable Download & Temp Directory**: Download files to `.temp`, only move to formal directory after full download + verification. Avoid loading partially updated files. |
-| **Q5: Crash after update, cannot start** | **Safe Mode**: Record `LastSuccessVersion`. If consecutive Crashes occur 3 times after startup, automatically clear hotfix cache, rollback to original version in `StreamingAssets`, and report error. |
+---
 
 ## 4. Next Steps
 
