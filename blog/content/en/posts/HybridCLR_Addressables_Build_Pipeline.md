@@ -178,6 +178,8 @@ The client should maintain a `"LastGoodVersion"` (the last version that successf
 
 To reduce human error and improve release efficiency, it is recommended to introduce Jenkins/GitLab CI for automated builds.
 
+> **Strategy Note**: Jenkins integration should strictly follow the **stabilization of the local build pipeline**. Jenkins essentially "automates the replication of an already stable process".
+
 ### 4.1 Roles of Jenkins and Unity Editor
 
 * **Jenkins (CI Server)**: Responsible for all official packaging, hotfix building, and release processes. Fully scripted, no manual UI intervention.
@@ -213,28 +215,43 @@ This is a strict serial process to ensure version consistency.
 
 ---
 
-## 5. Configuration Summary & Rules
+## 5. Status & Roadmap
 
-### 5.1 Version Update Trigger Table
+### 5.1 Current Implementation Status
 
-| Change Content | appVersion | dllVersion | contentVersion | catalogVersion | behavior |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Hotfix Code Only** | Unchanged | **+1** | Unchanged | Unchanged | Download DLL only |
-| **Assets Only** | Unchanged | Unchanged | **+1** | **+1** | Update Catalog & Assets only |
-| **Code + Assets** | Unchanged | **+1** | **+1** | **+1** | Download Both |
-| **AOT / Main Project** | **+1** | N/A | N/A | N/A | Force Full Package Update |
+- [x] **Addressables Integration**: Completed, including UIPrefab loading and label mapping fixes.
+- [x] **Unified Build Output**: Standardized structure as `{appVersion}_c{contentVersion}_d{dllVersion}/{platform}/...`.
+- [x] **Auto Manifest Generation**: Generates `UpdateManifest.json` with hash verification for hotupdate/aot DLLs.
+- [x] **Profile Automation**: Auto-generates Addressables Profiles for LocalCDN/OnlineTest/Release.
+- [x] **Open Config**: Integrated Init, Build Entry, and Chinese localization (Odin) into Open Config.
+- [x] **Output Separation**: `BuildHotUpdate` specifically outputs to `dll/hotupdate` and `dll/aot`.
+- [x] **AOT Build Toggle**: Optional switch to trigger AOT build only when building a new package.
+- [x] **Auto Versioning**: Implemented auto-increment for `appVersion` in OnlineTest/Release, optional for Local.
 
-### 5.2 Recommended Unified Strategy
+### 5.2 Upcoming Work Order
 
-To reduce cognitive load, we recommend:
-- **CatalogVersion == ContentVersion** (Always Sync)
-- **DllVersion** Independent Increment
-- **AppVersion** Semantic Management
+Recommended sequence to ensure local stability before remote deployment:
 
----
+#### **Step 1: Build Pipeline Self-Test**
 
-## 6. Next Steps
+* **Config**: Enable "New Package Build (Generate AOT DLL)".
+- **Verify**: Check `BuildOutput` for correct generation of `dll/hotupdate` and `dll/aot` subdirectories.
+- **Logs**: Confirm correct DLL counts in build logs (Staging vs Final count).
 
-1. **Implement Addressables Replacement**: Modify `BuildAssetsCommand.cs`, remove `BuildPipeline`, integrate `AddressableAssetSettings.BuildPlayerContent()`.
-2. **Develop Update Manager**: Implement the Manifest parsing, ForceRollback, and LastGood fallback logic.
-3. **Write CI Scripts**: Convert "4.2 CI Build Order" into Shell/Python scripts for Jenkins to invoke.
+#### **Step 2: Setup CDN**
+
+* **Structure**: Establish standard directory tree `/cdn/{env}/{version}/{platform}/...`.
+- **Upload**: Simulate uploading Addressables bundles, DLLs, and `UpdateManifest.json`.
+
+#### **Step 3: Startup Logic Implementation**
+
+* **Flow**:
+    1. Fetch `UpdateManifest.json`.
+    2. Incremental download of DLL/AOT based on Hash comparison.
+    3. Addressables Catalog download and cache update.
+    4. Enter Game.
+
+#### **Step 4: Rollback & Fallback Assurance**
+
+* **Pointer Control**: Implement `latest.json` or similar mechanism to point to active version.
+- **Local Fallback**: Verify fallback to `Local` resources when network fails.

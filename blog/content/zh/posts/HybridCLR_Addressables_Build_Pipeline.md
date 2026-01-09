@@ -178,6 +178,8 @@ tags: ["Build Pipeline", "HybridCLR", "Addressables", "Unity", "Hotfix"]
 
 为了减少人工错误并提高发布效率，建议引入 Jenkins/GitLab CI 进行自动化构建。
 
+> **策略提示 (Strategy Note)**: Jenkins 的引入应在 **本地流程完全跑通并稳定** 之后。Jenkins 本质是“自动化复制已经稳定的流程”。
+
 ### 4.1 Jenkins 与 Unity Editor 的职责划分
 
 * **Jenkins (CI 服务器)**: 负责所有正式的打包、热更构建和发布流程。完全脚本化，无需人工干预 UI。
@@ -213,28 +215,43 @@ tags: ["Build Pipeline", "HybridCLR", "Addressables", "Unity", "Hotfix"]
 
 ---
 
-## 5. 相关配置表 (Summary & Rules)
+## 5. 当前进度与实施工作流 (Status & Roadmap)
 
-### 5.1 版本更新触发规则表
+### 5.1 当前已完成特性 (Current Progress)
 
-| 变更内容 | appVersion | dllVersion | contentVersion | catalogVersion | behavior |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **仅热更逻辑** | 不变 | **+1** | 不变 | 不变 | 只下载 DLL |
-| **仅资源内容** | 不变 | 不变 | **+1** | **+1** | 只更新 Catalog & Asset |
-| **逻辑 + 资源** | 不变 | **+1** | **+1** | **+1** | 同时下载 |
-| **AOT/主工程改动** | **+1** | N/A | N/A | N/A | 强制整包更新 |
+- [x] **Addressables 加载补齐**: 包含 UIPrefab 的加载及 Label 映射修正。
+- [x] **统一构建输出结构**: 输出目录格式统一为 `{appVersion}_c{contentVersion}_d{dllVersion}/{platform}/...`。
+- [x] **Manifest 自动生成**: 支持自动分析路径下文件并生成含 Hash 的 `UpdateManifest.json`。
+- [x] **Profile 自动配置**: 自动生成 LocalCDN/OnlineTest/Release 的 Addressables Profiles。
+- [x] **Open Config 集成**: 使用 Odin Inspector 集成初始化入口、构建入口及中文配置字段。
+- [x] **构建分离**: `BuildHotUpdate` 明确分离为 `dll/hotupdate` 和 `dll/aot` 输出。
+- [x] **AOT 自动构建开关**: 提供选项，仅在打新整包时触发 AOT 构建。
+- [x] **版本自增规则**: 实现 `appVersion` 在 OnlineTest/Release 环境下自动 +1，Local 环境可选。
 
-### 5.2 推荐统一策略
+### 5.2 后续工作顺序 (Work Order)
 
-为了简化心智负担，建议：
-- **CatalogVersion == ContentVersion** (始终同步)
-- **DllVersion** 独立自增
-- **AppVersion** 语义化管理
+建议按以下顺序推进，先确保本地闭环，再部署到远端：
 
----
+#### **步骤 1: 构建链路自测 (Build Self-Test)**
 
-## 6. 下一步行动建议
+* **配置**: 启用“打新包（生成 AOT DLL）”。
+- **验证**: 检查 `BuildOutput` 目录下是否正确生成 `dll/hotupdate` 和 `dll/aot` 子目录。
+- **日志**: 确认构建日志中 DLL 计数正确 (Staging vs Final count)。
 
-1. **实施 Addressables 替换**: 修改 `BuildAssetsCommand.cs`，移除 `BuildPipeline`，接入 `AddressableAssetSettings.BuildPlayerContent()`.
-2. **开发更新管理器 (UpdateManager)**: 实现上述的 Manifest 模板解析、ForceRollback 逻辑、LastGood 回退逻辑。
-3. **编写 CI 脚本**: 将 "4.2 CI 构建顺序" 转化为 Shell/Python 脚本，供 Jenkins 调用。
+#### **步骤 2: 搭建 CDN (Setup CDN)**
+
+* **结构**: 建立标准目录结构 `/cdn/{env}/{version}/{platform}/...`。
+- **上传**: 模拟上传 Addressables bundles, DLLs, 和 `UpdateManifest.json`。
+
+#### **步骤 3: 游戏启动下载逻辑 (Startup Logic)**
+
+* **流程**:
+    1. 拉取 `UpdateManifest.json`。
+    2. 对比 Hash 进行 DLL/AOT 增量下载。
+    3. Addressables Catalog 下载与缓存更新。
+    4. 进入游戏。
+
+#### **步骤 4: 版本回滚与兜底 (Rollback & Fallback)**
+
+* **指针控制**: 实现 `latest.json` 或类似机制指向当前活跃版本。
+- **本地兜底**: 验证网络失败时能否回退到 `Local` 资源启动。
