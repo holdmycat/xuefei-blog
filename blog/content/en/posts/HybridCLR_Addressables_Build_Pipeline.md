@@ -174,9 +174,48 @@ The client should maintain a `"LastGoodVersion"` (the last version that successf
 
 ---
 
-## 4. Configuration Summary
+## 4. CI/CD Automated Build Pipeline
 
-### 3.4 Version Update Trigger Table
+To reduce human error and improve release efficiency, it is recommended to introduce Jenkins/GitLab CI for automated builds.
+
+### 4.1 Roles of Jenkins and Unity Editor
+
+* **Jenkins (CI Server)**: Responsible for all official packaging, hotfix building, and release processes. Fully scripted, no manual UI intervention.
+- **Unity Editor (Local Workbench)**: Retain menu bar build entries only for developer's **local debugging** and **feature verification**.
+
+### 4.2 CI Build Order (Recommended Pipeline)
+
+This is a strict serial process to ensure version consistency.
+
+#### **Phase A: Preparation**
+
+* **Trigger**: Git Merge / Tag Push
+- **Action**:
+  - Pull latest HotUpdate script code.
+  - Ensure Addressables asset files are in place.
+
+#### **Phase B: CI Build**
+
+1. **Build HotUpdate DLL**: Compile hot update DLLs, generating the latest `Assembly-CSharp.dll` etc.
+2. **Build Addressables**: Execute Addressables Build (Full New Build or Incremental Update Previous Build).
+3. **Generate UpdateManifest**: Automatically generate `UpdateManifest.json` file based on the artifacts from the above two steps (DLL Hash + Catalog Hash).
+
+#### **Phase C: Release**
+
+4. **Upload Assets**: Upload DLLs, Addressables Bundles (`.bundle`), and Catalog (`.json`, `.hash`) to CDN.
+2. **Upload Manifest (Final Step)**: **Upload** `UpdateManifest.json` **LAST**.
+    - **Principle**: The Manifest is the "switch" for hotfixes. Only when all resources are uploaded and ready can the Manifest be updated to prevent clients from downloading non-existent files (404).
+
+#### **Phase D: Verify**
+
+* **Sequence**: `LocalCDN` -> `OnlineTest` -> `Release`
+- Verify level by level, ensuring correctness before pushing to the public internet.
+
+---
+
+## 5. Configuration Summary & Rules
+
+### 5.1 Version Update Trigger Table
 
 | Change Content | appVersion | dllVersion | contentVersion | catalogVersion | behavior |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -185,7 +224,7 @@ The client should maintain a `"LastGoodVersion"` (the last version that successf
 | **Code + Assets** | Unchanged | **+1** | **+1** | **+1** | Download Both |
 | **AOT / Main Project** | **+1** | N/A | N/A | N/A | Force Full Package Update |
 
-### 3.5 Recommended Unified Strategy
+### 5.2 Recommended Unified Strategy
 
 To reduce cognitive load, we recommend:
 - **CatalogVersion == ContentVersion** (Always Sync)
@@ -194,8 +233,8 @@ To reduce cognitive load, we recommend:
 
 ---
 
-## 5. Next Steps
+## 6. Next Steps
 
 1. **Implement Addressables Replacement**: Modify `BuildAssetsCommand.cs`, remove `BuildPipeline`, integrate `AddressableAssetSettings.BuildPlayerContent()`.
 2. **Develop Update Manager**: Implement the Manifest parsing, ForceRollback, and LastGood fallback logic.
-3. **Setup CI/CD**: Script the above Local/QA/Release processes (Jenkins/GitHub Actions).
+3. **Write CI Scripts**: Convert "4.2 CI Build Order" into Shell/Python scripts for Jenkins to invoke.

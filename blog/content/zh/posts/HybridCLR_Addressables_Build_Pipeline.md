@@ -95,7 +95,7 @@ tags: ["Build Pipeline", "HybridCLR", "Addressables", "Unity", "Hotfix"]
 2. **HybridCLR Generate** & **Compile DLL**.
 3. **Addressables Build**: Load Path 指向 Production CDN。
 4. **MD5 & Hash**: 生成所有文件的校验清单 (Manifest)。
-5. **Distribute**: 上传 CDN，刷新 CDN 缓存。
+5. **Distribute**: Upload to CDN, refresh CDN cache.
 6. **Backend Config**: 后台配置最新版本号，控制灰度或全量推送。
 
 ---
@@ -174,9 +174,48 @@ tags: ["Build Pipeline", "HybridCLR", "Addressables", "Unity", "Hotfix"]
 
 ---
 
-## 4. 相关配置表 (Summary)
+## 4. CI/CD 自动化构建流程 (CI/CD Optimization)
 
-### 3.4 版本更新触发规则表
+为了减少人工错误并提高发布效率，建议引入 Jenkins/GitLab CI 进行自动化构建。
+
+### 4.1 Jenkins 与 Unity Editor 的职责划分
+
+* **Jenkins (CI 服务器)**: 负责所有正式的打包、热更构建和发布流程。完全脚本化，无需人工干预 UI。
+- **Unity Editor (本地工作台)**: 保留菜单栏打包入口，仅用于开发者的**本地调试**和**功能验证**。
+
+### 4.2 CI 构建顺序 (Recommended Pipeline)
+
+这是一个严格的串行流程，确保版本的一致性。
+
+#### **阶段 A: 代码准备 (A. Preparation)**
+
+* **触发**: Git Merge / Tag Push
+- **动作**:
+  - 拉取最新 HotUpdate 脚本代码。
+  - 确保 Addressables 资源文件已就位。
+
+#### **阶段 B: CI 构建 (B. Build)**
+
+1. **Build HotUpdate DLL**: 编译热更 DLL，生成最新的 `Assembly-CSharp.dll` 等。
+2. **Build Addressables**: 执行 Addressables Build (全量 New Build 或 增量 Update Previous Build)。
+3. **Generate UpdateManifest**: 基于上述两步的产物 (DLL Hash + Catalog Hash)，自动生成 `UpdateManifest.json` 文件。
+
+#### **阶段 C: 发布 (C. Release)**
+
+4. **Upload Assets**: 将 DLL、Addressables Bundles (`.bundle`)、Catalog (`.json`, `.hash`) 上传到 CDN。
+2. **Upload Manifest (Final Step)**: **最后上传** `UpdateManifest.json`。
+    - **原理**: Manifest 是热更的“开关”。只有当所有资源都上传就绪后，才更新 Manifest，防止客户端下载到不存在的文件 (404)。
+
+#### **阶段 D: 验证 (D. Verify)**
+
+* **顺序**: `LocalCDN` -> `OnlineTest` -> `Release`
+- 逐级验证，确保无误后再推向外网。
+
+---
+
+## 5. 相关配置表 (Summary & Rules)
+
+### 5.1 版本更新触发规则表
 
 | 变更内容 | appVersion | dllVersion | contentVersion | catalogVersion | behavior |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -185,7 +224,7 @@ tags: ["Build Pipeline", "HybridCLR", "Addressables", "Unity", "Hotfix"]
 | **逻辑 + 资源** | 不变 | **+1** | **+1** | **+1** | 同时下载 |
 | **AOT/主工程改动** | **+1** | N/A | N/A | N/A | 强制整包更新 |
 
-### 3.5 推荐统一策略
+### 5.2 推荐统一策略
 
 为了简化心智负担，建议：
 - **CatalogVersion == ContentVersion** (始终同步)
@@ -194,8 +233,8 @@ tags: ["Build Pipeline", "HybridCLR", "Addressables", "Unity", "Hotfix"]
 
 ---
 
-## 5. 下一步行动建议
+## 6. 下一步行动建议
 
 1. **实施 Addressables 替换**: 修改 `BuildAssetsCommand.cs`，移除 `BuildPipeline`，接入 `AddressableAssetSettings.BuildPlayerContent()`.
 2. **开发更新管理器 (UpdateManager)**: 实现上述的 Manifest 模板解析、ForceRollback 逻辑、LastGood 回退逻辑。
-3. **搭建 CI/CD**: 将上述 Local/QA/Release 流程脚本化 (Jenkins/GitHub Actions).
+3. **编写 CI 脚本**: 将 "4.2 CI 构建顺序" 转化为 Shell/Python 脚本，供 Jenkins 调用。
