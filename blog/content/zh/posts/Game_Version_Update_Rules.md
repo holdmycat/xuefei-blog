@@ -12,6 +12,7 @@ tags: ["Build Pipeline", "Versioning", "Addressables", "Hotfix", "DevOps"]
 ## 1. AppVersion（发布基线版本）
 
 * **锁定原则**: `AppVersion` **仅在** `release/*` 或 `hotfix/*` 分支上确定并锁定。这是版本的锚点。
+* **数据来源**: 运行时读取 Unity Player Settings 中的 `Bundle Version` (`Application.version`)。
 * **开发环境行为**: **LocalCDN / OnlineTest 不修改 AppVersion**。
   * 即使是在本地开发（`dev` 分支），打出来的包也应当跟随当前的主线或发布基线版本（即当前锁定的 `AppVersion`）。
   * **禁止**在日常开发测试中随意变更 `AppVersion`，因为这会导致热更路径变更，产生不必要的全量包更新需求。
@@ -36,6 +37,7 @@ tags: ["Build Pipeline", "Versioning", "Addressables", "Hotfix", "DevOps"]
 * **重置规则**:
   * **当 AppVersion 变化时**，上述所有热更版本号 **统一重置为 1**。
   * **原因**: 新的 `AppVersion` 意味着一个新的“初始包”，这个初始包自带的内容即为该大版本的“第 1 版”。
+  * **隔离保障**: CDN 文件夹命名规则为 `{AppVersion}_c{contentVersion}_d{dllVersion}`，这天然保证了不同 AppVersion 之间的资源物理隔离，不会发生覆盖冲突。
 
 ## 4. LocalCDN 版本保留与清理策略
 

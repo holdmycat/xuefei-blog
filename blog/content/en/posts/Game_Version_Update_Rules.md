@@ -12,6 +12,7 @@ tags: ["Build Pipeline", "Versioning", "Addressables", "Hotfix", "DevOps"]
 ## 1. AppVersion (Release Baseline)
 
 * **Locking Principle**: `AppVersion` is determined and locked **only** on `release/*` or `hotfix/*` branches. This is the version anchor.
+* **Source of Truth**: Read from `Bundle Version` (`Application.version`) in Unity Player Settings at runtime.
 * **Development Environment Behavior**: **LocalCDN / OnlineTest MUST NOT modify AppVersion**.
   * Even during local development (`dev` branch), built packages should follow the current mainline or release baseline version (i.e., the currently locked `AppVersion`).
   * **Prohibited**: Changing `AppVersion` arbitrarily during daily development/testing is forbidden, as it changes the hot-update path and necessitates unnecessary full package updates.
@@ -36,6 +37,7 @@ These versions (`contentVersion` / `dllVersion` / `catalogVersion`) are core to 
 * **Reset Rule**:
   * **When AppVersion changes**, all the above hot-update versions are **unified and reset to 1**.
   * **Reason**: A new `AppVersion` implies a new "Base Package"; the content within this base package effectively becomes "Version 1" of that major version.
+  * **Isolation Guarantee**: The CDN folder naming convention `{AppVersion}_c{contentVersion}_d{dllVersion}` naturally ensures physical isolation of resources between different AppVersions, preventing overwrite conflicts.
 
 ## 4. LocalCDN Version Retention & Cleanup Strategy
 
