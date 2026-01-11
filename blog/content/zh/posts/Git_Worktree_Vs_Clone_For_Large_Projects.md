@@ -50,6 +50,57 @@ tags: ["Git", "Workflow", "Unity", "DevOps", "Efficiency"]
   * **状态同步**: 在主仓库 `git fetch origin`，所有 Worktree 都能立即看到最新的远端分支。
   * **极速创建**: 创建一个新 Worktree 秒级完成（不涉及网络传输，只需 checkout 文件）。
 
+### 2.3 补充知识：.git 里的 Object Database 是什么？
+
+`.git` 目录下的 **Object Database (对象库)** 本质上是一个 **Content-Addressable Filesystem (基于内容寻址的文件系统)**。
+
+简单来说，它是一个超大的 Key-Value 数据库：
+
+* **Key**: 数据的 SHA-1 哈希值（那个 40 位的字符串，如 `a1b2c3...`）。
+* **Value**: 压缩后的二进制数据。
+
+在 Object Database 中，主要存储着 3 种核心对象（以及一种优化机制）：
+
+#### 1. Blob 对象 (Binary Large Object)
+
+* **由什么生成**: 你的代码文件、图片、贴图等。
+* **存了什么**: **只存文件内容**。不存文件名，也不存权限。
+* **特点**:
+  * 如果你有两个文件 `A.cs` 和 `B.cs` 里的代码完全一样，它们在数据库里只是一份 `Blob`。
+  * 这是 Git 即使存了很多版本也相对省空间的基础（内容去重）。
+
+#### 2. Tree 对象
+
+* **由什么生成**: 你的文件夹。
+* **存了什么**: 一个清单列表。
+  * 列出了该文件夹下包含了哪些文件名。
+  * 这些文件名对应的 **Blob 哈希值** 是什么。
+  * 或者包含的子文件夹（子 Tree）的哈希值是什么。
+* **作用**: 它把文件名和 Blob（内容）关联了起来，还原了你的“目录结构”。
+
+#### 3. Commit 对象
+
+* **由什么生成**: 每次你执行 `git commit`。
+* **存了什么**:
+  * **Root Tree**: 这次提交时，项目根目录对应的 Tree 哈希值（代表了这一刻所有文件的快照）。
+  * **Parent**: 上一次提交的 Commit 哈希值（构成了历史链条）。
+  * **Metadata**: 提交人、时间、提交信息。
+* **作用**: 它赋予了时间维度和历史意义。
+
+#### 4. Packfiles (打包文件)
+
+* **这是什么**: `.git/objects/pack/` 下的 `.pack` 和 `.idx` 文件。
+* **由于 Git 对象默认是松散文件 (Loose Objects)**，如果文件太多，IO 效率低且浪费空间。
+* **作用**: Git 会定期（或在 Push/Pull 时）通过 `git gc` 将松散对象打包并进行 **Delta Compression (差异压缩)**。
+  * 比如你只改了一行代码，Git 不会再存一个全新的全量 Blob，而是存一个“基于旧 Blob 的补丁”，这使得 `.git` 体积在大型项目中依然可控。
+
+#### 结合 Worktree 理解
+
+当你使用 `git worktree` 时，所有 Worktree **共用** 上述这套 Object Database：
+
+* **不占空间**: 主仓库下载了 `texture.png` (Blob)，辅助 Worktree 切到包含该图的分支时，直接从共享数据库读取，不需要再次下载或占用额外的磁盘空间来存这个 Blob 的副本。
+* **立即同步**: 主仓库 `fetch` 下来了新的 Commit 和 Tree 对象，辅助 Worktree 立刻就能访问到，因为它们读的是同一个物理文件夹 (`.git/objects`)。
+
 ---
 
 ## 3. 为什么 Git Worktree 更适合大型项目？

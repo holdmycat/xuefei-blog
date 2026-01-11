@@ -50,6 +50,57 @@ The most intuitive approach is to clone multiple copies of the repository on dis
   * **State Sync**: `git fetch origin` in the main repo makes the latest remote branches immediately visible to all Worktrees.
   * **Instant Creation**: Creating a new Worktree takes seconds (no network transfer involved, just checking out files).
 
+### 2.3 Supplementary Knowledge: What is the Object Database in .git?
+
+The **Object Database** under the `.git` directory is essentially a **Content-Addressable Filesystem**.
+
+Simply put, it is a massive Key-Value database:
+
+* **Key**: The SHA-1 hash of the data (that 40-character string, e.g., `a1b2c3...`).
+* **Value**: The compressed binary data.
+
+In the Object Database, there are primarily 3 core objects (and one optimization mechanism):
+
+#### 1. Blob Object (Binary Large Object)
+
+* **Generated from**: Your code files, images, textures, etc.
+* **Stores**: **File content only**. No filenames, no permissions.
+* **Feature**:
+  * If you have two files `A.cs` and `B.cs` with identical code, they are just one `Blob` in the database.
+  * This is the basis for Git's space efficiency even with many versions (content deduplication).
+
+#### 2. Tree Object
+
+* **Generated from**: Your directories.
+* **Stores**: A list.
+  * Lists which filenames are contained in that folder.
+  * What the corresponding **Blob Hash** for these filenames is.
+  * Or what the hash of subfolders (Sub-Trees) is.
+* **Function**: It associates filenames with Blobs (content), reconstructing your "directory structure".
+
+#### 3. Commit Object
+
+* **Generated from**: Every time you run `git commit`.
+* **Stores**:
+  * **Root Tree**: The hash of the Tree corresponding to the project root at the time of commit (representing a snapshot of all files at this moment).
+  * **Parent**: The Commit hash of the previous submission (forming the history chain).
+  * **Metadata**: Committer, time, message.
+* **Function**: It endows the data with a time dimension and historical significance.
+
+#### 4. Packfiles
+
+* **What is it**: Files ending in `.pack` and `.idx` under `.git/objects/pack/`.
+* **Reason**: Since Git objects are Loose Objects by default, having too many files wastes IO efficiency and space.
+* **Function**: Git periodically (or during Push/Pull) runs `git gc` to pack loose objects and perform **Delta Compression**.
+  * For example, if you change just one line of code, Git won't store a brand new full Blob, but rather a "patch based on the old Blob", keeping `.git` size controllable even in large projects.
+
+#### Understanding with Worktree
+
+When you use `git worktree`, all Worktrees **share** this Object Database:
+
+* **Space Saving**: The main repo downloads `texture.png` (Blob). When an auxiliary Worktree switches to a branch containing this image, it reads directly from the shared database without needing to download it again or use extra disk space for a copy.
+* **Instant Sync**: The main repo `fetches` new Commit and Tree objects, and auxiliary Worktrees can access them immediately because they read from the same physical folder (`.git/objects`).
+
 ---
 
 ## 3. Why is Git Worktree Better for Large Projects?
@@ -114,7 +165,7 @@ git worktree repair
 ### 4.3 Notes for Unity
 
 * **Symbolic Link**: Advanced users can try symlinking common parts like `Library/PackageCache` to save even more space (but risky, suggest letting Unity regenerate libraries).
-* **Tooling**: It helps to write a simple Shell/Python script (e.g., `add_worktree.sh`) to automatically run `git worktree add`, create `LocalConfig` 或拷贝基础配置，实现一键搭建环境。
+* **Tooling**: It helps to write a simple Shell/Python script (e.g., `add_worktree.sh`) to automatically run `git worktree add`, create `LocalConfig` or copy base configs, achieving one-click environment setup.
 
 ---
 
