@@ -1,25 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const copyBtn = document.querySelector('.copy-btn');
-  const toast = document.querySelector('.copy-toast');
-  if (copyBtn && toast) {
-    copyBtn.addEventListener('click', async () => {
-      const text = copyBtn.dataset.copy;
-      try {
-        await navigator.clipboard.writeText(text);
-        toast.hidden = false;
-        copyBtn.disabled = true;
-        const original = copyBtn.textContent;
-        copyBtn.textContent = 'Copied';
-        setTimeout(() => {
-          toast.hidden = true;
-          copyBtn.disabled = false;
-          copyBtn.textContent = original;
-        }, 1000);
-      } catch (e) {
-        toast.hidden = false;
-        toast.textContent = 'Copy failed';
-        setTimeout(() => { toast.hidden = true; toast.textContent = 'Copied'; }, 1000);
-      }
+  const filterBar = document.querySelector('[data-project-filters]');
+  const list = document.querySelector('[data-project-list]');
+  if (!filterBar || !list) return;
+
+  const buttons = Array.from(filterBar.querySelectorAll('.filter-tag'));
+  const cards = Array.from(list.querySelectorAll('.project-card'));
+  const activeFilters = new Set();
+
+  const normalizeTags = (value) => (value || '')
+    .split(' ')
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+
+  const applyFilters = () => {
+    if (activeFilters.size === 0) {
+      cards.forEach((card) => { card.hidden = false; });
+      return;
+    }
+
+    cards.forEach((card) => {
+      const tags = normalizeTags(card.dataset.tags);
+      const matches = Array.from(activeFilters).every((filter) => tags.includes(filter));
+      card.hidden = !matches;
     });
-  }
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const filter = button.dataset.filter;
+      if (!filter) return;
+
+      if (activeFilters.has(filter)) {
+        activeFilters.delete(filter);
+        button.classList.remove('active');
+      } else {
+        activeFilters.add(filter);
+        button.classList.add('active');
+      }
+
+      applyFilters();
+    });
+  });
 });

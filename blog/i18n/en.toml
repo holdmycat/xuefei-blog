@@ -27,3 +27,33 @@ other = "Download Resume"
 
 [viewGithub]
 other = "View GitHub"
+
+[pinnedProject]
+other = "Pinned Project"
+
+[viewOnSteam]
+other = "View on Steam"
+
+[watchVideo]
+other = "Watch Video"
+
+[projectFilters]
+other = "Filter"
+
+[projectList]
+other = "Projects"
+
+[projectDetails]
+other = "Details"
+
+[projectPlatform]
+other = "Platform"
+
+[projectPeriod]
+other = "Period"
+
+[projectRole]
+other = "Role"
+
+[videoThumb]
+other = "Video"

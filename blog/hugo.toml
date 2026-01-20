@@ -3,6 +3,7 @@ title = "Xuefei Blog"
 languageCode = "en-us"
 defaultContentLanguage = "zh"
 defaultContentLanguageInSubdir = false
+disableKinds = ["taxonomy", "term", "RSS", "sitemap", "robotsTXT", "404"]
 
 [pagination]
   pagerSize = 10
@@ -67,26 +68,6 @@ theme = ""  # using local layouts, leave empty
         moreHref = "/posts/"
 
     [languages.en.menu]
-      [[languages.en.menu.main]]
-        name = "Home"
-        pageRef = "/"
-        weight = 1
-      [[languages.en.menu.main]]
-        name = "Projects"
-        pageRef = "/projects"
-        weight = 2
-      [[languages.en.menu.main]]
-        name = "Writing"
-        pageRef = "/posts"
-        weight = 3
-      [[languages.en.menu.main]]
-        name = "Annual"
-        pageRef = "/annual"
-        weight = 4
-      [[languages.en.menu.main]]
-        name = "Now"
-        pageRef = "/now"
-        weight = 5
 
   [languages.zh]
     languageName = "中文"
@@ -125,23 +106,3 @@ theme = ""  # using local layouts, leave empty
         moreHref = "/posts/"
 
     [languages.zh.menu]
-      [[languages.zh.menu.main]]
-        name = "首页"
-        pageRef = "/"
-        weight = 1
-      [[languages.zh.menu.main]]
-        name = "项目"
-        pageRef = "/projects"
-        weight = 2
-      [[languages.zh.menu.main]]
-        name = "文章"
-        pageRef = "/posts"
-        weight = 3
-      [[languages.zh.menu.main]]
-        name = "年报"
-        pageRef = "/annual"
-        weight = 4
-      [[languages.zh.menu.main]]
-        name = "Now"
-        pageRef = "/now"
-        weight = 5

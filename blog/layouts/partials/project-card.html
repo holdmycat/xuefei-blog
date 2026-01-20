@@ -1,0 +1,45 @@
+{{ $tagSlugs := slice }}
+{{ with .Params.tags }}
+  {{ range . }}
+    {{ $tagSlugs = $tagSlugs | append (. | lower | replace " " "-" | replace "/" "-") }}
+  {{ end }}
+{{ end }}
+<article class="project-card" data-tags="{{ delimit $tagSlugs " " }}">
+  <div class="project-thumb">
+    {{ with .Params.cover }}
+      <img src="{{ . | relURL }}" alt="{{ $.Title }} cover" loading="lazy" decoding="async">
+    {{ else }}
+      <div class="media-placeholder">No image</div>
+    {{ end }}
+  </div>
+  <div class="project-info">
+    <div class="project-header">
+      <h3 class="project-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+      <div class="project-meta">
+        {{ with .Params.period }}<span>{{ . }}</span>{{ end }}
+        {{ with .Params.role }}
+          <span class="meta-sep">•</span>
+          <span>{{ . }}</span>
+        {{ end }}
+      </div>
+    </div>
+    {{ with .Params.summary_bullets }}
+      <ul class="project-bullets">
+        {{ range first 4 . }}<li>{{ . }}</li>{{ end }}
+      </ul>
+    {{ end }}
+    <div class="project-footer">
+      {{ with .Params.tags }}
+        <div class="project-tags">
+          {{ range . }}<span class="project-tag">{{ . }}</span>{{ end }}
+        </div>
+      {{ end }}
+      <div class="project-actions">
+        {{ with .Params.video_url }}
+          {{ if ne . "" }}<a class="project-link" href="{{ . }}" target="_blank" rel="noopener noreferrer">{{ i18n "watchVideo" }}</a>{{ end }}
+        {{ end }}
+        <a class="project-link" href="{{ .RelPermalink }}">{{ i18n "projectDetails" }}</a>
+      </div>
+    </div>
+  </div>
+</article>

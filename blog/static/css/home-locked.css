@@ -1,0 +1,64 @@
+.home-page .container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.home-page .pinned-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .home-page .pinned-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.home-page .pinned-main {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.home-page .pinned-main img,
+.home-page .pinned-main iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+  display: block;
+}
+
+.home-page .project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.home-page .project-card {
+  display: grid;
+  grid-template-columns: 184px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.home-page .project-card .project-thumb {
+  width: 184px;
+  height: 86px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.home-page .project-card .project-thumb img {
+  width: 184px !important;
+  height: 86px !important;
+  object-fit: cover;
+  display: block;
+}

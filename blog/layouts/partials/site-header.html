@@ -9,21 +9,9 @@
 <div class="top-nav">
   <div class="nav-left">
     <a class="brand-mark" href="{{ "/" | relLangURL }}">{{ .Site.Params.profile.name }}</a>
-  </div>
-  <nav class="nav-center">
-    {{ $currentPage := .Page }}
-    {{ range .Site.Menus.main }}
-      {{ $active := or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}
-      {{ $target := cond .Page (.Page.RelPermalink) (.URL | relLangURL) }}
-      <a class="nav-link{{ if $active }} active{{ end }}" href="{{ $target }}"{{ if $active }} aria-current="page"{{ end }}>{{ .Name }}</a>
-    {{ end }}
-  </nav>
   <div class="nav-right">
     {{ $current := .Site.Language.Lang }}
     <a class="lang-btn {{ if eq $current "en" }}primary active{{ else }}ghost{{ end }}" href="{{ $en.RelPermalink }}" {{ if eq $current "en" }}aria-current="page"{{ end }}>English</a>
     <a class="lang-btn {{ if eq $current "zh" }}primary active{{ else }}ghost{{ end }}" href="{{ $zh.RelPermalink }}" {{ if eq $current "zh" }}aria-current="page"{{ end }}>中文</a>
-    <div class="avatar">
-      <img src="{{ .Site.Params.profile.avatar | relURL }}" alt="{{ .Site.Params.profile.name }}">
-    </div>
   </div>
   </div>

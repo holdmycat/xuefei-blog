@@ -1,0 +1,23 @@
+{{ $projects := where .Site.RegularPages "Section" "projects" }}
+{{ $projects = $projects.ByDate.Reverse }}
+{{ $unpinned := where $projects "Params.pinned" "ne" true }}
+{{ $list := first 6 $unpinned }}
+{{ if eq (len $list) 0 }}
+  {{ $list = first 6 $projects }}
+{{ end }}
+
+<section id="projects" class="project-list-section">
+  <div class="container">
+    <div class="section-title">
+      <h2>{{ i18n "projectList" }}</h2>
+    </div>
+    <div class="project-list project-list-items" data-project-list>
+      {{ range $list }}
+        {{ partial "project-card.html" . }}
+      {{ end }}
+      {{ if eq (len $list) 0 }}
+        <!-- debug: no projects found; sections={{ len (where .Site.RegularPages "Section" "projects") }} total={{ len .Site.RegularPages }} -->
+      {{ end }}
+    </div>
+  </div>
+</section>

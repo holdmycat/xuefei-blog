@@ -16,9 +16,8 @@
     <link rel="stylesheet" href="{{ "css/annual.css" | relURL }}">
   {{ end }}
   {{ if .IsHome }}
-    <link rel="stylesheet" href="{{ "css/home.css" | relURL }}">
-    <link rel="stylesheet" href="{{ "css/home-sections.css" | relURL }}">
-    <script src="{{ "js/home.js" | relURL }}" defer></script>
+    <link rel="stylesheet" href="{{ "css/pinned-only.css" | relURL }}">
+    <script src="{{ "js/pinned-only.js" | relURL }}" defer></script>
   {{ end }}
 </head>
 <body class="site dark{{ if .IsHome }} home-page{{ end }}">
@@ -26,7 +25,7 @@
     {{ partial "site-header.html" . }}
   </header>
 
-  <main class="site-main">
+  <main class="{{ if .IsHome }}home-page{{ else }}site-main{{ end }}">
     {{ block "main" . }}{{ end }}
   </main>
 

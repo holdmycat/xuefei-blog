@@ -27,3 +27,33 @@ other = "下载简历"
 
 [viewGithub]
 other = "查看 GitHub"
+
+[pinnedProject]
+other = "置顶项目"
+
+[viewOnSteam]
+other = "Steam 页面"
+
+[watchVideo]
+other = "观看视频"
+
+[projectFilters]
+other = "筛选"
+
+[projectList]
+other = "项目列表"
+
+[projectDetails]
+other = "详情"
+
+[projectPlatform]
+other = "平台"
+
+[projectPeriod]
+other = "周期"
+
+[projectRole]
+other = "职责"
+
+[videoThumb]
+other = "视频"

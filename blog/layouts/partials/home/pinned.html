@@ -1,0 +1,88 @@
+{{ $projects := where .Site.RegularPages "Section" "projects" }}
+{{ $projects = $projects.ByDate.Reverse }}
+{{ $pinned := first 1 (where $projects "Params.pinned" true) }}
+{{ if eq (len $pinned) 0 }}
+  {{ $pinned = first 1 $projects }}
+{{ end }}
+{{ if gt (len $pinned) 0 }}
+  {{ $project := index $pinned 0 }}
+  {{ $video := $project.Params.video_url }}
+  {{ if $video }}
+    {{ $video = replace $video "watch?v=" "embed/" }}
+  {{ end }}
+  {{ $cover := $project.Params.cover_image | default $project.Params.cover }}
+  {{ $gallery := $project.Params.gallery_images }}
+
+  <section id="pinned" class="pinned">
+    <div class="container">
+      <div class="pinned-grid" data-pinned-gallery>
+        <div class="pinned-media">
+          <div class="pinned-main" data-pinned-main>
+            {{ if $video }}
+              <iframe src="{{ $video }}" title="{{ $project.Title }} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            {{ else }}
+              {{ with $cover }}
+                <img src="{{ . | relURL }}" alt="{{ $project.Title }} cover" loading="lazy" decoding="async">
+              {{ end }}
+            {{ end }}
+          </div>
+          <div class="pinned-thumbs">
+            {{ if $video }}
+              <button type="button" class="pinned-thumb active" data-media-type="video" data-src="{{ $video }}">
+                <span class="thumb-label">{{ i18n "videoThumb" }}</span>
+              </button>
+            {{ else }}
+              {{ with $cover }}
+                <button type="button" class="pinned-thumb active" data-media-type="image" data-src="{{ . | relURL }}">
+                  <img src="{{ . | relURL }}" alt="{{ $project.Title }} thumbnail" loading="lazy" decoding="async">
+                </button>
+              {{ end }}
+            {{ end }}
+            {{ range first 6 $gallery }}
+              <button type="button" class="pinned-thumb" data-media-type="image" data-src="{{ . | relURL }}">
+                <img src="{{ . | relURL }}" alt="{{ $project.Title }} thumbnail" loading="lazy" decoding="async">
+              </button>
+            {{ end }}
+          </div>
+        </div>
+        <aside class="pinned-info">
+          <h2 class="pinned-title">{{ $project.Title }}</h2>
+          {{ with $project.Params.summary }}<p class="pinned-summary">{{ . }}</p>{{ end }}
+          <dl class="pinned-facts">
+            {{ with $project.Params.platforms }}
+              <div class="fact-row">
+                <dt>{{ i18n "projectPlatform" }}</dt>
+                <dd>{{ delimit . " / " }}</dd>
+              </div>
+            {{ end }}
+            {{ with $project.Params.period }}
+              <div class="fact-row">
+                <dt>{{ i18n "projectPeriod" }}</dt>
+                <dd>{{ . }}</dd>
+              </div>
+            {{ end }}
+            {{ with $project.Params.role }}
+              <div class="fact-row">
+                <dt>{{ i18n "projectRole" }}</dt>
+                <dd>{{ . }}</dd>
+              </div>
+            {{ end }}
+          </dl>
+          {{ with $project.Params.tags }}
+            <div class="pinned-tags">
+              {{ range . }}<span class="tag-pill">{{ . }}</span>{{ end }}
+            </div>
+          {{ end }}
+          <div class="pinned-actions">
+            {{ with $project.Params.steam_url }}
+              {{ if ne . "" }}<a class="btn-flat primary" href="{{ . }}" target="_blank" rel="noopener noreferrer">{{ i18n "viewOnSteam" }}</a>{{ end }}
+            {{ end }}
+            {{ with $project.Params.video_url }}
+              {{ if ne . "" }}<a class="btn-flat secondary" href="{{ . }}" target="_blank" rel="noopener noreferrer">{{ i18n "watchVideo" }}</a>{{ end }}
+            {{ end }}
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+{{ end }}

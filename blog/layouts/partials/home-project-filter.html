@@ -1,0 +1,24 @@
+{{ $projects := where .Site.RegularPages "Section" "projects" }}
+{{ $tags := slice }}
+{{ range $projects }}
+  {{ with .Params.tags }}
+    {{ range . }}
+      {{ $tags = $tags | append . }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ $tags = sort (uniq $tags) }}
+
+<section class="project-filter">
+  <div class="container">
+    <div class="filter-row" data-project-filters>
+      <span class="filter-label">{{ i18n "projectFilters" }}</span>
+      <div class="filter-tags">
+        {{ range $tags }}
+          {{ $slug := . | lower | replace " " "-" | replace "/" "-" }}
+          <button type="button" class="filter-tag" data-filter="{{ $slug }}">{{ . }}</button>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>
