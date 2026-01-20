@@ -4,7 +4,6 @@ date = 2025-12-14T10:00:00Z
 summary = "面向生产环境的 AOT vs JIT 心智模型；解释为何 IL2CPP 下的“晚绑定泛型”容易失败；并给出用 Source Generator 生成确定性注册表、彻底替代运行时反射的落地方案（包含 Generator DLL 的构建与 Unity 集成步骤）。"
 categories = ["游戏系统", "工程实践"]
 tags = ["Unity", "CSharp", "AOT", "JIT", "IL2CPP", "Generics", "SourceGenerator", "Performance"]
-lang = "zh"
 slug = "aot-safe-unity-il2cpp-without-reflection-zh"
 +++
 
