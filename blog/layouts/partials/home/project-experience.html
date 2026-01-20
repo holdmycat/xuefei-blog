@@ -1,0 +1,62 @@
+{{ $projects := .Site.Data.projects.projects }}
+{{ if $projects }}
+  <section class="project-experience">
+    <div class="pinned-container">
+      <div class="projects-header">
+        <h2 class="projects-title">项目经历</h2>
+      </div>
+      <div class="projects-list">
+        {{ range first 2 $projects }}
+          {{ $project := . }}
+          <article class="project-row">
+            <div class="project-thumb">
+              {{ with $project.cover }}
+                <img src="{{ strings.TrimPrefix "/" . | relURL }}" alt="{{ $project.title }} cover" loading="lazy" decoding="async">
+              {{ end }}
+            </div>
+            <div class="project-main">
+              <div class="project-heading">
+                <h3 class="project-title">{{ $project.title }}</h3>
+                {{ with $project.subtitle }}<p class="project-subtitle">{{ . }}</p>{{ end }}
+              </div>
+              {{ with $project.tags }}
+                <div class="project-tags">
+                  {{ range . }}<span class="tag">{{ . }}</span>{{ end }}
+                </div>
+              {{ end }}
+              {{ with $project.description }}
+                <p class="project-desc">{{ . }}</p>
+              {{ end }}
+              <div class="project-links">
+                {{ with $project.links.demo }}
+                  {{ if ne . "" }}<a class="btn" href="{{ . }}" target="_blank" rel="noopener noreferrer">Demo</a>{{ end }}
+                {{ end }}
+                {{ with $project.links.github }}
+                  {{ if ne . "" }}<a class="btn" href="{{ . }}" target="_blank" rel="noopener noreferrer">GitHub</a>{{ end }}
+                {{ end }}
+              </div>
+            </div>
+            <aside class="project-meta">
+              {{ with $project.date }}
+                <div class="meta-row">
+                  <div class="meta-k">开发日期</div>
+                  <div class="meta-v">{{ . }}</div>
+                </div>
+              {{ end }}
+              {{ with $project.tech_stack }}
+                <div class="meta-row">
+                  <div class="meta-k">技术栈</div>
+                  <div class="meta-v">
+                    <div class="tech-list">
+                      {{ range . }}<span class="chip">{{ . }}</span>{{ end }}
+                    </div>
+                  </div>
+                </div>
+              {{ end }}
+            </aside>
+          </article>
+        {{ end }}
+      </div>
+    </div>
+  </section>
+{{ end }}

@@ -1,0 +1,24 @@
+projects:
+  - id: modular-skill-system
+    title: Modular Skill System Demo
+    subtitle: Designer-First / PoE-style
+    date: "2023 – 2025"
+    cover: /images/projects/modular-skill-system.jpg
+    tags: [Unity, Roguelite, SkillSystem, Tools]
+    description: >
+      用 ScriptableObject + 数据图驱动技能；支持主动/被动/辅助宝石；编辑器工具链完善。
+    tech_stack: [Unity 2022.3, C#, Addressables, Zenject]
+    links:
+      github: https://github.com/xxxx
+      demo: https://xxxx
+  - id: skill-editor
+    title: Skill Editor Tooling
+    subtitle: Node-based / Designer-friendly
+    date: "2024 – 2025"
+    cover: /images/projects/skill-editor.png
+    tags: [Editor, Graph, Workflow]
+    description: >
+      自研可视化技能图编辑器；支持变体、校验、导出；面向设计师的零重复工作流。
+    tech_stack: [Unity 2022.3, C#, UI Toolkit, Odin]
+    links:
+      github: https://github.com/xxxx

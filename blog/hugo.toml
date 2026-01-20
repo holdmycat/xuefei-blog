@@ -3,7 +3,7 @@ title = "Xuefei Blog"
 languageCode = "en-us"
 defaultContentLanguage = "zh"
 defaultContentLanguageInSubdir = false
-disableKinds = ["taxonomy", "term", "RSS", "sitemap", "robotsTXT", "404"]
+disableKinds = ["taxonomy", "term", "RSS", "sitemap", "robotsTXT", "404", "section", "page"]
 
 [pagination]
   pagerSize = 10
@@ -19,16 +19,13 @@ theme = ""  # using local layouts, leave empty
   steam = "https://store.steampowered.com/app/3680960/_/"
   gameRepo = ""
 
-[taxonomies]
-  category = "categories"
-  tag = "tags"
+taxonomies = {}
 
 [permalinks]
   posts = "/posts/:slug/"
 
 [outputs]
-  home = ["HTML", "RSS"]
-  section = ["HTML", "RSS"]
+  home = ["HTML"]
 
 [languages]
   [languages.en]

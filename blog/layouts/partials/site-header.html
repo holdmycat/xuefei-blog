@@ -9,9 +9,10 @@
 <div class="top-nav">
   <div class="nav-left">
     <a class="brand-mark" href="{{ "/" | relLangURL }}">{{ .Site.Params.profile.name }}</a>
+  </div>
   <div class="nav-right">
     {{ $current := .Site.Language.Lang }}
     <a class="lang-btn {{ if eq $current "en" }}primary active{{ else }}ghost{{ end }}" href="{{ $en.RelPermalink }}" {{ if eq $current "en" }}aria-current="page"{{ end }}>English</a>
     <a class="lang-btn {{ if eq $current "zh" }}primary active{{ else }}ghost{{ end }}" href="{{ $zh.RelPermalink }}" {{ if eq $current "zh" }}aria-current="page"{{ end }}>中文</a>
   </div>
-  </div>
+</div>

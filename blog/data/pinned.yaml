@@ -1,0 +1,25 @@
+id: ebonor
+title: 暗辉幸存者-EBONOR
+subtitle: Steam 项目
+period: "2024 – 2025"
+description: >
+  《暗辉幸存者》是一款融合 Roguelike 构筑与快节奏割草战斗的生存游戏。武器自动攻击，技能搭配自由，战斗节奏爽快，每局全新体验。没有最强组合，只有最适合当局的策略，打造属于你的终极体系。
+poster: /images/pinned/ebonor-poster1.png
+responsibility: 制作人、主程序、战斗系统设计、美术资源整合
+team_size: 8
+video:
+  provider: bilibili
+  bvid: BV1sWk5BHE2h
+  autoplay: false
+  cover: /images/pinned/ebonor-cover.png
+  iframe_src: "https://player.bilibili.com/player.html?bvid=BV1sWk5BHE2h&page=1&high_quality=1&danmaku=0"
+  title: Ebonor Gameplay
+gallery:
+  - /images/pinned/ebonor-1.png
+  - /images/pinned/ebonor-2.png
+  - /images/pinned/ebonor-3.png
+  - /images/pinned/ebonor-4.png
+tags: [轻度rogue, 砍杀, 3D, 弹幕射击]
+tech_stack: [Unity 2022.3, C#, Addressables, HybridCLR, Zenject, Node.js]
+links:
+  steam: https://store.steampowered.com/app/3680960/_/

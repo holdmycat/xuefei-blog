@@ -1,32 +1,45 @@
+console.log('[home.js] loaded', location.href);
 document.addEventListener('DOMContentLoaded', () => {
   const gallery = document.querySelector('[data-pinned-gallery]');
   console.log('[pinned] boot', { hasGallery: !!gallery });
   if (gallery) {
-    const playBtn = document.querySelector('[data-pinned-play]');
-    if (!playBtn) {
+    const main = gallery.querySelector('[data-pinned-main]');
+    const coverTemplate = main?.querySelector('[data-pinned-play]')?.cloneNode(true);
+    if (!coverTemplate) {
       console.warn('[pinned] no play button');
-    } else {
-      playBtn.addEventListener('click', () => {
-        console.log('[pinned] play click');
-        const main = gallery.querySelector('[data-pinned-main]');
-        if (!main) return;
-        const iframeSrc = playBtn.dataset.iframe
-          || `https://player.bilibili.com/player.html?bvid=${playBtn.dataset.bvid}&page=1&high_quality=1&danmaku=0&autoplay=1`;
-        main.setAttribute('data-state', 'playing');
-        main.innerHTML = `<iframe src="${iframeSrc}" title="Bilibili video" frameborder="0" loading="lazy" referrerpolicy="no-referrer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
-        console.log('[pinned] iframe inserted', main.querySelector('iframe')?.src);
-        const fallback = gallery.querySelector('.pinned-fallback');
-        if (fallback) {
-          fallback.hidden = false;
-        }
-      });
     }
 
+    const renderCover = () => {
+      if (!main || !coverTemplate) return;
+      main.removeAttribute('data-state');
+      main.innerHTML = '';
+      main.appendChild(coverTemplate.cloneNode(true));
+    };
+
+    const playVideo = (playBtn) => {
+      if (!main || !playBtn) return;
+      console.log('[pinned] play click');
+      const iframeSrc = playBtn.dataset.iframe
+        || `https://player.bilibili.com/player.html?bvid=${playBtn.dataset.bvid}&page=1&high_quality=1&danmaku=0&autoplay=1`;
+      main.setAttribute('data-state', 'playing');
+      main.innerHTML = `<iframe src="${iframeSrc}" title="Bilibili video" frameborder="0" loading="lazy" referrerpolicy="no-referrer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+      console.log('[pinned] iframe inserted', main.querySelector('iframe')?.src);
+      const fallback = gallery.querySelector('.pinned-fallback');
+      if (fallback) {
+        fallback.hidden = false;
+      }
+    };
+
     gallery.addEventListener('click', (event) => {
+      const playBtn = event.target.closest('[data-pinned-play]');
+      if (playBtn && gallery.contains(playBtn)) {
+        playVideo(playBtn);
+        return;
+      }
+
       const button = event.target.closest('.pinned-thumb');
       if (!button || !gallery.contains(button)) return;
 
-      const main = gallery.querySelector('[data-pinned-main]');
       if (!main) return;
 
       gallery.querySelectorAll('.pinned-thumb').forEach((thumb) => {
@@ -34,16 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       const mediaType = button.dataset.mediaType;
-      if (mediaType === 'video' && button.dataset.provider === 'bilibili') {
-        const bvid = button.dataset.bvid;
-        if (!bvid) return;
-        const url = `https://player.bilibili.com/player.html?bvid=${bvid}&page=1&high_quality=1&danmaku=0&autoplay=1`;
-        main.setAttribute('data-state', 'playing');
-        main.innerHTML = `<iframe src="${url}" title="Pinned video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen loading="lazy" frameborder="0"></iframe>`;
-        const fallback = gallery.querySelector('.pinned-fallback');
-        if (fallback) {
-          fallback.hidden = false;
-        }
+      if (mediaType === 'video') {
+        renderCover();
         return;
       }
 

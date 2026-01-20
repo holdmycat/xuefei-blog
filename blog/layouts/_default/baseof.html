@@ -16,8 +16,8 @@
     <link rel="stylesheet" href="{{ "css/annual.css" | relURL }}">
   {{ end }}
   {{ if .IsHome }}
-    <link rel="stylesheet" href="{{ "css/pinned-only.css" | relURL }}">
-    <script src="{{ "js/pinned-only.js" | relURL }}" defer></script>
+    <link rel="stylesheet" href="{{ "css/home-pinned-only.css" | relURL }}">
+    <link rel="stylesheet" href="{{ "css/home-project-experience.css" | relURL }}">
   {{ end }}
 </head>
 <body class="site dark{{ if .IsHome }} home-page{{ end }}">
@@ -32,5 +32,9 @@
   <footer class="site-footer">
     <p>{{ i18n "builtWith" }} Hugo · {{ now.Format "2006" }}</p>
   </footer>
+  {{ if .IsHome }}
+    {{ $home := resources.Get "js/home.js" | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $home.RelPermalink }}"></script>
+  {{ end }}
 </body>
 </html>

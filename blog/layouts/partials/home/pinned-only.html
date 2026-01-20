@@ -1,66 +1,68 @@
-{{ $projects := where .Site.RegularPages "Section" "projects" }}
-{{ $projects = $projects.ByDate.Reverse }}
-{{ $pinned := first 1 (where $projects "Params.pinned" true) }}
-{{ if eq (len $pinned) 0 }}
-  {{ $pinned = first 1 $projects }}
-{{ end }}
-{{ if gt (len $pinned) 0 }}
-  {{ $project := index $pinned 0 }}
-  {{ $video := $project.Params.video_url }}
-  {{ if $video }}
-    {{ $video = replace $video "watch?v=" "embed/" }}
-  {{ end }}
-  {{ $cover := $project.Params.cover_image }}
-  {{ $poster := $project.Params.poster | default $cover }}
-  {{ $gallery := $project.Params.gallery_images }}
-  {{ $summary := $project.Params.summary | default $project.Params.description }}
-  {{ $release := $project.Params.release_date | default $project.Params.period }}
-
-  <section class="pinned">
-    <div class="pinned-shell">
+{{ $pinned := .Site.Data.pinned }}
+{{ if $pinned }}
+  <section id="pinned" class="pinned-only">
+    <div class="pinned-container" data-pinned-gallery>
       <div class="pinned-header">
-        <h1 class="pinned-title">{{ $project.Title }}</h1>
+        <h1 class="pinned-title">{{ $pinned.title }}</h1>
+        {{ with $pinned.subtitle }}<p class="pinned-subtitle">{{ . }}</p>{{ end }}
       </div>
 
-      <div class="pinned-grid" data-pinned-gallery>
+      <div class="pinned-grid">
         <div class="pinned-media">
           <div class="pinned-main" data-pinned-main>
-            {{ if $video }}
-              <iframe src="{{ $video }}" title="{{ $project.Title }} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            {{ else }}
-              {{ with $cover }}
-                <img src="{{ . | relURL }}" alt="{{ $project.Title }} cover" loading="lazy" decoding="async">
-              {{ end }}
+            {{ if and $pinned.video (eq $pinned.video.provider "bilibili") }}
+              <button class="pinned-video-cover" type="button" data-pinned-play data-bvid="{{ $pinned.video.bvid }}" data-iframe="{{ $pinned.video.iframe_src }}" aria-label="Play video">
+                <img src="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}" alt="{{ $pinned.title }} video cover" loading="lazy" decoding="async">
+                <span class="play-icon" aria-hidden="true"></span>
+              </button>
             {{ end }}
           </div>
           <div class="pinned-thumbs">
-            {{ if $video }}
-              <button type="button" class="pinned-thumb active" data-media-type="video" data-src="{{ $video }}">
-                <span class="thumb-label">Video</span>
+            {{ if and $pinned.video (eq $pinned.video.provider "bilibili") }}
+              <button type="button" class="pinned-thumb pinned-thumb--video active" data-media-type="video" data-bvid="{{ $pinned.video.bvid }}" data-iframe="{{ $pinned.video.iframe_src }}">
+                <img src="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}" alt="{{ $pinned.title }} video thumbnail" loading="lazy" decoding="async">
+                <span class="pinned-thumb-play" aria-hidden="true"></span>
               </button>
             {{ end }}
-            {{ range first 6 $gallery }}
-              <button type="button" class="pinned-thumb" data-media-type="image" data-src="{{ . | relURL }}">
-                <img src="{{ . | relURL }}" alt="{{ $project.Title }} thumbnail" loading="lazy" decoding="async">
+            {{ range $pinned.gallery }}
+              <button type="button" class="pinned-thumb" data-media-type="image" data-src="{{ strings.TrimPrefix "/" . | relURL }}">
+                <img src="{{ strings.TrimPrefix "/" . | relURL }}" alt="{{ $pinned.title }} thumbnail" loading="lazy" decoding="async">
               </button>
             {{ end }}
           </div>
         </div>
 
         <aside class="pinned-info">
-          {{ with $poster }}
+          {{ with $pinned.poster }}
             <div class="pinned-poster">
-              <img src="{{ . | relURL }}" alt="{{ $project.Title }} poster" loading="lazy" decoding="async">
+              <img src="{{ strings.TrimPrefix "/" . | relURL }}" alt="{{ $pinned.title }} poster" loading="lazy" decoding="async">
             </div>
           {{ end }}
 
-          {{ with $summary }}
+          {{ with $pinned.description }}
             <div class="pinned-desc">
               <p>{{ . }}</p>
             </div>
           {{ end }}
 
-          {{ with $release }}
+          {{ if or $pinned.responsibility $pinned.team_size }}
+            <div class="pinned-meta-extra">
+              {{ with $pinned.responsibility }}
+                <div class="meta-row">
+                  <span class="label">职责：</span>
+                  <span class="value">{{ . }}</span>
+                </div>
+              {{ end }}
+              {{ with $pinned.team_size }}
+                <div class="meta-row">
+                  <span class="label">项目组人数：</span>
+                  <span class="value">{{ . }} 人</span>
+                </div>
+              {{ end }}
+            </div>
+          {{ end }}
+
+          {{ with $pinned.period }}
             <div class="pinned-meta">
               <div class="meta-row">
                 <div class="meta-k">日期</div>
@@ -69,13 +71,13 @@
             </div>
           {{ end }}
 
-          {{ with $project.Params.tags }}
+          {{ with $pinned.tags }}
             <div class="pinned-tags">
-              {{ range first 8 . }}<span class="tag">{{ . }}</span>{{ end }}
+              {{ range . }}<span class="tag">{{ . }}</span>{{ end }}
             </div>
           {{ end }}
 
-          {{ with $project.Params.tech_stack }}
+          {{ with $pinned.tech_stack }}
             <div class="pinned-tech">
               <div class="tech-title">技术栈</div>
               <div class="tech-list">
@@ -85,13 +87,16 @@
           {{ end }}
 
           <div class="pinned-actions">
-            {{ with $project.Params.steam_url }}
+            {{ with $pinned.links.steam }}
               {{ if ne . "" }}<a class="btn primary" href="{{ . }}" target="_blank" rel="noopener noreferrer">Steam 页面</a>{{ end }}
             {{ end }}
-            {{ with $project.Params.video_url }}
-              {{ if ne . "" }}<button class="btn" data-open-video type="button">观看视频</button>{{ end }}
+            {{ if and $pinned.video (eq $pinned.video.provider "bilibili") }}
+              <a class="btn" data-open-video href="https://www.bilibili.com/video/{{ $pinned.video.bvid }}" target="_blank" rel="noopener noreferrer">观看视频</a>
             {{ end }}
           </div>
+          {{ if and $pinned.video (eq $pinned.video.provider "bilibili") }}
+            <p class="pinned-fallback" hidden>若无法嵌入播放，请点击“观看视频”跳转 B 站。</p>
+          {{ end }}
         </aside>
       </div>
     </div>
