@@ -18,14 +18,13 @@
 }
 
 .home-page .project-row {
-  display: grid;
-  grid-template-columns: 240px 1fr 260px;
+  display: flex;
+  align-items: stretch;
   gap: 18px;
   padding: 16px;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.02);
-  align-items: start;
 }
 
 .home-page .project-row:hover {
@@ -34,11 +33,15 @@
 }
 
 .home-page .project-thumb {
-  width: 100%;
-  aspect-ratio: 24 / 11;
+  width: 240px;
+  flex: 0 0 240px;
   border-radius: 12px;
   overflow: hidden;
+  align-self: stretch;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  height: auto;
+  aspect-ratio: auto;
 }
 
 .home-page .project-thumb img {
@@ -46,6 +49,16 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  flex: 1 1 auto;
+}
+ 
+.home-page .project-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.home-page .project-meta {
+  flex: 0 0 260px;
 }
 
 .home-page .project-heading {
@@ -116,4 +129,32 @@
   .home-page .project-meta {
     flex-direction: column;
   }
+}
+
+/* Project experience thumb: target only top-level list rows to avoid nested collisions. */
+.home-page .project-experience .projects-list > .project-row { display: flex !important; align-items: stretch !important; }
+.home-page .project-experience .projects-list > .project-row > .project-thumb {
+  align-self: stretch !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  border-radius: 12px !important;
+}
+.home-page .project-experience .projects-list > .project-row > .project-thumb,
+.home-page .project-experience .projects-list > .project-row > .project-thumb img {
+  aspect-ratio: auto !important;
+  max-height: none !important;
+}
+.home-page .project-experience .projects-list > .project-row > .project-thumb > a,
+.home-page .project-experience .projects-list > .project-row > .project-thumb > div,
+.home-page .project-experience .projects-list > .project-row > .project-thumb > figure {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.home-page .project-experience .projects-list > .project-row > .project-thumb img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
 }

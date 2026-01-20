@@ -8,10 +8,25 @@
       <div class="projects-list">
         {{ range first 2 $projects }}
           {{ $project := . }}
-          <article class="project-row">
-            <div class="project-thumb">
-              {{ with $project.cover }}
-                <img src="{{ strings.TrimPrefix "/" . | relURL }}" alt="{{ $project.title }} cover" loading="lazy" decoding="async">
+          {{ $cover := strings.TrimPrefix "/" $project.cover | relURL }}
+          {{ $videoCover := "" }}
+          {{ if and $project.video $project.video.cover }}
+            {{ $videoCover = strings.TrimPrefix "/" $project.video.cover | relURL }}
+          {{ end }}
+          {{ $gallery := slice }}
+          {{ range $project.gallery }}
+            {{ $gallery = $gallery | append (strings.TrimPrefix "/" . | relURL) }}
+          {{ end }}
+          {{ $video := dict }}
+          {{ if $project.video }}
+            {{ $video = dict "provider" $project.video.provider "bvid" $project.video.bvid "cover" $videoCover "iframe_src" $project.video.iframe_src "title" $project.video.title "autoplay" $project.video.autoplay }}
+          {{ end }}
+          {{ $links := dict "github" $project.links.github "demo" $project.links.demo "steam" $project.links.steam "bilibili" $project.links.bilibili }}
+          {{ $modal := dict "id" $project.id "title" $project.title "subtitle" $project.subtitle "period" $project.period "description" $project.description "responsibility" $project.responsibility "team_size" $project.team_size "cover" $cover "tags" $project.tags "tech_stack" $project.tech_stack "video" $video "gallery" $gallery "links" $links }}
+          <article class="project-row" data-project-id="{{ $project.id }}">
+            <div class="project-thumb" data-project-main>
+              {{ with $cover }}
+                <img src="{{ . }}" alt="{{ $project.title }} cover" loading="lazy" decoding="async">
               {{ end }}
             </div>
             <div class="project-main">
@@ -28,16 +43,14 @@
                 <p class="project-desc">{{ . }}</p>
               {{ end }}
               <div class="project-links">
-                {{ with $project.links.demo }}
-                  {{ if ne . "" }}<a class="btn" href="{{ . }}" target="_blank" rel="noopener noreferrer">Demo</a>{{ end }}
+                {{ with $project.video }}
+                  <button class="btn primary" type="button" data-project-play data-project-iframe="{{ .iframe_src }}" data-project-bvid="{{ .bvid }}" data-project-video-cover="{{ $videoCover }}">观看视频</button>
                 {{ end }}
-                {{ with $project.links.github }}
-                  {{ if ne . "" }}<a class="btn" href="{{ . }}" target="_blank" rel="noopener noreferrer">GitHub</a>{{ end }}
-                {{ end }}
+                <button class="btn" type="button" data-project-detail>查看详情</button>
               </div>
             </div>
             <aside class="project-meta">
-              {{ with $project.date }}
+              {{ with $project.period }}
                 <div class="meta-row">
                   <div class="meta-k">开发日期</div>
                   <div class="meta-v">{{ . }}</div>
@@ -54,6 +67,7 @@
                 </div>
               {{ end }}
             </aside>
+            <script type="application/json" data-project-json="{{ $project.id }}">{{ $modal | jsonify }}</script>
           </article>
         {{ end }}
       </div>

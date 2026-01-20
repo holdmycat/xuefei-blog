@@ -1,24 +1,52 @@
 projects:
-  - id: modular-skill-system
-    title: Modular Skill System Demo
-    subtitle: Designer-First / PoE-style
-    date: "2023 – 2025"
-    cover: /images/projects/modular-skill-system.jpg
-    tags: [Unity, Roguelite, SkillSystem, Tools]
+  - id: soulmaster
+    title: 契灵师 - SOUL MASTER
+    subtitle: 这是一款可以装配多把武器并且支持技能构筑系统的3D多人在线手游
+    period: "2023 – 2024"
     description: >
-      用 ScriptableObject + 数据图驱动技能；支持主动/被动/辅助宝石；编辑器工具链完善。
+      欢迎来到契灵师！在每场战斗中，你可以自由选择不同武器，并通过复杂的技能组合增强英雄实力，创造出专属的战斗流派。丰富的技能自由度和武器搭配，让你在战斗中体验无限变化的策略和爽快感。无论是单打独斗还是团队协作，战斗体验都独具一格！立即预约，抢先体验技能与武器无缝结合的畅快对决！
+    cover: /images/projects/soulmaster/soulmaster-thumnail.png
+    responsibility: 技能框架与工具链设计
+    team_size: 3
+    tags: [Unity, Roguelite, SkillSystem, Tools]
     tech_stack: [Unity 2022.3, C#, Addressables, Zenject]
+    video:
+      provider: bilibili
+      bvid: BV1sWk5BHE2h
+      cover: /images/pinned/ebonor-cover.jpg
+      iframe_src: https://player.bilibili.com/player.html?bvid=BV1sWk5BHE2h&page=1&high_quality=1&danmaku=0
+      title: Modular Skill System Demo
+      autoplay: false
+    gallery:
+      - /images/projects/modular-skill-system.jpg
+      - /images/projects/skill-editor.png
     links:
       github: https://github.com/xxxx
       demo: https://xxxx
+      steam: ""
+      bilibili: https://www.bilibili.com/video/BV1sWk5BHE2h
   - id: skill-editor
     title: Skill Editor Tooling
     subtitle: Node-based / Designer-friendly
-    date: "2024 – 2025"
-    cover: /images/projects/skill-editor.png
-    tags: [Editor, Graph, Workflow]
+    period: "2024 – 2025"
     description: >
       自研可视化技能图编辑器；支持变体、校验、导出；面向设计师的零重复工作流。
+    cover: /images/projects/soulmaster/soulmaster-thumnail.png
+    responsibility: 编辑器工具链与流程优化
+    team_size: 2
+    tags: [Editor, Graph, Workflow]
     tech_stack: [Unity 2022.3, C#, UI Toolkit, Odin]
+    video:
+      provider: bilibili
+      bvid: BV1sWk5BHE2h
+      cover: /images/pinned/ebonor-cover.jpg
+      iframe_src: https://player.bilibili.com/player.html?bvid=BV1sWk5BHE2h&page=1&high_quality=1&danmaku=0
+      title: Skill Editor Tooling
+      autoplay: false
+    gallery:
+      - /images/projects/skill-editor.png
     links:
       github: https://github.com/xxxx
+      demo: ""
+      steam: ""
+      bilibili: https://www.bilibili.com/video/BV1sWk5BHE2h
