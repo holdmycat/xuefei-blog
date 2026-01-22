@@ -42,7 +42,7 @@ projects:
       《重走长征路》是一款沉浸式红色主题策略游戏（小型 SLG）。玩家在“据点—村落—支部”式的场景中进行建设与养成，通过资源产出、建筑升级、队伍编成与关卡战斗推进进程。不同于传统 SLG 的大地图行军与长线铺路，本项目采用“场景内轻策略 + 快节奏战斗”的结构，聚焦单局可控、目标清晰的策略体验。
     cover: /images/projects/longmarch/longmarch-cover.png
     responsibility: 项目负责人，技术负责人，核心玩法与系统设计
-    team_size: 11
+    team_size: 15
     tech_stack: [Unity, C#, AssetBundles, Odin, Docker, nodejs]
     video:
       provider: bilibili
