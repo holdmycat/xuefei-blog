@@ -1,0 +1,76 @@
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: hidden !important;
+  }
+
+  .home-page .pinned-only,
+  .home-page .pinned-container,
+  .home-page .pinned-grid,
+  .home-page .pinned-media,
+  .home-page .pinned-main {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .home-page .pinned-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .home-page .pinned-main {
+    aspect-ratio: auto !important;
+    border-radius: 12px;
+  }
+
+  .home-page .pinned-main iframe,
+  .home-page .pinned-main img,
+  .home-page .pinned-video-cover,
+  .home-page .pinned-video-cover img {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    display: block !important;
+    object-fit: cover !important;
+    aspect-ratio: auto !important;
+  }
+
+  .home-page .pinned-thumbs {
+    display: flex !important;
+    gap: 10px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    max-width: 100% !important;
+  }
+
+  .home-page .pinned-thumbs > * {
+    flex: 0 0 auto !important;
+  }
+
+  .home-page .pinned-info,
+  .home-page .pinned-desc,
+  .home-page .pinned-title,
+  .home-page .pinned-subtitle,
+  .home-page .pinned-only p,
+  .home-page .pinned-only a {
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+
+  .home-page .pinned-tags,
+  .home-page .pinned-tech,
+  .home-page .pinned-actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+}
