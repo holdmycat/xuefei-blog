@@ -110,9 +110,29 @@
     overflow-x: hidden !important;
   }
 
+  .project-modal__content,
+  .project-modal__meta,
+  .project-modal__meta-grid,
+  .project-modal .meta-grid,
+  .project-modal .info-grid,
   .project-modal .pinned-grid {
-    flex-direction: column !important;
+    display: block !important;
+    grid-template-columns: 1fr !important;
+    grid-auto-flow: row !important;
     min-width: 0 !important;
+  }
+
+  .project-modal__content * {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .project-modal__meta .col-right,
+  .project-modal__meta .right,
+  .project-modal__meta .spacer,
+  .project-modal__meta .placeholder,
+  .project-modal__meta [data-empty="true"] {
+    display: none !important;
   }
 
   .project-modal .pinned-media,
@@ -134,10 +154,34 @@
 
   .project-modal .pinned-desc,
   .project-modal .pinned-info p,
-  .project-modal .pinned-info li {
+  .project-modal .pinned-info li,
+  .project-modal h1,
+  .project-modal h2,
+  .project-modal h3,
+  .project-modal h4,
+  .project-modal p,
+  .project-modal li,
+  .project-modal a {
     white-space: normal !important;
     overflow-wrap: anywhere !important;
     word-break: break-word !important;
+  }
+
+  .project-modal__chips,
+  .project-modal .tag-list,
+  .project-modal .tech-stack,
+  .project-modal .badge-list {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .project-modal__media img,
+  .project-modal__media video,
+  .project-modal__media iframe {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
   }
 
   .project-modal .pinned-thumbs {

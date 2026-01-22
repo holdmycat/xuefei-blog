@@ -9,7 +9,7 @@
           <p class="pinned-subtitle" data-project-modal-subtitle></p>
         </div>
         <div class="pinned-grid">
-          <div class="pinned-media">
+          <div class="pinned-media project-modal__media">
             <div class="pinned-main">
               <button class="pinned-video-cover" type="button" data-video-poster hidden aria-label="Play video">
                 <img data-video-poster-img alt="" loading="lazy" decoding="async">
@@ -20,27 +20,29 @@
             <div class="pinned-thumbs" data-project-modal-thumbs></div>
           </div>
           <aside class="pinned-info">
-            <div class="pinned-desc" data-project-modal-desc></div>
-            <div class="pinned-meta-extra">
-              <div class="meta-row">
-                <span class="label">职责：</span>
-                <span class="value" data-project-modal-responsibility></span>
+            <div class="pinned-desc project-modal__desc" data-project-modal-desc></div>
+            <div class="project-modal__meta">
+              <div class="pinned-meta-extra">
+                <div class="meta-row">
+                  <span class="label">职责：</span>
+                  <span class="value" data-project-modal-responsibility></span>
+                </div>
+                <div class="meta-row">
+                  <span class="label">项目组人数：</span>
+                  <span class="value" data-project-modal-team></span>
+                </div>
               </div>
-              <div class="meta-row">
-                <span class="label">项目组人数：</span>
-                <span class="value" data-project-modal-team></span>
+              <div class="pinned-meta">
+                <div class="meta-row">
+                  <div class="meta-k">日期</div>
+                  <div class="meta-v" data-project-modal-period></div>
+                </div>
               </div>
             </div>
-            <div class="pinned-meta">
-              <div class="meta-row">
-                <div class="meta-k">日期</div>
-                <div class="meta-v" data-project-modal-period></div>
-              </div>
-            </div>
-            <div class="pinned-tags" data-project-modal-tags></div>
+            <div class="pinned-tags project-modal__chips" data-project-modal-tags></div>
             <div class="pinned-tech">
               <div class="tech-title">技术栈</div>
-              <div class="tech-list" data-project-modal-tech></div>
+              <div class="tech-list project-modal__chips" data-project-modal-tech></div>
             </div>
           </aside>
         </div>
