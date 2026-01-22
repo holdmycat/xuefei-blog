@@ -4,6 +4,7 @@
   z-index: 100;
   display: grid;
   place-items: center;
+  overflow-x: hidden;
 }
 
 .home-page .project-modal[hidden] { display: none; }
@@ -17,12 +18,13 @@
 .home-page .project-modal__panel {
   position: relative;
   width: min(80vw, 1400px);
-  max-height: 90vh;
+  max-height: 92vh;
   background: rgba(10, 15, 31, 0.98);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   padding: 24px;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   z-index: 1;
 }
 
@@ -40,9 +42,91 @@
 }
 
 .home-page .project-modal__content {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  display: block;
+  overflow-x: hidden;
+}
+
+.home-page .project-modal .pinned-container {
+  width: 100%;
+  margin: 0;
+  height: 100%;
+  min-height: 0;
+  overflow-x: hidden;
+}
+
+.home-page .project-modal .pinned-grid {
+  display: flex;
+  align-items: stretch;
   gap: 24px;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.home-page .project-modal .pinned-media {
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+}
+
+.home-page .project-modal .pinned-info {
+  flex: 0 0 360px;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.home-page .project-modal .pinned-video-cover {
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.home-page .project-modal .pinned-video-cover .play-icon {
+  pointer-events: none;
+}
+
+.home-page .project-modal .pinned-main [data-video-player],
+.home-page .project-modal .pinned-main [data-video-player] iframe,
+.home-page .project-modal .pinned-main [data-video-player] img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  border-radius: 12px;
+  max-width: 100%;
+}
+
+.home-page .project-modal .pinned-main [data-video-player] {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.home-page .project-modal .pinned-main [data-video-player].is-playing {
+  pointer-events: auto;
+}
+
+.home-page .project-modal .pinned-main [data-video-player] img {
+  object-fit: cover;
+}
+
+.home-page .project-modal .pinned-desc {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.home-page .project-modal .pinned-tags,
+.home-page .project-modal .pinned-tech .tech-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
 }
 
 .home-page .project-modal__media { display: flex; flex-direction: column; gap: 12px; }
@@ -145,7 +229,10 @@
     width: 92vw;
     padding: 20px;
   }
-  .home-page .project-modal__content {
-    grid-template-columns: 1fr;
+  .home-page .project-modal .pinned-grid {
+    flex-direction: column;
+  }
+  .home-page .project-modal .pinned-info {
+    flex-basis: auto;
   }
 }

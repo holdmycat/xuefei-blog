@@ -6,7 +6,7 @@ description: >
   《暗辉幸存者》是一款融合 Roguelike 构筑与快节奏割草战斗的生存游戏。
 poster: /images/pinned/ebonor-poster1.png
 responsibility: 制作人、主程序、战斗系统设计、美术资源整合
-team_size: 8
+team_size: 2
 video:
   provider: bilibili
   bvid: BV1sWk5BHE2h
@@ -20,6 +20,6 @@ gallery:
   - /images/pinned/ebonor-3.png
   - /images/pinned/ebonor-4.png
 
-tech_stack: [Unity 2022.3, C#, Addressables, HybridCLR, Zenject, Node.js]
+tech_stack: [Unity 6, C#, Addressables, HybridCLR, Zenject, Node.js， Docker, CDN, Cloud Server]
 links:
   steam: https://store.steampowered.com/app/3680960/_/

@@ -63,18 +63,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const projectRows = Array.from(document.querySelectorAll('.project-row[data-project-id]'));
   const projectDataMap = new Map();
-  document.querySelectorAll('script[data-project-json]').forEach((script) => {
-    const id = script.dataset.projectJson;
-    if (!id) return;
+  const getProjectData = (row) => {
+    if (!row) return null;
+    const id = row.dataset.projectId;
+    if (id && projectDataMap.has(id)) {
+      return projectDataMap.get(id);
+    }
+    const raw = row.dataset.project;
+    if (!raw) return null;
     try {
-      projectDataMap.set(id, JSON.parse(script.textContent));
+      const data = JSON.parse(raw);
+      if (id) {
+        projectDataMap.set(id, data);
+      }
+      return data;
     } catch (error) {
       console.warn('[projects] invalid json', id, error);
+      return null;
     }
-  });
+  };
 
   const modal = document.querySelector('.project-modal');
-  const modalMain = modal?.querySelector('[data-project-modal-main]');
   const modalThumbs = modal?.querySelector('[data-project-modal-thumbs]');
   const modalTitle = modal?.querySelector('[data-project-modal-title]');
   const modalSubtitle = modal?.querySelector('[data-project-modal-subtitle]');
@@ -84,35 +93,103 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalPeriod = modal?.querySelector('[data-project-modal-period]');
   const modalTags = modal?.querySelector('[data-project-modal-tags]');
   const modalTech = modal?.querySelector('[data-project-modal-tech]');
-  const modalLinks = modal?.querySelector('[data-project-modal-links]');
+  const modalTechWrap = modalTech?.closest('.pinned-tech');
 
   const closeModal = () => {
     if (!modal) return;
     modal.hidden = true;
-    if (modalMain) {
-      modalMain.innerHTML = '';
+    const player = modal.querySelector('[data-video-player]');
+    if (player) {
+      player.innerHTML = '';
+      player.classList.remove('is-playing');
     }
   };
 
-  const renderModalCover = (project) => {
-    if (!modalMain || !project?.video?.cover) return;
-    modalMain.innerHTML = '';
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'pinned-video-cover';
-    button.setAttribute('data-project-modal-play', 'true');
-    button.dataset.iframe = project.video.iframe_src || '';
-    button.dataset.bvid = project.video.bvid || '';
-    button.setAttribute('aria-label', 'Play video');
-    button.innerHTML = `<img src="${project.video.cover}" alt="${project.title} video cover" loading="lazy" decoding="async"><span class="play-icon" aria-hidden="true"></span>`;
-    modalMain.appendChild(button);
+  const getIframeSrc = (video) => {
+    if (!video) return '';
+    if (video.iframe_src) {
+      if (video.autoplay === true && !video.iframe_src.includes('autoplay=')) {
+        return `${video.iframe_src}&autoplay=1`;
+      }
+      return video.iframe_src;
+    }
+    if (video.bvid) {
+      const autoplay = video.autoplay ? '&autoplay=1' : '';
+      return `https://player.bilibili.com/player.html?bvid=${video.bvid}&page=1&high_quality=1&danmaku=0${autoplay}`;
+    }
+    return '';
   };
 
-  const renderModalIframe = (project) => {
-    if (!modalMain) return;
-    const iframeSrc = project?.video?.iframe_src
-      || `https://player.bilibili.com/player.html?bvid=${project?.video?.bvid}&page=1&high_quality=1&danmaku=0&autoplay=1`;
-    modalMain.innerHTML = `<iframe src="${iframeSrc}${iframeSrc.includes('autoplay=') ? '' : '&autoplay=1'}" title="Bilibili video" frameborder="0" loading="lazy" referrerpolicy="no-referrer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+  const getModalMediaNodes = (modalEl) => {
+    if (!modalEl) return {};
+    return {
+      poster: modalEl.querySelector('[data-video-poster]'),
+      posterImg: modalEl.querySelector('[data-video-poster-img]'),
+      player: modalEl.querySelector('[data-video-player]'),
+    };
+  };
+
+  const renderImage = (modalEl, src, alt) => {
+    const { player, poster } = getModalMediaNodes(modalEl);
+    if (!player) return;
+    player.innerHTML = `<img src="${src}" alt="${alt}" loading="lazy" decoding="async">`;
+    player.classList.add('is-playing');
+    if (poster) {
+      poster.hidden = true;
+      poster.classList.add('is-hidden');
+    }
+  };
+
+  const renderVideo = (modalEl, project, options = {}) => {
+    const { poster, posterImg, player } = getModalMediaNodes(modalEl);
+    if (!player) return;
+    const video = project?.video;
+    const iframeSrc = getIframeSrc(video);
+    const cover = video?.cover || project?.cover || '';
+    const shouldPlay = options.play === true;
+
+    player.innerHTML = '';
+    player.classList.remove('is-playing');
+
+    if (!iframeSrc) {
+      if (cover) {
+        renderImage(modalEl, cover, `${project?.title || ''} cover`);
+      }
+      return;
+    }
+
+    if (poster) {
+      const posterButton = poster.cloneNode(true);
+      poster.parentNode?.replaceChild(posterButton, poster);
+      const posterImage = posterButton.querySelector('[data-video-poster-img]');
+      if (posterImage) {
+        posterImage.src = cover || '';
+        posterImage.alt = cover ? `${project?.title || ''} video cover` : '';
+      }
+      posterButton.hidden = !(cover && !shouldPlay);
+      posterButton.classList.toggle('is-hidden', shouldPlay);
+      if (cover) {
+        posterButton.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          renderVideo(modalEl, project, { play: true });
+        });
+      }
+    }
+
+    if (!shouldPlay && cover) {
+      return;
+    }
+
+    player.innerHTML = `<iframe src="${iframeSrc}" title="Bilibili video" frameborder="0" loading="lazy" referrerpolicy="no-referrer" allow="autoplay; fullscreen; picture-in-picture; accelerometer; clipboard-write; encrypted-media; gyroscope" allowfullscreen></iframe>`;
+    player.classList.add('is-playing');
+  };
+
+  const setActiveThumb = (button) => {
+    if (!modalThumbs) return;
+    modalThumbs.querySelectorAll('.pinned-thumb').forEach((thumb) => {
+      thumb.classList.toggle('active', thumb === button);
+    });
   };
 
   const renderModal = (project) => {
@@ -124,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
       modalSubtitle.hidden = !project.subtitle;
     }
     if (modalDesc) {
-      modalDesc.textContent = project.description || '';
+      modalDesc.innerHTML = project.description ? `<p>${project.description}</p>` : '';
       modalDesc.hidden = !project.description;
     }
     if (modalResponsibility) {
@@ -138,6 +215,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modalPeriod) {
       modalPeriod.textContent = project.period || '';
       modalPeriod.closest('.meta-row')?.toggleAttribute('hidden', !project.period);
+    }
+    const metaExtra = modalResponsibility?.closest('.pinned-meta-extra');
+    if (metaExtra) {
+      metaExtra.toggleAttribute('hidden', !project.responsibility && !project.team_size);
+    }
+    const metaPeriod = modalPeriod?.closest('.pinned-meta');
+    if (metaPeriod) {
+      metaPeriod.toggleAttribute('hidden', !project.period);
     }
     if (modalTags) {
       modalTags.innerHTML = '';
@@ -157,62 +242,62 @@ document.addEventListener('DOMContentLoaded', () => {
         span.textContent = tech;
         modalTech.appendChild(span);
       });
-      modalTech.hidden = !(project.tech_stack && project.tech_stack.length);
-    }
-    if (modalLinks) {
-      modalLinks.innerHTML = '';
-      const links = project.links || {};
-      const linkPairs = [
-        { label: 'Demo', href: links.demo },
-        { label: 'GitHub', href: links.github },
-        { label: 'Steam', href: links.steam },
-        { label: 'Bilibili', href: links.bilibili },
-      ];
-      linkPairs.forEach((item) => {
-        if (!item.href) return;
-        const link = document.createElement('a');
-        link.className = 'btn';
-        link.href = item.href;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.textContent = item.label;
-        modalLinks.appendChild(link);
-      });
-      modalLinks.hidden = !modalLinks.childElementCount;
+      if (modalTechWrap) {
+        modalTechWrap.toggleAttribute('hidden', !(project.tech_stack && project.tech_stack.length));
+      } else {
+        modalTech.hidden = !(project.tech_stack && project.tech_stack.length);
+      }
     }
 
-    if (project.video?.cover) {
-      renderModalCover(project);
+    if (project.video?.iframe_src || project.video?.bvid) {
+      renderVideo(modal, project, { play: false });
     } else if (project.cover) {
-      modalMain.innerHTML = `<img src="${project.cover}" alt="${project.title} cover" loading="lazy" decoding="async">`;
+      renderImage(modal, project.cover, `${project.title} cover`);
+    } else if (project.gallery?.[0]) {
+      renderImage(modal, project.gallery[0], `${project.title} cover`);
     }
     if (modalThumbs) {
       modalThumbs.innerHTML = '';
-      if (project.video?.cover) {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'project-modal__thumb project-modal__thumb--video';
+    if (project.video?.cover) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'pinned-thumb pinned-thumb--video';
         button.dataset.mediaType = 'video';
         button.dataset.iframe = project.video.iframe_src || '';
         button.dataset.bvid = project.video.bvid || '';
-        button.innerHTML = `<img src="${project.video.cover}" alt="${project.title} video thumbnail" loading="lazy" decoding="async"><span class="project-modal__thumb-play" aria-hidden="true"></span>`;
-        modalThumbs.appendChild(button);
-      }
+        button.innerHTML = `<img src="${project.video.cover}" alt="${project.title} video thumbnail" loading="lazy" decoding="async"><span class="pinned-thumb-play" aria-hidden="true"></span>`;
+      modalThumbs.appendChild(button);
+      setActiveThumb(button);
+    } else if (project.video?.iframe_src || project.video?.bvid) {
+      renderVideo(modal, project, { play: true });
+    }
       (project.gallery || []).forEach((src) => {
         const button = document.createElement('button');
         button.type = 'button';
-        button.className = 'project-modal__thumb';
+        button.className = 'pinned-thumb';
         button.dataset.mediaType = 'image';
         button.dataset.src = src;
         button.innerHTML = `<img src="${src}" alt="${project.title} thumbnail" loading="lazy" decoding="async">`;
         modalThumbs.appendChild(button);
+        if (!modalThumbs.querySelector('.pinned-thumb.active') && !project.video?.cover) {
+          setActiveThumb(button);
+        }
       });
+      modalThumbs.hidden = !modalThumbs.childElementCount;
     }
   };
 
   const bindModalEvents = () => {
     if (!modal) return;
-    modal.querySelectorAll('[data-project-modal-close]').forEach((node) => {
+    const backdrop = modal.querySelector('.project-modal__backdrop');
+    if (backdrop) {
+      backdrop.addEventListener('click', (event) => {
+        if (event.target === backdrop) {
+          closeModal();
+        }
+      });
+    }
+    modal.querySelectorAll('[data-project-modal-close]:not(.project-modal__backdrop)').forEach((node) => {
       node.addEventListener('click', closeModal);
     });
     document.addEventListener('keydown', (event) => {
@@ -220,27 +305,20 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal();
       }
     });
-    modal.addEventListener('click', (event) => {
-      const playBtn = event.target.closest('[data-project-modal-play]');
-      if (!playBtn) return;
-      const projectId = modal.dataset.projectId;
-      const project = projectDataMap.get(projectId);
-      if (!project) return;
-      renderModalIframe(project);
-    });
     modalThumbs?.addEventListener('click', (event) => {
-      const button = event.target.closest('.project-modal__thumb');
+      const button = event.target.closest('.pinned-thumb');
       if (!button) return;
       const projectId = modal.dataset.projectId;
       const project = projectDataMap.get(projectId);
       if (!project) return;
       if (button.dataset.mediaType === 'video') {
-        renderModalCover(project);
+        renderVideo(modal, project, { play: false });
       } else if (button.dataset.mediaType === 'image') {
         const src = button.dataset.src;
-        if (!src || !modalMain) return;
-        modalMain.innerHTML = `<img src="${src}" alt="${project.title} media" loading="lazy" decoding="async">`;
+        if (!src) return;
+        renderImage(modal, src, `${project.title} media`);
       }
+      setActiveThumb(button);
     });
   };
 
@@ -263,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (detailBtn && modal) {
       detailBtn.addEventListener('click', () => {
         const projectId = row.dataset.projectId;
-        const project = projectDataMap.get(projectId);
+        const project = getProjectData(row);
         if (!project) return;
         modal.dataset.projectId = projectId;
         renderModal(project);
@@ -274,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (event.target.closest('button, a')) return;
       if (!detailBtn || !modal) return;
       const projectId = row.dataset.projectId;
-      const project = projectDataMap.get(projectId);
+      const project = getProjectData(row);
       if (!project) return;
       modal.dataset.projectId = projectId;
       renderModal(project);

@@ -23,7 +23,7 @@
           {{ end }}
           {{ $links := dict "github" $project.links.github "demo" $project.links.demo "steam" $project.links.steam "bilibili" $project.links.bilibili }}
           {{ $modal := dict "id" $project.id "title" $project.title "subtitle" $project.subtitle "period" $project.period "description" $project.description "responsibility" $project.responsibility "team_size" $project.team_size "cover" $cover "tags" $project.tags "tech_stack" $project.tech_stack "video" $video "gallery" $gallery "links" $links }}
-          <article class="project-row" data-project-id="{{ $project.id }}">
+          <article class="project-row" data-project-id="{{ $project.id }}" data-project='{{ $modal | jsonify | safeHTMLAttr }}'>
             <div class="project-thumb" data-project-main>
               {{ with $cover }}
                 <img src="{{ . }}" alt="{{ $project.title }} cover" loading="lazy" decoding="async">
@@ -67,7 +67,6 @@
                 </div>
               {{ end }}
             </aside>
-            <script type="application/json" data-project-json="{{ $project.id }}">{{ $modal | jsonify }}</script>
           </article>
         {{ end }}
       </div>

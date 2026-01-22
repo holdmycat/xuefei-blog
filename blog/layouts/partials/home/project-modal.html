@@ -3,34 +3,48 @@
   <div class="project-modal__panel" role="dialog" aria-modal="true">
     <button class="project-modal__close" type="button" data-project-modal-close aria-label="Close">×</button>
     <div class="project-modal__content">
-      <div class="project-modal__media">
-        <div class="project-modal__main" data-project-modal-main></div>
-        <div class="project-modal__thumbs" data-project-modal-thumbs></div>
+      <div class="pinned-container">
+        <div class="pinned-header">
+          <h3 class="pinned-title" data-project-modal-title></h3>
+          <p class="pinned-subtitle" data-project-modal-subtitle></p>
+        </div>
+        <div class="pinned-grid">
+          <div class="pinned-media">
+            <div class="pinned-main">
+              <button class="pinned-video-cover" type="button" data-video-poster hidden aria-label="Play video">
+                <img data-video-poster-img alt="" loading="lazy" decoding="async">
+                <span class="play-icon" aria-hidden="true"></span>
+              </button>
+              <div data-video-player></div>
+            </div>
+            <div class="pinned-thumbs" data-project-modal-thumbs></div>
+          </div>
+          <aside class="pinned-info">
+            <div class="pinned-desc" data-project-modal-desc></div>
+            <div class="pinned-meta-extra">
+              <div class="meta-row">
+                <span class="label">职责：</span>
+                <span class="value" data-project-modal-responsibility></span>
+              </div>
+              <div class="meta-row">
+                <span class="label">项目组人数：</span>
+                <span class="value" data-project-modal-team></span>
+              </div>
+            </div>
+            <div class="pinned-meta">
+              <div class="meta-row">
+                <div class="meta-k">日期</div>
+                <div class="meta-v" data-project-modal-period></div>
+              </div>
+            </div>
+            <div class="pinned-tags" data-project-modal-tags></div>
+            <div class="pinned-tech">
+              <div class="tech-title">技术栈</div>
+              <div class="tech-list" data-project-modal-tech></div>
+            </div>
+          </aside>
+        </div>
       </div>
-      <aside class="project-modal__info">
-        <div class="project-modal__header">
-          <h3 class="project-modal__title" data-project-modal-title></h3>
-          <p class="project-modal__subtitle" data-project-modal-subtitle></p>
-        </div>
-        <p class="project-modal__desc" data-project-modal-desc></p>
-        <div class="project-modal__meta">
-          <div class="meta-row">
-            <div class="meta-k">职责</div>
-            <div class="meta-v" data-project-modal-responsibility></div>
-          </div>
-          <div class="meta-row">
-            <div class="meta-k">项目组人数</div>
-            <div class="meta-v" data-project-modal-team></div>
-          </div>
-          <div class="meta-row">
-            <div class="meta-k">开发日期</div>
-            <div class="meta-v" data-project-modal-period></div>
-          </div>
-        </div>
-        <div class="project-modal__tags" data-project-modal-tags></div>
-        <div class="project-modal__tech" data-project-modal-tech></div>
-        <div class="project-modal__links" data-project-modal-links></div>
-      </aside>
     </div>
   </div>
 </div>

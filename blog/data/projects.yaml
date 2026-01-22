@@ -6,47 +6,58 @@ projects:
     description: >
       欢迎来到契灵师！在每场战斗中，你可以自由选择不同武器，并通过复杂的技能组合增强英雄实力，创造出专属的战斗流派。丰富的技能自由度和武器搭配，让你在战斗中体验无限变化的策略和爽快感。无论是单打独斗还是团队协作，战斗体验都独具一格！立即预约，抢先体验技能与武器无缝结合的畅快对决！
     cover: /images/projects/soulmaster/soulmaster-thumnail.png
-    responsibility: 技能框架与工具链设计
-    team_size: 3
-    tags: [Unity, Roguelite, SkillSystem, Tools]
-    tech_stack: [Unity 2022.3, C#, Addressables, Zenject]
+    responsibility: 项目负责人，技术负责人，核心玩法与系统设计
+    team_size: 6
+  
+    tech_stack: [Unity 2022.3, C#, Addressables, HybridCLR, Zenject, Mirror, Odin, Docker, nodejs, Cloud Server]
     video:
       provider: bilibili
-      bvid: BV1sWk5BHE2h
-      cover: /images/pinned/ebonor-cover.jpg
-      iframe_src: https://player.bilibili.com/player.html?bvid=BV1sWk5BHE2h&page=1&high_quality=1&danmaku=0
+      bvid: BV14nk5BWEPk
+      cover: /images/projects/soulmaster/soulmaster-horizontal-cover.png
+      iframe_src: https://player.bilibili.com/player.html?bvid=BV14nk5BWEPk&page=1&high_quality=1&danmaku=0
       title: Modular Skill System Demo
       autoplay: false
     gallery:
-      - /images/projects/modular-skill-system.jpg
-      - /images/projects/skill-editor.png
+      - /images/projects/soulmaster/Snapshot_30.png
+      - /images/projects/soulmaster/Snapshot_27.png
+      - /images/projects/soulmaster/Snapshot_26.png
+      - /images/projects/soulmaster/Snapshot_28.png
+      - /images/projects/soulmaster/Snapshot_32.png
+      - /images/projects/soulmaster/Snapshot_33.png     
+      - /images/projects/soulmaster/Snapshot_34.png
+      - /images/projects/soulmaster/Snapshot_35.png   
+      - /images/projects/soulmaster/Snapshot_36.png
+      - /images/projects/soulmaster/Snapshot_38.png   
+      - /images/projects/soulmaster/Snapshot_40.png   
     links:
       github: https://github.com/xxxx
       demo: https://xxxx
       steam: ""
-      bilibili: https://www.bilibili.com/video/BV1sWk5BHE2h
-  - id: skill-editor
-    title: Skill Editor Tooling
-    subtitle: Node-based / Designer-friendly
-    period: "2024 – 2025"
+      bilibili: https://www.bilibili.com/video/BV14nk5BWEPk
+  - id: longmarch
+    title: 重走长征路
+    subtitle: 沉浸式红色主题策略游戏
+    period: "2020 – 2023"
     description: >
-      自研可视化技能图编辑器；支持变体、校验、导出；面向设计师的零重复工作流。
-    cover: /images/projects/soulmaster/soulmaster-thumnail.png
-    responsibility: 编辑器工具链与流程优化
-    team_size: 2
-    tags: [Editor, Graph, Workflow]
-    tech_stack: [Unity 2022.3, C#, UI Toolkit, Odin]
+      《重走长征路》是一款沉浸式红色主题策略游戏（小型 SLG）。玩家在“据点—村落—支部”式的场景中进行建设与养成，通过资源产出、建筑升级、队伍编成与关卡战斗推进进程。不同于传统 SLG 的大地图行军与长线铺路，本项目采用“场景内轻策略 + 快节奏战斗”的结构，聚焦单局可控、目标清晰的策略体验。
+    cover: /images/projects/longmarch/longmarch-cover.png
+    responsibility: 项目负责人，技术负责人，核心玩法与系统设计
+    team_size: 11
+    tech_stack: [Unity, C#, AssetBundles, Odin, Docker, nodejs]
     video:
       provider: bilibili
       bvid: BV1sWk5BHE2h
-      cover: /images/pinned/ebonor-cover.jpg
-      iframe_src: https://player.bilibili.com/player.html?bvid=BV1sWk5BHE2h&page=1&high_quality=1&danmaku=0
+      cover: /images/projects/longmarch/longmarch-horizontal-cover.png
+      iframe_src: https://player.bilibili.com/player.html?bvid=BV1xnk5BWEeC&page=1&high_quality=1&danmaku=0
       title: Skill Editor Tooling
       autoplay: false
     gallery:
-      - /images/projects/skill-editor.png
+      - /images/projects/longmarch/longmatch1.png
+      - /images/projects/longmarch/longmatch2.png
+      - /images/projects/longmarch/longmatch3.png
+   
     links:
       github: https://github.com/xxxx
       demo: ""
       steam: ""
-      bilibili: https://www.bilibili.com/video/BV1sWk5BHE2h
+      bilibili: https://www.bilibili.com/video/BV1xnk5BWEeC
