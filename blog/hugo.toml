@@ -1,6 +1,6 @@
 baseURL = "https://holdmycat.github.io/xuefei-blog/"
 title = "Xuefei Blog"
-languageCode = "en-us"
+languageCode = "zh-cn"
 defaultContentLanguage = "zh"
 defaultContentLanguageInSubdir = false
 disableKinds = ["taxonomy", "term", "RSS", "sitemap", "robotsTXT", "404", "section", "page"]
