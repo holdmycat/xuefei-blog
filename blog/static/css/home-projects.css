@@ -236,3 +236,24 @@
     flex-basis: auto;
   }
 }
+
+@media (max-width: 768px) {
+  .home-page .project-modal__panel {
+    width: 94vw;
+    max-height: 86vh;
+    padding: 16px;
+  }
+
+  .home-page .project-modal .pinned-info {
+    overflow: visible;
+  }
+
+  .home-page .project-modal .pinned-thumbs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .home-page .project-modal .pinned-thumb {
+    width: 120px;
+  }
+}

@@ -10,6 +10,13 @@ body {
   padding: 32px 0 64px;
 }
 
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+}
+
 a { color: var(--text); text-decoration: none; }
 a:hover { color: var(--accent); }
 
