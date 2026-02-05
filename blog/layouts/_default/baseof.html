@@ -34,6 +34,7 @@
 
   <footer class="site-footer">
     <p>{{ i18n "builtWith" }} Hugo · {{ now.Format "2006" }}</p>
+    <p><a href="{{ "docs/ebonor/privacy-policy-template.html" | relURL }}">隐私政策模板</a></p>
   </footer>
   {{ if .IsHome }}
     {{ $home := resources.Get "js/home.js" | resources.Minify | resources.Fingerprint }}
