@@ -2,12 +2,12 @@ projects:
   - id: soulmaster
     title: 契灵师 - SOUL MASTER
     subtitle: 3D多人在线联机手游，装配多把武器，支持技能构筑
-    period: "2023 – 2024"
+    period: "2024 – 2025"
     description: >
       欢迎来到契灵师！在每场战斗中，你可以自由选择不同武器，并通过复杂的技能组合增强英雄实力，创造出专属的战斗流派。丰富的技能自由度和武器搭配，让你在战斗中体验无限变化的策略和爽快感。无论是单打独斗还是团队协作，战斗体验都独具一格！
     cover: /images/projects/soulmaster/soulmaster-thumnail.png
     responsibility: 项目负责人，技术负责人，核心玩法与系统设计
-    team_size: 1
+    team_size: 2
   
     tech_stack: [Unity 2022.3, C#, Addressables, HybridCLR, Zenject, Mirror, Odin, Docker, nodejs, Cloud Server]
     video:
@@ -37,7 +37,7 @@ projects:
   - id: longmarch
     title: 重走长征路
     subtitle: 沉浸式红色主题策略游戏
-    period: "2020 – 2023"
+    period: "2021 – 2024"
     description: >
       《重走长征路》是一款沉浸式红色主题策略游戏（小型 SLG）。玩家在“据点—村落—支部”式的场景中进行建设与养成，通过资源产出、建筑升级、队伍编成与关卡战斗推进进程。不同于传统 SLG 的大地图行军与长线铺路，本项目采用“场景内轻策略 + 快节奏战斗”的结构，聚焦单局可控、目标清晰的策略体验。
     cover: /images/projects/longmarch/longmarch-cover.png
