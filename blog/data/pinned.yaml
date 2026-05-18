@@ -1,6 +1,6 @@
 id: ebonor
-title: 暗辉幸存者-EBONOR(Steam)
-subtitle: Steam 项目
+title: 暗辉幸存者-EBONOR(TapTap)
+subtitle: TapTap 项目
 period: "2025 – 2026"
 description: >
   《暗辉幸存者》是一款融合 Roguelike 构筑与快节奏割草战斗的生存游戏。
@@ -22,4 +22,4 @@ gallery:
 
 tech_stack: [Unity 6, C#, Addressables, HybridCLR, Zenject, Node.js， Docker, CDN, Cloud Server]
 links:
-  steam: https://store.steampowered.com/app/3680960/_/
+  taptap: https://www.taptap.cn/app/814618?os=android

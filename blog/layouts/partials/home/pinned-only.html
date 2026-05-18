@@ -87,8 +87,8 @@
           {{ end }}
 
           <div class="pinned-actions">
-            {{ with $pinned.links.steam }}
-              {{ if ne . "" }}<a class="btn primary" href="{{ . }}" target="_blank" rel="noopener noreferrer">Steam 页面</a>{{ end }}
+            {{ with $pinned.links.taptap }}
+              {{ if ne . "" }}<a class="btn primary" href="{{ . }}" target="_blank" rel="noopener noreferrer">TapTap 页面</a>{{ end }}
             {{ end }}
             {{ if and $pinned.video (eq $pinned.video.provider "bilibili") }}
               <a class="btn" data-open-video href="https://www.bilibili.com/video/{{ $pinned.video.bvid }}" target="_blank" rel="noopener noreferrer">观看视频</a>
