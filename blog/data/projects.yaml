@@ -7,7 +7,7 @@ projects:
       欢迎来到契灵师！在每场战斗中，你可以自由选择不同武器，并通过复杂的技能组合增强英雄实力，创造出专属的战斗流派。丰富的技能自由度和武器搭配，让你在战斗中体验无限变化的策略和爽快感。无论是单打独斗还是团队协作，战斗体验都独具一格！
     cover: /images/projects/soulmaster/soulmaster-thumnail.png
     responsibility: 项目负责人，技术负责人，核心玩法与系统设计
-    team_size: 2
+    team_size: 1
   
     tech_stack: [Unity 2022.3, C#, Addressables, HybridCLR, Zenject, Mirror, Odin, Docker, nodejs, Cloud Server]
     video:
