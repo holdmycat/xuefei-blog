@@ -1,0 +1,172 @@
+{{ $isEN := eq site.Language.Lang "en" }}
+{{ $media := site.Data.pinned.hub_media }}
+{{ $gallery := $media.cover_gallery }}
+{{ $features := $media.features }}
+
+<section id="hub-workflow" class="hub-workflow">
+  <div class="hub-container">
+
+    <header class="hub-header">
+      <h1 class="hub-title">
+        {{ if $isEN }}Ebonor Data Hub · A Workflow Layer Between Unity and Claude Code{{ else }}Ebonor Data Hub · AI × 游戏研发工具链{{ end }}
+      </h1>
+      <div class="hub-lead">
+        {{ cond $isEN $media.description.en $media.description.zh | safeHTML }}
+      </div>
+    </header>
+
+    {{/* ============ 上方区：左大图+缩略图条 / 右信息卡片 ============ */}}
+    <div class="pinned-grid hub-grid-top" data-pinned-gallery>
+      <div class="pinned-media">
+
+        {{/* 默认大图：cover_gallery 第一张 */}}
+        {{ $first := index $gallery 0 }}
+        {{ $firstPath := cond $isEN $first.path_en $first.path_zh }}
+        {{ $firstAlt := cond $isEN $first.alt_en $first.alt_zh }}
+        <div class="pinned-main" data-pinned-main>
+          {{ if and $firstPath (ne $firstPath "") }}
+            <img src="{{ strings.TrimPrefix "/" $firstPath | relURL }}" alt="{{ $firstAlt }}" loading="lazy" decoding="async">
+          {{ else }}
+            <div class="hub-media-placeholder hub-media-placeholder--cover">
+              <div class="placeholder-icon">🖼</div>
+              <div class="placeholder-label">{{ $firstAlt }}</div>
+              <div class="placeholder-hint">
+                {{ if $isEN }}cover image — coming{{ else }}主图 · 待补{{ end }}
+              </div>
+            </div>
+          {{ end }}
+        </div>
+
+        {{/* 缩略图条 */}}
+        <div class="pinned-thumbs">
+          {{ range $i, $g := $gallery }}
+            {{ $path := cond $isEN $g.path_en $g.path_zh }}
+            {{ $alt := cond $isEN $g.alt_en $g.alt_zh }}
+            {{ $activeCls := cond (eq $i 0) " active" "" }}
+            {{ if and $path (ne $path "") }}
+              <button type="button" class="pinned-thumb{{ $activeCls }}" data-media-type="image" data-src="{{ strings.TrimPrefix "/" $path | relURL }}">
+                <img src="{{ strings.TrimPrefix "/" $path | relURL }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+              </button>
+            {{ else }}
+              <div class="pinned-thumb hub-thumb-placeholder" aria-label="{{ $alt }}">
+                <span class="thumb-placeholder-label">{{ $alt }}</span>
+              </div>
+            {{ end }}
+          {{ end }}
+        </div>
+      </div>
+
+      <aside class="pinned-info">
+
+        {{ with $media.description }}
+          <div class="pinned-desc">
+            {{ cond $isEN .en .zh | safeHTML }}
+          </div>
+        {{ end }}
+
+        {{ with $media.responsibility }}
+          <div class="pinned-meta-extra">
+            <div class="meta-row">
+              <span class="label">{{ if $isEN }}Responsibility:{{ else }}职责：{{ end }}</span>
+              <span class="value">{{ cond $isEN .en .zh }}</span>
+            </div>
+          </div>
+        {{ end }}
+
+        <div class="pinned-meta">
+          {{ with $media.period }}
+            <div class="meta-row">
+              <div class="meta-k">{{ if $isEN }}Period{{ else }}周期{{ end }}</div>
+              <div class="meta-v">{{ . }}</div>
+            </div>
+          {{ end }}
+          {{ with $media.coverage }}
+            <div class="meta-row">
+              <div class="meta-k">{{ if $isEN }}Coverage{{ else }}覆盖范围{{ end }}</div>
+              <div class="meta-v">{{ cond $isEN .en .zh }}</div>
+            </div>
+          {{ end }}
+        </div>
+
+        {{ with $media.tech_stack }}
+          <div class="pinned-tech">
+            <div class="tech-title">{{ if $isEN }}Tech Stack{{ else }}技术栈{{ end }}</div>
+            <div class="tech-list">
+              {{ range . }}<span class="chip">{{ . }}</span>{{ end }}
+            </div>
+          </div>
+        {{ end }}
+
+        {{ with $media.status }}
+          {{ $items := cond $isEN .en .zh }}
+          {{ with $items }}
+            <div class="pinned-status">
+              <div class="status-title">{{ if $isEN }}Status{{ else }}当前状态{{ end }}</div>
+              <ul class="status-list hub-status-list">
+                {{ range . }}<li>{{ . }}</li>{{ end }}
+              </ul>
+            </div>
+          {{ end }}
+        {{ end }}
+
+      </aside>
+    </div>
+
+    {{/* ============ 下方区：纵向 GIF 段 × 3 ============ */}}
+    <div class="hub-features">
+      {{ range $i, $f := $features }}
+        {{ $title := cond $isEN $f.title_en $f.title_zh }}
+        {{ $caption := cond $isEN $f.caption_en $f.caption_zh }}
+        <article class="hub-feature">
+          <h3 class="hub-feature-title">
+            <span class="hub-feature-no">{{ add $i 1 }}</span>
+            {{ $title }}
+          </h3>
+          {{/* 中文版用 bilibili；英文版优先 YouTube，无 YouTube 时回落 bilibili（中英共用）；其余回落 gif / 占位 */}}
+          {{ $yt := default "" $f.video_youtube }}
+          {{ $biliBvid := "" }}
+          {{ if $isEN }}
+            {{ if eq $yt "" }}{{ $biliBvid = default "" $f.video_bilibili }}{{ end }}
+          {{ else }}
+            {{ $biliBvid = default "" $f.video_bilibili }}
+          {{ end }}
+          <div class="hub-feature-media">
+            {{ if and $biliBvid (ne $biliBvid "") }}
+              <div class="hub-feature-video-wrap">
+                <iframe src="https://player.bilibili.com/player.html?bvid={{ $biliBvid }}&page=1&high_quality=1&danmaku=0&autoplay=0"
+                        title="{{ $title }}"
+                        frameborder="0"
+                        loading="lazy"
+                        referrerpolicy="no-referrer"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                        allowfullscreen></iframe>
+              </div>
+            {{ else if and $f.video_youtube (ne $f.video_youtube "") }}
+              <div class="hub-feature-video-wrap">
+                <iframe src="https://www.youtube.com/embed/{{ $f.video_youtube }}"
+                        title="{{ $title }}"
+                        frameborder="0"
+                        loading="lazy"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                        allowfullscreen></iframe>
+              </div>
+            {{ else if and $f.gif (ne $f.gif "") }}
+              <img src="{{ strings.TrimPrefix "/" $f.gif | relURL }}" alt="{{ $title }}" loading="lazy" decoding="async">
+            {{ else }}
+              <div class="hub-media-placeholder hub-media-placeholder--feature">
+                <div class="placeholder-icon">▶</div>
+                <div class="placeholder-label">{{ $title }}</div>
+                <div class="placeholder-hint">
+                  {{ if $isEN }}GIF — coming{{ else }}GIF · 待补{{ end }}
+                </div>
+              </div>
+            {{ end }}
+          </div>
+          {{ with $caption }}<p class="hub-feature-caption">{{ . }}</p>{{ end }}
+        </article>
+      {{ end }}
+    </div>
+
+  </div>
+</section>

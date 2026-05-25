@@ -1,25 +1,42 @@
 {{ $pinned := .Site.Data.pinned }}
+{{ $isEN := eq site.Language.Lang "en" }}
+{{/* 中文版走 bilibili，英文版保留 YouTube */}}
+{{ $vIframe := "" }}
+{{ $vBvid := "" }}
+{{ $vProvider := "" }}
+{{ if $pinned.video }}
+  {{ $vIframe = $pinned.video.iframe_src }}
+  {{ $vBvid = $pinned.video.bvid }}
+  {{ $vProvider = $pinned.video.provider }}
+  {{ if and (not $isEN) (ne (default "" $pinned.video.iframe_src_zh) "") }}
+    {{ $vIframe = $pinned.video.iframe_src_zh }}
+    {{ $vBvid = default "" $pinned.video.bvid_zh }}
+    {{ $vProvider = "bilibili" }}
+  {{ end }}
+{{ end }}
 {{ if $pinned }}
   <section id="pinned" class="pinned-only">
     <div class="pinned-container" data-pinned-gallery>
+      {{ $title := cond (and $isEN (ne (default "" $pinned.title_en) "")) $pinned.title_en $pinned.title }}
+      {{ $subtitle := cond (and $isEN (ne (default "" $pinned.subtitle_en) "")) $pinned.subtitle_en $pinned.subtitle }}
       <div class="pinned-header">
-        <h1 class="pinned-title">{{ $pinned.title }}</h1>
-        {{ with $pinned.subtitle }}<p class="pinned-subtitle">{{ . }}</p>{{ end }}
+        <h1 class="pinned-title">{{ $title }}</h1>
+        {{ with $subtitle }}<p class="pinned-subtitle">{{ . }}</p>{{ end }}
       </div>
 
       <div class="pinned-grid">
         <div class="pinned-media">
           <div class="pinned-main" data-pinned-main>
-            {{ if and $pinned.video (eq $pinned.video.provider "bilibili") }}
-              <button class="pinned-video-cover" type="button" data-pinned-play data-bvid="{{ $pinned.video.bvid }}" data-iframe="{{ $pinned.video.iframe_src }}" aria-label="Play video">
+            {{ if $pinned.video }}
+              <button class="pinned-video-cover" type="button" data-pinned-play data-provider="{{ $vProvider }}" data-bvid="{{ $vBvid }}" data-iframe="{{ $vIframe }}" data-video-cover="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}" aria-label="Play video">
                 <img src="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}" alt="{{ $pinned.title }} video cover" loading="lazy" decoding="async">
                 <span class="play-icon" aria-hidden="true"></span>
               </button>
             {{ end }}
           </div>
           <div class="pinned-thumbs">
-            {{ if and $pinned.video (eq $pinned.video.provider "bilibili") }}
-              <button type="button" class="pinned-thumb pinned-thumb--video active" data-media-type="video" data-bvid="{{ $pinned.video.bvid }}" data-iframe="{{ $pinned.video.iframe_src }}">
+            {{ if $pinned.video }}
+              <button type="button" class="pinned-thumb pinned-thumb--video active" data-media-type="video" data-provider="{{ $vProvider }}" data-bvid="{{ $vBvid }}" data-iframe="{{ $vIframe }}" data-video-cover="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}">
                 <img src="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}" alt="{{ $pinned.title }} video thumbnail" loading="lazy" decoding="async">
                 <span class="pinned-thumb-play" aria-hidden="true"></span>
               </button>
@@ -39,7 +56,8 @@
             </div>
           {{ end }}
 
-          {{ with $pinned.description }}
+          {{ $desc := cond (and $isEN (ne (default "" $pinned.description_en) "")) $pinned.description_en $pinned.description }}
+          {{ with $desc }}
             <div class="pinned-desc">
               <p>{{ . }}</p>
             </div>
@@ -47,16 +65,17 @@
 
           {{ if or $pinned.responsibility $pinned.team_size }}
             <div class="pinned-meta-extra">
-              {{ with $pinned.responsibility }}
+              {{ $resp := cond (and $isEN (ne (default "" $pinned.responsibility_en) "")) $pinned.responsibility_en $pinned.responsibility }}
+              {{ with $resp }}
                 <div class="meta-row">
-                  <span class="label">职责：</span>
+                  <span class="label">{{ if $isEN }}Responsibility:{{ else }}职责：{{ end }}</span>
                   <span class="value">{{ . }}</span>
                 </div>
               {{ end }}
               {{ with $pinned.team_size }}
                 <div class="meta-row">
-                  <span class="label">项目组人数：</span>
-                  <span class="value">{{ . }} 人</span>
+                  <span class="label">{{ if $isEN }}Team Size:{{ else }}项目组人数：{{ end }}</span>
+                  <span class="value">{{ . }}{{ if $isEN }}{{ else }} 人{{ end }}</span>
                 </div>
               {{ end }}
             </div>
@@ -65,7 +84,7 @@
           {{ with $pinned.period }}
             <div class="pinned-meta">
               <div class="meta-row">
-                <div class="meta-k">日期</div>
+                <div class="meta-k">{{ if $isEN }}Period{{ else }}日期{{ end }}</div>
                 <div class="meta-v">{{ . }}</div>
               </div>
             </div>
@@ -79,25 +98,86 @@
 
           {{ with $pinned.tech_stack }}
             <div class="pinned-tech">
-              <div class="tech-title">技术栈</div>
+              <div class="tech-title">{{ if $isEN }}Tech Stack{{ else }}技术栈{{ end }}</div>
               <div class="tech-list">
                 {{ range . }}<span class="chip">{{ . }}</span>{{ end }}
               </div>
             </div>
           {{ end }}
 
+          {{ $lang := site.Language.Lang }}
+          {{ with $pinned.status }}
+            <div class="pinned-status">
+              <div class="status-title">{{ if eq $lang "en" }}Status{{ else }}发行状态{{ end }}</div>
+              <ul class="status-list">
+                {{ with .taptap }}
+                  {{ $val := cond (eq $lang "en") .en .zh }}
+                  {{ if $val }}<li><span class="status-label">TapTap</span><span class="status-value">{{ $val }}</span></li>{{ end }}
+                {{ end }}
+                {{ with .google_play }}
+                  {{ $val := cond (eq $lang "en") .en .zh }}
+                  {{ if $val }}<li><span class="status-label">Google Play</span><span class="status-value">{{ $val }}</span></li>{{ end }}
+                {{ end }}
+              </ul>
+            </div>
+          {{ end }}
+
+        </aside>
+      </div>
+
+      {{/* ============ 横跨整宽的 footer：PERFORMANCE + 按钮 + apk-meta ============ */}}
+      <div class="pinned-footer">
+        {{ with $pinned.performance }}
+          {{ $items := cond (eq $lang "en") .en .zh }}
+          {{ with $items }}
+            <div class="pinned-perf pinned-footer-cell">
+              <div class="perf-title">{{ if eq $lang "en" }}Performance{{ else }}性能指标{{ end }}</div>
+              <ul class="perf-list">
+                {{ range . }}<li>{{ . }}</li>{{ end }}
+              </ul>
+            </div>
+          {{ end }}
+        {{ end }}
+
+        <div class="pinned-actions-wrap pinned-footer-cell">
           <div class="pinned-actions">
-            {{ with $pinned.links.taptap }}
-              {{ if ne . "" }}<a class="btn primary" href="{{ . }}" target="_blank" rel="noopener noreferrer">TapTap 页面</a>{{ end }}
+            {{ $apk := cond (and $isEN (ne (default "" $pinned.links.apk_en) "")) $pinned.links.apk_en $pinned.links.apk_zh }}
+            {{ if and $apk (ne $apk "") }}
+              <a class="btn primary apk-btn" href="{{ $apk }}" target="_blank" rel="noopener noreferrer" download>📱 {{ if $isEN }}Download APK{{ else }}试玩 APK 下载{{ end }}</a>
+            {{ else }}
+              <a class="btn primary apk-btn apk-btn-pending" href="javascript:void(0);" aria-disabled="true" title="{{ if $isEN }}APK coming soon{{ else }}APK 待补{{ end }}">📱 {{ if $isEN }}APK Coming{{ else }}APK 待补{{ end }}</a>
             {{ end }}
-            {{ if and $pinned.video (eq $pinned.video.provider "bilibili") }}
-              <a class="btn" data-open-video href="https://www.bilibili.com/video/{{ $pinned.video.bvid }}" target="_blank" rel="noopener noreferrer">观看视频</a>
+            {{ with $pinned.links.taptap }}
+              {{ if ne . "" }}<a class="btn" href="{{ . }}" target="_blank" rel="noopener noreferrer">{{ if $isEN }}TapTap Page{{ else }}TapTap 页面{{ end }}</a>{{ end }}
+            {{ end }}
+            {{ if $pinned.video }}
+              {{ $videoHref := "" }}
+              {{ if eq $vProvider "youtube" }}
+                {{ $videoHref = $vIframe }}
+              {{ else if eq $vProvider "bilibili" }}
+                {{ $videoHref = printf "https://www.bilibili.com/video/%s" $vBvid }}
+              {{ end }}
+              {{ if ne $videoHref "" }}
+                <a class="btn" data-open-video href="{{ $videoHref }}" target="_blank" rel="noopener noreferrer">{{ if eq $vProvider "bilibili" }}Bilibili{{ else }}YouTube Link{{ end }}</a>
+              {{ end }}
             {{ end }}
           </div>
-          {{ if and $pinned.video (eq $pinned.video.provider "bilibili") }}
-            <p class="pinned-fallback" hidden>若无法嵌入播放，请点击“观看视频”跳转 B 站。</p>
+          {{ with $pinned.apk_meta }}
+            <p class="apk-meta">
+              {{ if and $apk (ne $apk "") }}
+                {{ with .note }}<span class="apk-meta-tag">{{ . }}</span>{{ end }}
+              {{ else }}
+                <span class="apk-meta-tag apk-meta-tag-pending">{{ if $isEN }}APK Coming{{ else }}APK 待补{{ end }}</span>
+              {{ end }}
+              {{ with .size }}<span>{{ . }}</span>{{ end }}
+              {{ with .platform }}<span>·  {{ . }}</span>{{ end }}
+              {{ with .updated }}<span>·  {{ if $isEN }}Updated {{ . }}{{ else }}更新于 {{ . }}{{ end }}</span>{{ end }}
+            </p>
           {{ end }}
-        </aside>
+          {{ if $pinned.video }}
+            <p class="pinned-fallback" hidden>{{ if $isEN }}If embed playback fails, click "YouTube Link" to open the video.{{ else }}若无法嵌入播放，请点击 "{{ if eq $vProvider "bilibili" }}Bilibili{{ else }}YouTube Link{{ end }}" 打开视频。{{ end }}</p>
+          {{ end }}
+        </div>
       </div>
     </div>
   </section>

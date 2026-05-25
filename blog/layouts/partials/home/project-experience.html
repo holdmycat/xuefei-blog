@@ -1,13 +1,18 @@
 {{ $projects := .Site.Data.projects.projects }}
+{{ $isEN := eq site.Language.Lang "en" }}
 {{ if $projects }}
   <section class="project-experience">
     <div class="pinned-container">
       <div class="projects-header">
-        <h2 class="projects-title">项目经历</h2>
+        <h2 class="projects-title">{{ if $isEN }}Projects{{ else }}项目经历{{ end }}</h2>
       </div>
       <div class="projects-list">
         {{ range first 2 $projects }}
           {{ $project := . }}
+          {{ $title := cond (and $isEN (ne (default "" $project.title_en) "")) $project.title_en $project.title }}
+          {{ $subtitle := cond (and $isEN (ne (default "" $project.subtitle_en) "")) $project.subtitle_en $project.subtitle }}
+          {{ $description := cond (and $isEN (ne (default "" $project.description_en) "")) $project.description_en $project.description }}
+          {{ $responsibility := cond (and $isEN (ne (default "" $project.responsibility_en) "")) $project.responsibility_en $project.responsibility }}
           {{ $cover := strings.TrimPrefix "/" $project.cover | relURL }}
           {{ $videoCover := "" }}
           {{ if and $project.video $project.video.cover }}
@@ -18,47 +23,59 @@
             {{ $gallery = $gallery | append (strings.TrimPrefix "/" . | relURL) }}
           {{ end }}
           {{ $video := dict }}
+          {{ $vIframe := "" }}
+          {{ $vBvid := "" }}
+          {{ $vProvider := "" }}
           {{ if $project.video }}
-            {{ $video = dict "provider" $project.video.provider "bvid" $project.video.bvid "cover" $videoCover "iframe_src" $project.video.iframe_src "title" $project.video.title "autoplay" $project.video.autoplay }}
+            {{ $vIframe = $project.video.iframe_src }}
+            {{ $vBvid = $project.video.bvid }}
+            {{ $vProvider = $project.video.provider }}
+            {{/* 中文版走 bilibili，英文版保留 YouTube */}}
+            {{ if and (not $isEN) (ne (default "" $project.video.iframe_src_zh) "") }}
+              {{ $vIframe = $project.video.iframe_src_zh }}
+              {{ $vBvid = default "" $project.video.bvid_zh }}
+              {{ $vProvider = "bilibili" }}
+            {{ end }}
+            {{ $video = dict "provider" $vProvider "bvid" $vBvid "cover" $videoCover "iframe_src" $vIframe "title" $project.video.title "autoplay" $project.video.autoplay }}
           {{ end }}
           {{ $links := dict "github" $project.links.github "demo" $project.links.demo "steam" $project.links.steam "bilibili" $project.links.bilibili }}
-          {{ $modal := dict "id" $project.id "title" $project.title "subtitle" $project.subtitle "period" $project.period "description" $project.description "responsibility" $project.responsibility "team_size" $project.team_size "cover" $cover "tags" $project.tags "tech_stack" $project.tech_stack "video" $video "gallery" $gallery "links" $links }}
+          {{ $modal := dict "id" $project.id "title" $title "subtitle" $subtitle "period" $project.period "description" $description "responsibility" $responsibility "team_size" $project.team_size "cover" $cover "tags" $project.tags "tech_stack" $project.tech_stack "video" $video "gallery" $gallery "links" $links }}
           <article class="project-row" data-project-id="{{ $project.id }}" data-project='{{ $modal | jsonify | safeHTMLAttr }}'>
             <div class="project-thumb" data-project-main>
               {{ with $cover }}
-                <img src="{{ . }}" alt="{{ $project.title }} cover" loading="lazy" decoding="async">
+                <img src="{{ . }}" alt="{{ $title }} cover" loading="lazy" decoding="async">
               {{ end }}
             </div>
             <div class="project-main">
               <div class="project-heading">
-                <h3 class="project-title">{{ $project.title }}</h3>
-                {{ with $project.subtitle }}<p class="project-subtitle">{{ . }}</p>{{ end }}
+                <h3 class="project-title">{{ $title }}</h3>
+                {{ with $subtitle }}<p class="project-subtitle">{{ . }}</p>{{ end }}
               </div>
               {{ with $project.tags }}
                 <div class="project-tags">
                   {{ range . }}<span class="tag">{{ . }}</span>{{ end }}
                 </div>
               {{ end }}
-              {{ with $project.description }}
+              {{ with $description }}
                 <p class="project-desc">{{ . }}</p>
               {{ end }}
               <div class="project-links">
-                {{ with $project.video }}
-                  <button class="btn primary" type="button" data-project-play data-project-iframe="{{ .iframe_src }}" data-project-bvid="{{ .bvid }}" data-project-video-cover="{{ $videoCover }}">观看视频</button>
+                {{ if $project.video }}
+                  <button class="btn primary" type="button" data-project-play data-project-iframe="{{ $vIframe }}" data-project-bvid="{{ $vBvid }}" data-project-video-cover="{{ $videoCover }}">{{ if eq $vProvider "bilibili" }}Bilibili{{ else }}YouTube Link{{ end }}</button>
                 {{ end }}
-                <button class="btn" type="button" data-project-detail>查看详情</button>
+                <button class="btn" type="button" data-project-detail>{{ if $isEN }}Details{{ else }}查看详情{{ end }}</button>
               </div>
             </div>
             <aside class="project-meta">
               {{ with $project.period }}
                 <div class="meta-row">
-                  <div class="meta-k">开发日期</div>
+                  <div class="meta-k">{{ if $isEN }}Period{{ else }}开发日期{{ end }}</div>
                   <div class="meta-v">{{ . }}</div>
                 </div>
               {{ end }}
               {{ with $project.tech_stack }}
                 <div class="meta-row">
-                  <div class="meta-k">技术栈</div>
+                  <div class="meta-k">{{ if $isEN }}Tech Stack{{ else }}技术栈{{ end }}</div>
                   <div class="meta-v">
                     <div class="tech-list">
                       {{ range . }}<span class="chip">{{ . }}</span>{{ end }}

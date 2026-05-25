@@ -2,4 +2,15 @@
   <div class="nav-left">
     <a class="brand-mark" href="{{ "/" | relLangURL }}">{{ .Site.Params.profile.name }}</a>
   </div>
+  <div class="nav-right">
+    {{ $current := .Site.Language.Lang }}
+    {{ range .Site.Home.AllTranslations }}
+      <a class="lang-btn {{ if eq .Language.Lang $current }}primary{{ else }}ghost{{ end }}"
+         href="{{ .RelPermalink }}"
+         hreflang="{{ .Language.Lang }}"
+         data-lang-set="{{ .Language.Lang }}">
+        {{ if eq .Language.Lang "zh" }}中文{{ else }}EN{{ end }}
+      </a>
+    {{ end }}
+  </div>
 </div>

@@ -206,3 +206,163 @@
   object-fit: cover !important;
   object-position: center !important;
 }
+
+/* ============ Video Popup (YouTube/Bilibili) ============ */
+.video-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-popup__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  cursor: pointer;
+}
+.video-popup__frame {
+  position: relative;
+  width: min(92vw, 1100px);
+  max-height: 88vh;
+  background: #000;
+  border-radius: 12px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+.video-popup__close {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  color: #111;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-popup__close:hover { background: #f1f1f1; }
+.video-popup__player {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+.video-popup__player iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+@media (max-width: 640px) {
+  .video-popup__frame { width: 96vw; border-radius: 8px; }
+  .video-popup__close { top: -8px; right: -8px; width: 32px; height: 32px; font-size: 20px; }
+}
+
+/* ============ Video Popup — fallback + escape hatch ============ */
+.video-popup__open-yt {
+  position: absolute;
+  top: -36px;
+  right: 40px;
+  color: #fff;
+  font-size: 13px;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 6px 12px;
+  border-radius: 6px;
+  z-index: 2;
+  transition: background .15s;
+}
+.video-popup__open-yt:hover { background: #ff0000; }
+.video-popup__fallback {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.video-popup__fallback-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.35;
+  filter: blur(3px);
+}
+.video-popup__fallback-body {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: #fff;
+  padding: 24px;
+}
+.video-popup__fallback-msg {
+  margin: 0 0 16px 0;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.8);
+}
+.video-popup__fallback-btn {
+  display: inline-block;
+  padding: 12px 28px;
+  background: #ff0000;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: background .15s, transform .15s;
+}
+.video-popup__fallback-btn:hover {
+  background: #cc0000;
+  transform: translateY(-1px);
+}
+.video-popup__player iframe,
+.video-popup__player #video-popup-mount,
+.video-popup__player > div:first-child {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+@media (max-width: 640px) {
+  .video-popup__open-yt { top: -30px; right: 36px; font-size: 12px; padding: 4px 10px; }
+}
+
+/* YT.Player mount sizing — for both popup and details modal */
+#modal-yt-mount,
+#video-popup-mount {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.home-page .project-modal .pinned-main [data-video-player] iframe {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#pinned-yt-mount {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}

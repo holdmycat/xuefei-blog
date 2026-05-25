@@ -1,21 +1,29 @@
 projects:
   - id: soulmaster
     title: 契灵师 - SOUL MASTER
+    title_en: Soul Master
     subtitle: 3D多人在线联机手游，装配多把武器，支持技能构筑
+    subtitle_en: 3D online co-op mobile action — multi-weapon loadouts + skill build crafting
     period: "2024 – 2025"
     description: >
       欢迎来到契灵师！在每场战斗中，你可以自由选择不同武器，并通过复杂的技能组合增强英雄实力，创造出专属的战斗流派。丰富的技能自由度和武器搭配，让你在战斗中体验无限变化的策略和爽快感。无论是单打独斗还是团队协作，战斗体验都独具一格！
+    description_en: >
+      Welcome to Soul Master! Pick from a wide weapon arsenal, combine skills to craft unique combat builds, and tailor your fighting style. Rich skill freedom + weapon variety deliver fresh strategy every battle. Solo or in coop, every encounter feels distinct.
     cover: /images/projects/soulmaster/soulmaster-thumnail.png
     responsibility: 项目负责人，技术负责人，核心玩法与系统设计
+    responsibility_en: "Project Lead · Tech Lead · Core Gameplay & System Design"
     team_size: 2
   
     tech_stack: [Unity 2022.3, C#, Addressables, HybridCLR, Zenject, Mirror, Odin, Docker, nodejs, Cloud Server]
     video:
-      provider: bilibili
-      bvid: BV14nk5BWEPk
+      provider: youtube
+      bvid: ""
       cover: /images/projects/soulmaster/soulmaster-horizontal-cover.png
-      iframe_src: https://player.bilibili.com/player.html?bvid=BV14nk5BWEPk&page=1&high_quality=1&danmaku=0
-      title: Modular Skill System Demo
+      iframe_src: https://youtu.be/412gI43ushA
+      # 中文版走 bilibili（英文版继续用上面的 YouTube）
+      bvid_zh: "BV14nk5BWEPk"
+      iframe_src_zh: "https://player.bilibili.com/player.html?isOutside=true&aid=115924606654410&bvid=BV14nk5BWEPk&cid=25948985830&p=1&high_quality=1"
+      title: Soul Master — Modular Skill System Demo
       autoplay: false
     gallery:
       - /images/projects/soulmaster/Snapshot_30.png
@@ -36,20 +44,28 @@ projects:
       bilibili: https://www.bilibili.com/video/BV14nk5BWEPk
   - id: longmarch
     title: 重走长征路
+    title_en: Long March
     subtitle: 沉浸式红色主题策略游戏
-    period: "2021 – 2024"
+    subtitle_en: Compact strategy game (mini-SLG) with stronghold building & squad combat
+    period: "2020 – 2024"
     description: >
       《重走长征路》是一款沉浸式红色主题策略游戏（小型 SLG）。玩家在“据点—村落—支部”式的场景中进行建设与养成，通过资源产出、建筑升级、队伍编成与关卡战斗推进进程。不同于传统 SLG 的大地图行军与长线铺路，本项目采用“场景内轻策略 + 快节奏战斗”的结构，聚焦单局可控、目标清晰的策略体验。
+    description_en: >
+      Long March is an immersive historical strategy game (mini-SLG). Players progress through "Stronghold–Village–Branch" scenes — building economies, upgrading structures, forming squads, and clearing missions. Unlike traditional SLGs with sprawling maps and long supply lines, this title focuses on scene-bound light strategy paired with fast-paced combat — controllable, goal-driven single sessions.
     cover: /images/projects/longmarch/longmarch-cover.png
     responsibility: 项目负责人，技术负责人，核心玩法与系统设计
-    team_size: 11
+    responsibility_en: "Project Lead · Tech Lead · Core Gameplay & System Design"
+    team_size: 15
     tech_stack: [Unity, C#, AssetBundles, Odin, Docker, nodejs]
     video:
-      provider: bilibili
-      bvid: BV1sWk5BHE2h
+      provider: youtube
+      bvid: ""
       cover: /images/projects/longmarch/longmarch-horizontal-cover.png
-      iframe_src: https://player.bilibili.com/player.html?bvid=BV1xnk5BWEeC&page=1&high_quality=1&danmaku=0
-      title: Skill Editor Tooling
+      iframe_src: https://youtu.be/rvTh1v4yM5w
+      # 中文版走 bilibili（英文版继续用上面的 YouTube）
+      bvid_zh: "BV1xnk5BWEHV"
+      iframe_src_zh: "https://player.bilibili.com/player.html?isOutside=true&aid=115924606655856&bvid=BV1xnk5BWEHV&cid=25948985688&p=1&high_quality=1"
+      title: Long March — Compact Strategy (mini-SLG) Gameplay
       autoplay: false
     gallery:
       - /images/projects/longmarch/longmatch1.png
@@ -60,4 +76,4 @@ projects:
       github: https://github.com/xxxx
       demo: ""
       steam: ""
-      bilibili: https://www.bilibili.com/video/BV1xnk5BWEeC
+      bilibili: https://www.bilibili.com/video/BV1xnk5BWEHV

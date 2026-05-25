@@ -3,6 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  {{ if .IsHome }}
+  {{/* 地域自动切换语言：按时区判定，中国语区→中文，其余→英文；手动选择优先并记忆。
+       静态托管（GitHub Pages）无服务端，故在 head 内联同步执行，先于样式加载完成重定向，避免错语言闪烁。 */}}
+  <script>
+  (function () {
+    var KEY = 'xf_lang_pref', DONE = 'xf_geo_redirected';
+    var current = {{ .Site.Language.Lang }};
+    var urls = { {{- range .Site.Home.AllTranslations }} {{ .Language.Lang }}: {{ .RelPermalink }},{{ end }} };
+    // 记忆手动选择：点击语言按钮即写入偏好（捕获阶段，先于跳转）
+    document.addEventListener('click', function (ev) {
+      var a = ev.target && ev.target.closest && ev.target.closest('[data-lang-set]');
+      if (a) { try { localStorage.setItem(KEY, a.getAttribute('data-lang-set')); } catch (e) {} }
+    }, true);
+    try {
+      var pref = null;
+      try { pref = localStorage.getItem(KEY); } catch (e) {}
+      if (pref === 'zh' || pref === 'en') {                 // 手动选择优先，永远生效
+        if (pref !== current && urls[pref]) location.replace(urls[pref]);
+        return;
+      }
+      var done = null;
+      try { done = sessionStorage.getItem(DONE); } catch (e) {}
+      if (done) return;                                     // 每会话仅自动判定一次
+      try { sessionStorage.setItem(DONE, '1'); } catch (e) {}
+      var desired = detect();
+      if (desired !== current && urls[desired]) location.replace(urls[desired]);
+    } catch (e) {}
+    function detect() {
+      var tz = '';
+      try { tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').toLowerCase(); } catch (e) {}
+      // 中国语区时区（大陆 + 港澳台）→ 中文；东南亚的新加坡不在内 → 英文
+      var cn = ['asia/shanghai','asia/chongqing','asia/chungking','asia/harbin','asia/urumqi','asia/kashgar',
+                'asia/hong_kong','asia/macau','asia/macao','asia/taipei','prc','roc','hongkong'];
+      if (tz) return cn.indexOf(tz) !== -1 ? 'zh' : 'en';
+      // 时区不可用时回退浏览器语言
+      var l = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
+      return l.indexOf('zh') === 0 ? 'zh' : 'en';
+    }
+  })();
+  </script>
+  {{ end }}
   <title>{{ if .Title }}{{ .Title }} · {{ end }}{{ .Site.Title }}</title>
   <meta name="description" content="{{ with .Params.description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,17 +57,21 @@
     <link rel="stylesheet" href="{{ "css/annual.css" | relURL }}">
   {{ end }}
   {{ if .IsHome }}
+    <link rel="stylesheet" href="{{ "css/home-hero-status.css?v=20260519c" | relURL }}">
     <link rel="stylesheet" href="{{ "css/home-pinned-only.css" | relURL }}">
     <link rel="stylesheet" href="{{ "css/home-pinned.mobile.css?v=20260122" | relURL }}">
     <link rel="stylesheet" href="{{ "css/home-project-experience.css" | relURL }}">
     <link rel="stylesheet" href="{{ "css/home-project-experience.mobile.css?v=20260122" | relURL }}">
     <link rel="stylesheet" href="{{ "css/home-projects.css" | relURL }}">
+    <link rel="stylesheet" href="{{ "css/home-hub-workflow.css" | relURL }}">
   {{ end }}
 </head>
 <body class="site dark{{ if .IsHome }} home-page{{ end }}">
+  {{ if not .IsHome }}
   <header class="site-header">
     {{ partial "site-header.html" . }}
   </header>
+  {{ end }}
 
   <main class="{{ if .IsHome }}home-page{{ else }}site-main{{ end }}">
     {{ block "main" . }}{{ end }}
@@ -39,6 +84,12 @@
   {{ if .IsHome }}
     {{ $home := resources.Get "js/home.js" | resources.Minify | resources.Fingerprint }}
     <script defer src="{{ $home.RelPermalink }}"></script>
+  {{ end }}
+  {{ if .Store.Get "hasMermaid" }}
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'loose' });
+    </script>
   {{ end }}
 </body>
 </html>

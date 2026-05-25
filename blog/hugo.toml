@@ -14,7 +14,7 @@ theme = ""  # using local layouts, leave empty
   demo = "https://www.youtube.com/watch?v=h6gxAE1EmuE"
   github = "https://github.com/holdmycat/Modular-Skill-System-Demo"
   resume = "files/resume.pdf"
-  email = "clashancients@gmail.com"
+  email = "soulmasterzxf@proton.me"
   linkedin = "https://www.linkedin.com/in/xuefei-zhao-gamedeveloper/"
   steam = "https://store.steampowered.com/app/3680960/_/"
   gameRepo = ""
@@ -39,6 +39,15 @@ taxonomies = {}
       [languages.en.params.profile]
         name = "Xuefei Zhao"
         avatar = "img/avatar.jpg"
+      [languages.en.params.status]
+        open = true
+        tagline = "Unity Tech Lead / Senior Engineer  ·  15+ years"
+        hook = "Not just shipping games — I wired AI into the whole dev pipeline"
+        text = "Open to new opportunities in 2026"
+        positions = "0→1 prototyping  ·  AI × game dev toolchain  ·  performance & live-ops"
+        cta_resume = "Download Resume"
+        cta_email = "Email"
+        cta_linkedin = "LinkedIn"
     [languages.en.params.hero]
       title = "Senior Unity Gameplay and Tools Engineer"
       subtitle = "SkillForge PoE style skill authoring pipeline for Unity"
@@ -75,8 +84,17 @@ taxonomies = {}
       subtitle = "游戏系统 · Unity · 性能笔记"
       description = "记录游戏系统、Unity 工具链、性能与流水线的实践。"
       [languages.zh.params.profile]
-        name = "Xuefei Zhao"
+        name = "赵雪飞"
         avatar = "img/avatar.jpg"
+      [languages.zh.params.status]
+        open = true
+        tagline = "Unity 技术负责人 / 主程  ·  15 年经验"
+        hook = "不只是做游戏 —— 我把 AI 嵌进了整条研发链路"
+        text = "2026 年开放新机会"
+        positions = "0→1 原型落地  ·  AI × 游戏研发工具链  ·  性能与热更工程化"
+        cta_resume = "下载简历"
+        cta_email = "邮箱"
+        cta_linkedin = "LinkedIn"
       [languages.zh.params.hero]
         title = "高级 Unity 游戏与工具工程师"
       subtitle = "SkillForge：类 PoE 的 Unity 技能编辑流水线"

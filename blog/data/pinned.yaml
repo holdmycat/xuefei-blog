@@ -1,19 +1,122 @@
 id: ebonor
 title: 暗辉幸存者-EBONOR(TapTap)
+title_en: Pantheon Survivors - EBONOR (TapTap)
 subtitle: TapTap 项目
+subtitle_en: TapTap Release
 period: "2025 – 2026"
 description: >
   《暗辉幸存者》是一款融合 Roguelike 构筑与快节奏割草战斗的生存游戏。
+description_en: >
+  Pantheon Survivors blends Roguelite build-crafting with fast-paced horde combat — a mobile survival action title.
 poster: /images/pinned/ebonor-poster1.png
 responsibility: 制作人、主程序、战斗系统设计、美术资源整合
+responsibility_en: "Producer · Lead Programmer · Combat System Designer · Art Integration"
 team_size: 2
+status:
+  taptap:
+    zh: 首次封测完成
+    en: First closed beta completed
+  google_play:
+    zh: 已过审，等待新版本提交
+    en: Approved, awaiting new build submission
+performance:
+  zh:
+    - 主流中端机型稳定 60 FPS
+    - 冷启动 < 5 秒
+    - 包体 180 MB
+    - 内测期崩溃率 0%（Firebase Crashlytics 监控）
+  en:
+    - Stable 60 FPS on mid-range Android devices
+    - Cold start < 5s
+    - Package size 180 MB
+    - 0% crash rate during closed beta (Firebase Crashlytics)
+
+# ---- AI × Game Dev Toolchain (Hub) ----
+# 留空字段在前端显示占位框；填上即生效。
+hub_media:
+  # 一句话定位（页面顶部 lead 段使用，支持 HTML <strong> 高亮关键短语）
+  description:
+    zh: |
+      <strong>Hub 是 Ebonor 的游戏数据真源</strong>——所有游戏数据从这里导出到 Unity，原生支持<strong>热更新</strong>。
+      当全游戏由 Hub 数据驱动，<strong>AI 能接管节奏调优、数值平衡与批量战斗模拟</strong>——一局 10 分钟的战斗压到秒级跑完，<strong>把数日的平衡迭代压到小时级</strong>。
+    en: |
+      <strong>Hub is Ebonor's single source of truth for game data</strong> — everything flows from here into Unity, with <strong>hot-update</strong> built in.
+      Once the whole game is data-driven by Hub, <strong>AI takes over pacing, balance tuning, and batch combat simulation</strong> — a 10-minute fight runs in seconds, <strong>collapsing balance iteration from days to hours</strong>.
+
+  # 右信息卡片字段
+  responsibility:
+    zh: "数据导出 · Schema 生成 · 行为树构建 · 性能审计"
+    en: "Data export · Schema generation · Behavior tree · Performance audit"
+  period: "2026 – present"
+  coverage:
+    zh: "hero · buff · skill · monster AI · GC · Schema"
+    en: "hero · buff · skill · monster AI · GC · Schema"
+  tech_stack: [Python, Schema-driven, CLI, MCP, Git/PR, JSON, Markdown]
+  status:
+    zh:
+      - "Schema 生成已落地"
+      - "行为树构建已落地"
+      - "GC Audit 已上线"
+    en:
+      - "Schema generation shipped"
+      - "Behavior tree construction shipped"
+      - "GC Audit shipped"
+
+  # 左大图区：默认显示概述图（按语言切换中/英版本），缩略图条共 5 张
+  cover_gallery:
+    - path_zh: /images/hub/hub_chinese.png
+      path_en: /images/hub/hub_english.png
+      alt_zh: "Hub 功能纵览"
+      alt_en: "Hub Capability Overview"
+    - path_zh: /images/hub/hub_herodata.png
+      path_en: /images/hub/hub_herodata.png
+      alt_zh: "Hero 数据视图"
+      alt_en: "Hero data view"
+    - path_zh: /images/hub/hub_skilltree.png
+      path_en: /images/hub/hub_skilltree.png
+      alt_zh: "技能树编辑"
+      alt_en: "Skill tree editor"
+    - path_zh: /images/hub/hub_apiaudit.png
+      path_en: /images/hub/hub_apiaudit.png
+      alt_zh: "API 审计报告"
+      alt_en: "API audit report"
+    - path_zh: /images/hub/hub_gcaudit.png
+      path_en: /images/hub/hub_gcaudit.png
+      alt_zh: "GC 审计报告"
+      alt_en: "GC audit report"
+
+  # 下方纵向 GIF 段（对应概述图三大能力）
+  features:
+    - title_zh: "数据结构搭建 & 填写"
+      title_en: "Schema-driven config generation"
+      gif: ""              # 例: /images/hub/feature-1-schema.gif
+      video_youtube: "-ZJIJILfWaw"   # YouTube ID（英文版用）
+      video_bilibili: "BV1YhGW6pEJH" # 中文版用 bilibili
+      # video_mp4_zh: "https://ebonor-cn-1314867432.cos.ap-beijing.myqcloud.com/videos/hub-heronew_chinese.mp4"  # COS 自托管备选（2026-05-25 决定改回 bilibili，保留备查）
+      caption_zh: "hero / buff / skill —— Schema 定义 → Hub 生成 → Unity 与 archive 双份落地"
+      caption_en: "hero / buff / skill — Schema defined → Hub generates → dual-write to Unity and archive"
+    - title_zh: "行为树逻辑构建"
+      title_en: "Behavior tree construction"
+      gif: ""              # 例: /images/hub/feature-2-bt.gif
+      video_bilibili: "BV1ygGx6yEmV"  # 中英共用（无 video_youtube → 英文版回落 bilibili）
+      caption_zh: "技能树 + 怪物 AI 行为树 —— 节点级编辑，落地两端"
+      caption_en: "Skill tree + Monster AI behavior tree — node-level editing, dual-write"
+    - title_zh: "嵌入式 AI 工作流"
+      title_en: "Embedded AI workflow"
+      gif: ""              # 例: /images/hub/feature-3-tools.gif
+      video_bilibili: "BV1itGx6AExU"  # 中英共用（无 video_youtube → 英文版回落 bilibili）
+      caption_zh: "GC Audit · Schema 校验 · Profiler 桥接 —— 全链路自检"
+      caption_en: "GC Audit · Schema validation · Profiler bridge — full-link self-check"
 video:
-  provider: bilibili
-  bvid: BV1sWk5BHE2h
+  provider: youtube
+  bvid: ""
   autoplay: false
   cover: /images/pinned/ebonor-cover.png
-  iframe_src: "https://player.bilibili.com/player.html?bvid=BV1sWk5BHE2h&page=1&high_quality=1&danmaku=0"
-  title: Ebonor Gameplay
+  iframe_src: "https://youtu.be/01qeLKLhO6M"
+  # 中文版走 bilibili（英文版继续用上面的 YouTube）
+  bvid_zh: "BV1sWk5BHE2h"
+  iframe_src_zh: "https://player.bilibili.com/player.html?isOutside=true&aid=115924640206899&bvid=BV1sWk5BHE2h&cid=25948986024&p=1&high_quality=1"
+  title: Pantheon Survivors — Roguelite Horde Survivor Gameplay
 gallery:
   - /images/pinned/ebonor-1.png
   - /images/pinned/ebonor-2.png
@@ -23,3 +126,11 @@ gallery:
 tech_stack: [Unity 6, C#, Addressables, HybridCLR, Zenject, Node.js， Docker, CDN, Cloud Server]
 links:
   taptap: https://www.taptap.cn/app/814618?os=android
+  # APK 下载链接（按语言切换）— CN 走腾讯云 COS bj，EN 走海外 sg CDN
+  apk_zh: https://ebonor-cn-1314867432.cos.ap-beijing.myqcloud.com/soulmaster/cdn/custom/onlinetest-legacy/apk_0524_2011.apk
+  apk_en: https://coacdn.online/soulmaster/cdn/custom/onlinetest-legacy/sg_cdn.apk
+apk_meta:
+  size: "171 MB"
+  platform: "Android 8.0+"
+  updated: "2026-05-24"
+  note: "面试演示版"

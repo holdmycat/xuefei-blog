@@ -1,5 +1,26 @@
 {{ define "main" }}
-  {{ partial "home/pinned-only.html" . }}
-  {{ partial "home/project-experience.html" . }}
+  {{ partial "home/hero-status.html" . }}
+
+  {{ $isEN := eq site.Language.Lang "en" }}
+  <section class="home-tabs-wrapper" data-home-tabs>
+    <nav class="home-tabs" role="tablist" aria-label="{{ if $isEN }}Site sections{{ else }}站点分区{{ end }}">
+      <button type="button" class="home-tab is-active" role="tab" data-tab="ai" aria-selected="true">
+        {{ if $isEN }}AI × Game Dev Toolchain{{ else }}AI × 游戏研发工具链{{ end }}
+      </button>
+      <button type="button" class="home-tab" role="tab" data-tab="projects" aria-selected="false">
+        {{ if $isEN }}Projects{{ else }}项目经历{{ end }}
+      </button>
+    </nav>
+
+    <div class="home-tab-panel is-active" data-panel="ai" role="tabpanel">
+      {{ partial "home/hub-workflow.html" . }}
+    </div>
+
+    <div class="home-tab-panel" data-panel="projects" role="tabpanel" hidden>
+      {{ partial "home/pinned-only.html" . }}
+      {{ partial "home/project-experience.html" . }}
+    </div>
+  </section>
+
   {{ partial "home/project-modal.html" . }}
 {{ end }}

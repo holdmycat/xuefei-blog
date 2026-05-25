@@ -1,0 +1,14 @@
+{{ $step := .step }}
+{{ $isEN := .isEN }}
+{{ $img := $step.image }}
+{{ $alt := cond $isEN $step.alt_en $step.alt_zh }}
+<div class="hub-step-media">
+  {{ if and $img (ne $img "") }}
+    <img src="{{ $img | relURL }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+  {{ else }}
+    <div class="hub-media-placeholder hub-media-placeholder--step">
+      <div class="placeholder-icon">📷</div>
+      <div class="placeholder-label">{{ $alt }}</div>
+    </div>
+  {{ end }}
+</div>

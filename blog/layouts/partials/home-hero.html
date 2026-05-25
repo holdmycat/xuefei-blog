@@ -10,19 +10,12 @@
         {{ with $p.hero.subtitleLine2 }}{{ . }}{{ else }}{{ $p.hero.subtitle }}{{ end }}
       </p>
       <div class="hero-actions">
-        {{ with $p.links.resume }}<a class="btn secondary" href="{{ . | relURL }}">{{ i18n "downloadResume" }}</a>{{ end }}
         {{ with $p.links.github }}<a class="btn ghost" href="{{ . }}">{{ i18n "viewGithub" }}</a>{{ end }}
       </div>
       <div class="contact-links">
-        {{ with $p.links.email }}
-          <a class="email-link" href="mailto:{{ . }}" data-email="{{ . }}">Email: {{ . }}</a>
-          <button class="copy-btn" type="button" data-copy="{{ . }}">Copy</button>
-        {{ end }}
-        {{ if and $p.links.email $p.links.linkedin }}<span class="divider">•</span>{{ end }}
         {{ with $p.links.linkedin }}<a class="linkedin-link" href="{{ . }}" target="_blank" rel="noopener noreferrer">LinkedIn<span class="external-icon">↗</span></a>{{ end }}
         {{ if and $p.links.linkedin $p.links.steam }}<span class="divider">•</span>{{ end }}
         {{ with $p.links.steam }}<a class="steam-link" href="{{ . }}" target="_blank" rel="noopener noreferrer">Steam<span class="external-icon">↗</span></a>{{ end }}
-        <span class="copy-toast" hidden>Copied</span>
       </div>
     </div>
     <div class="hero-visual">
