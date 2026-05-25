@@ -9,16 +9,16 @@ description: >
 description_en: >
   Pantheon Survivors blends Roguelite build-crafting with fast-paced horde combat — a mobile survival action title.
 poster: /images/pinned/ebonor-poster1.png
-responsibility: 制作人、主程序、战斗系统设计、美术资源整合
-responsibility_en: "Producer · Lead Programmer · Combat System Designer · Art Integration"
+responsibility: 项目负责人、主程序、战斗系统设计、美术资源整合
+responsibility_en: "Project Lead · Lead Programmer · Combat System Designer · Art Integration"
 team_size: 2
 status:
   taptap:
     zh: 已上线
     en: Live
   google_play:
-    zh: 已过审，等待新版本提交
-    en: Approved, awaiting new build submission
+    zh: 已过审，冲刺上线中
+    en: Approved · sprinting to launch
 performance:
   zh:
     - 主流中端机型稳定 60 FPS

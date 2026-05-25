@@ -54,8 +54,8 @@ projects:
     description_en: >
       Long March is an immersive historical strategy game (mini-SLG). Players progress through "Stronghold–Village–Branch" scenes — building economies, upgrading structures, forming squads, and clearing missions. Unlike traditional SLGs with sprawling maps and long supply lines, this title focuses on scene-bound light strategy paired with fast-paced combat — controllable, goal-driven single sessions.
     cover: /images/projects/longmarch/longmarch-cover.png
-    responsibility: 项目负责人，技术负责人，核心玩法与系统设计
-    responsibility_en: "Project Lead · Tech Lead · Core Gameplay & System Design"
+    responsibility: 公司负责人 / 项目负责人，技术选型 · 团队搭建 · 发布与回滚管线
+    responsibility_en: "Studio Lead · Project Lead · Tech Selection · Team Building · Release/Rollback Pipeline"
     team_size: 15
     tech_stack: [Unity, C#, AssetBundles, Odin, Docker, nodejs]
     video:
