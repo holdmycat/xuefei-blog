@@ -14,8 +14,8 @@ responsibility_en: "Project Lead · Lead Programmer · Combat System Designer ·
 team_size: 2
 status:
   taptap:
-    zh: 已上线
-    en: Live
+    zh: 首轮封测完成，迭代中
+    en: Closed beta done · iterating
   google_play:
     zh: 已过审，冲刺上线中
     en: Approved · sprinting to launch
