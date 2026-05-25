@@ -126,8 +126,8 @@ gallery:
 tech_stack: [Unity 6, C#, Addressables, HybridCLR, Zenject, Node.js， Docker, CDN, Cloud Server]
 links:
   taptap: https://www.taptap.cn/app/814618?os=android
-  # APK 下载链接（按语言切换）— CN 走腾讯云 COS bj，EN 走海外 sg CDN
-  apk_zh: https://ebonor-cn-1314867432.cos.ap-beijing.myqcloud.com/soulmaster/cdn/custom/onlinetest-legacy/apk_0524_2011.apk
+  # APK 下载链接（按语言切换）— CN 走 coacdn bj_cdn，EN 走 coacdn sg_cdn
+  apk_zh: https://coacdn.online/soulmaster/cdn/custom/onlinetest-legacy/bj_cdn.apk
   apk_en: https://coacdn.online/soulmaster/cdn/custom/onlinetest-legacy/sg_cdn.apk
 apk_meta:
   size: "171 MB"
