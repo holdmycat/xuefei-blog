@@ -1,25 +1,25 @@
 +++
-title = "Ebonor (Steam Project)"
-genre = "3D action roguelite"
-subtitle = "3D action roguelite — shipped prototypes under real constraints"
-summary = "Combat/skills, tooling, and performance work with pipelines for builds and patches."
-period = "2023 - Present"
-role = "Gameplay/Tools Engineer"
-platforms = ["Steam", "PC"]
+title = "Ebonor (Pantheon Survivors)"
+genre = "3D horde-survival roguelite"
+subtitle = "3D horde-survival roguelite — build-crafting meets fast-paced horde combat (mobile)"
+summary = "Project Lead / Lead Programmer — data-driven combat, skill system, hot-update and release pipeline."
+period = "2025.3 - Present"
+role = "Project Lead / Lead Programmer"
+platforms = ["TapTap", "Google Play", "Android"]
 tags = ["Roguelite", "Combat", "Tools", "Performance"]
 pinned = true
-steam_url = "https://store.steampowered.com/app/3680960/_/"
-video_url = "https://www.youtube.com/watch?v=h6gxAE1EmuE"
+steam_url = ""
+video_url = "https://youtu.be/01qeLKLhO6M"
 cover_image = "images/projects/ebonor.png"
 gallery_images = [
   "images/projects/ebonor.jpg",
   "images/projects/modular-skill-system.jpg",
   "images/skill-editor.png"
 ]
-badge = "Planned"
+badge = "Live"
 cover = "images/projects/ebonor.png"
 highlights = [
-  "Steam page live with marketing assets and playable builds.",
+  "Live on TapTap; Google Play submission in progress.",
   "Modular skills integrated with authoring guardrails and budgets.",
   "Profiling + frame budgets baked into daily workflow."
 ]
@@ -29,8 +29,8 @@ summary_bullets = [
   "Shipped playable builds with repeatable packaging and patch flow."
 ]
 links = [
-  { label = "Steam", href = "https://store.steampowered.com/app/3680960/_/" }
+  { label = "TapTap", href = "https://www.taptap.cn/app/814618?os=android" }
 ]
 +++
 
-Prototyped and shipped under production constraints with a focus on combat, tooling, and performance.
+Shipped a live mobile title under production constraints, with a focus on combat, tooling, and performance.

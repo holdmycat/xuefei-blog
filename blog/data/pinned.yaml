@@ -14,8 +14,8 @@ responsibility_en: "Producer · Lead Programmer · Combat System Designer · Art
 team_size: 2
 status:
   taptap:
-    zh: 首次封测完成
-    en: First closed beta completed
+    zh: 已上线
+    en: Live
   google_play:
     zh: 已过审，等待新版本提交
     en: Approved, awaiting new build submission
@@ -23,12 +23,12 @@ performance:
   zh:
     - 主流中端机型稳定 60 FPS
     - 冷启动 < 5 秒
-    - 包体 180 MB
+    - 包体 171 MB
     - 内测期崩溃率 0%（Firebase Crashlytics 监控）
   en:
     - Stable 60 FPS on mid-range Android devices
     - Cold start < 5s
-    - Package size 180 MB
+    - Package size 171 MB
     - 0% crash rate during closed beta (Firebase Crashlytics)
 
 # ---- AI × Game Dev Toolchain (Hub) ----
