@@ -39,8 +39,8 @@ projects:
       - /images/projects/soulmaster/Snapshot_38.png   
       - /images/projects/soulmaster/Snapshot_40.png   
     links:
-      github: https://github.com/xxxx
-      demo: https://xxxx
+      github: ""
+      demo: ""
       steam: ""
       bilibili: https://www.bilibili.com/video/BV14nk5BWEPk
   - id: longmarch
@@ -75,7 +75,7 @@ projects:
       - /images/projects/longmarch/longmatch3.png
    
     links:
-      github: https://github.com/xxxx
+      github: ""
       demo: ""
       steam: ""
       bilibili: https://www.bilibili.com/video/BV1xnk5BWEHV

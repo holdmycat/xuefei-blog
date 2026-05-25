@@ -13,7 +13,6 @@ theme = ""  # using local layouts, leave empty
 [params.links]
   demo = "https://www.youtube.com/watch?v=h6gxAE1EmuE"
   github = "https://github.com/holdmycat/Modular-Skill-System-Demo"
-  resume = "files/resume.pdf"
   email = "soulmasterzxf@proton.me"
   linkedin = "https://www.linkedin.com/in/xuefei-zhao-gamedeveloper/"
   steam = "https://store.steampowered.com/app/3680960/_/"
@@ -41,37 +40,12 @@ taxonomies = {}
         avatar = "img/avatar.jpg"
       [languages.en.params.status]
         open = true
-        tagline = "Unity Tech Lead / Senior Engineer  ·  15+ years"
+        tagline = "Unity Tech Lead / Client Lead Programmer  ·  15+ years"
         hook = "Not just shipping games — I wired AI into the whole dev pipeline"
         text = "Open to new opportunities in 2026"
         positions = "0→1 prototyping  ·  AI × game dev toolchain  ·  performance & live-ops"
-        cta_resume = "Download Resume"
         cta_email = "Email"
         cta_linkedin = "LinkedIn"
-    [languages.en.params.hero]
-      title = "Senior Unity Gameplay and Tools Engineer"
-      subtitle = "SkillForge PoE style skill authoring pipeline for Unity"
-      subtitleLine1 = "SkillForge: PoE-style skill authoring pipeline for Unity"
-      subtitleLine2 = "Designer-first workflow for faster iteration and cleaner data."
-        skillEditorImage = "img/skill-editor.png"
-        caption = "Used daily for 12 months in our 2-person pipeline — powering all skills, characters, and weapons (I maintain the system; my co-dev authors content)."
-    [languages.en.params.home]
-      cards = [
-        { title = "SkillForge Pipeline", desc = "Designer-first skill authoring with deterministic runtime and guardrails.", href = "https://store.steampowered.com/app/3680960/_/" },
-        { title = "Modular Skill System", desc = "Data-driven combat modules for rapid iteration and reuse.", href = "https://github.com/holdmycat/Modular-Skill-System-Demo" },
-        { title = "Production Engineering", desc = "Pipelines, deploys, and profiling baked into daily workflows.", href = "https://www.linkedin.com/in/xuefei-zhao-gamedeveloper/" }
-      ]
-    [languages.en.params.home.featured]
-      enabled = false
-      title = "Designer-First Skill Pipeline (SkillForge)"
-      media = "/images/featured-media.png"
-      demoHref = "https://www.youtube.com/watch?v=h6gxAE1EmuE"
-      problem = "Content teams struggled to author and ship skills fast enough for live goals."
-      solution = "Built SkillForge: designer-first authoring, modular runtime, guardrails, and deploy tooling."
-      outcome = "Safer releases, faster iteration, and consistent performance across platforms."
-      writeupHref = "/posts/shipping-a-combat-skill-system-without-regrets/"
-      [languages.en.params.home.writing]
-        moreHref = "/posts/"
 
     [languages.en.menu]
 
@@ -88,36 +62,11 @@ taxonomies = {}
         avatar = "img/avatar.jpg"
       [languages.zh.params.status]
         open = true
-        tagline = "Unity 技术负责人 / 主程  ·  15 年经验"
+        tagline = "Unity 技术负责人 / 客户端主程  ·  15 年经验"
         hook = "不只是做游戏 —— 我把 AI 嵌进了整条研发链路"
         text = "2026 年开放新机会"
         positions = "0→1 原型落地  ·  AI × 游戏研发工具链  ·  性能与热更工程化"
-        cta_resume = "下载简历"
         cta_email = "邮箱"
         cta_linkedin = "LinkedIn"
-      [languages.zh.params.hero]
-        title = "高级 Unity 游戏与工具工程师"
-      subtitle = "SkillForge：类 PoE 的 Unity 技能编辑流水线"
-      subtitleLine1 = "SkillForge：类 PoE 的 Unity 技能编辑流水线"
-      subtitleLine2 = "以设计师为中心，加速迭代、保持数据干净。"
-        skillEditorImage = "img/skill-editor.png"
-        caption = "在我们 2 人流水线中已日常使用 12 个月，覆盖所有技能、角色和武器（我维护系统，搭档创作内容）。"
-    [languages.zh.params.home]
-      cards = [
-        { title = "SkillForge Pipeline", desc = "面向设计师的技能编辑，确定性运行时与防护校验。", href = "https://store.steampowered.com/app/3680960/_/" },
-        { title = "Modular Skill System", desc = "数据驱动的战斗模块，便于快速迭代与复用。", href = "https://github.com/holdmycat/Modular-Skill-System-Demo" },
-        { title = "Production Engineering", desc = "流水线、部署与 Profiling 融入日常工作。", href = "https://www.linkedin.com/in/xuefei-zhao-gamedeveloper/" }
-      ]
-    [languages.zh.params.home.featured]
-      enabled = false
-      title = "面向设计师的技能流水线（SkillForge）"
-      media = "/images/featured-media.png"
-      demoHref = "https://www.youtube.com/watch?v=h6gxAE1EmuE"
-      problem = "策划需要更快迭代技能以满足上线节奏。"
-      solution = "构建 SkillForge：设计师优先的编辑、模块化运行时与防护、发布工具。"
-      outcome = "迭代更快、发布更稳、跨平台性能一致。"
-      writeupHref = "/posts/shipping-a-combat-skill-system-without-regrets/"
-      [languages.zh.params.home.writing]
-        moreHref = "/posts/"
 
     [languages.zh.menu]
