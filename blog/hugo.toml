@@ -37,7 +37,7 @@ taxonomies = {}
       subtitle = "Game Systems · Unity · Performance Notes"
       description = "Notes on game systems, Unity tooling, performance, and experiments."
       [languages.en.params.profile]
-        name = "Xuefei Zhao"
+        name = "Jason Zhao"
         avatar = "img/avatar.jpg"
       [languages.en.params.status]
         open = true
