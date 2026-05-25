@@ -23,6 +23,7 @@ projects:
       # 中文版走 bilibili（英文版继续用上面的 YouTube）
       bvid_zh: "BV14nk5BWEPk"
       iframe_src_zh: "https://player.bilibili.com/player.html?isOutside=true&aid=115924606654410&bvid=BV14nk5BWEPk&cid=25948985830&p=1&high_quality=1"
+      video_mp4_zh: "https://coacdn.online/soulmaster/cdn/custom/videos/soulmaster_web.mp4"
       title: Soul Master — Modular Skill System Demo
       autoplay: false
     gallery:
@@ -65,6 +66,7 @@ projects:
       # 中文版走 bilibili（英文版继续用上面的 YouTube）
       bvid_zh: "BV1xnk5BWEHV"
       iframe_src_zh: "https://player.bilibili.com/player.html?isOutside=true&aid=115924606655856&bvid=BV1xnk5BWEHV&cid=25948985688&p=1&high_quality=1"
+      video_mp4_zh: "https://coacdn.online/soulmaster/cdn/custom/videos/longmarch_web.mp4"
       title: Long March — Compact Strategy (mini-SLG) Gameplay
       autoplay: false
     gallery:

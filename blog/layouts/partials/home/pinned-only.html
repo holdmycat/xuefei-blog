@@ -4,6 +4,7 @@
 {{ $vIframe := "" }}
 {{ $vBvid := "" }}
 {{ $vProvider := "" }}
+{{ $vMp4 := "" }}
 {{ if $pinned.video }}
   {{ $vIframe = $pinned.video.iframe_src }}
   {{ $vBvid = $pinned.video.bvid }}
@@ -13,6 +14,8 @@
     {{ $vBvid = default "" $pinned.video.bvid_zh }}
     {{ $vProvider = "bilibili" }}
   {{ end }}
+  {{/* 中文版自托管 MP4 优先（移动端可放）；EN 不设 */}}
+  {{ if not $isEN }}{{ $vMp4 = default "" $pinned.video.video_mp4_zh }}{{ end }}
 {{ end }}
 {{ if $pinned }}
   <section id="pinned" class="pinned-only">
@@ -28,7 +31,7 @@
         <div class="pinned-media">
           <div class="pinned-main" data-pinned-main>
             {{ if $pinned.video }}
-              <button class="pinned-video-cover" type="button" data-pinned-play data-provider="{{ $vProvider }}" data-bvid="{{ $vBvid }}" data-iframe="{{ $vIframe }}" data-video-cover="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}" aria-label="Play video">
+              <button class="pinned-video-cover" type="button" data-pinned-play data-provider="{{ $vProvider }}" data-bvid="{{ $vBvid }}" data-iframe="{{ $vIframe }}" data-mp4="{{ $vMp4 }}" data-video-cover="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}" aria-label="Play video">
                 <img src="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}" alt="{{ $pinned.title }} video cover" loading="lazy" decoding="async">
                 <span class="play-icon" aria-hidden="true"></span>
               </button>
@@ -36,7 +39,7 @@
           </div>
           <div class="pinned-thumbs">
             {{ if $pinned.video }}
-              <button type="button" class="pinned-thumb pinned-thumb--video active" data-media-type="video" data-provider="{{ $vProvider }}" data-bvid="{{ $vBvid }}" data-iframe="{{ $vIframe }}" data-video-cover="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}">
+              <button type="button" class="pinned-thumb pinned-thumb--video active" data-media-type="video" data-provider="{{ $vProvider }}" data-bvid="{{ $vBvid }}" data-iframe="{{ $vIframe }}" data-mp4="{{ $vMp4 }}" data-video-cover="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}">
                 <img src="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}" alt="{{ $pinned.title }} video thumbnail" loading="lazy" decoding="async">
                 <span class="pinned-thumb-play" aria-hidden="true"></span>
               </button>

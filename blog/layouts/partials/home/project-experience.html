@@ -26,6 +26,7 @@
           {{ $vIframe := "" }}
           {{ $vBvid := "" }}
           {{ $vProvider := "" }}
+          {{ $vMp4 := "" }}
           {{ if $project.video }}
             {{ $vIframe = $project.video.iframe_src }}
             {{ $vBvid = $project.video.bvid }}
@@ -36,7 +37,9 @@
               {{ $vBvid = default "" $project.video.bvid_zh }}
               {{ $vProvider = "bilibili" }}
             {{ end }}
-            {{ $video = dict "provider" $vProvider "bvid" $vBvid "cover" $videoCover "iframe_src" $vIframe "title" $project.video.title "autoplay" $project.video.autoplay }}
+            {{/* 中文版自托管 MP4 优先（移动端可放）；EN 不设 */}}
+            {{ if not $isEN }}{{ $vMp4 = default "" $project.video.video_mp4_zh }}{{ end }}
+            {{ $video = dict "provider" $vProvider "bvid" $vBvid "cover" $videoCover "iframe_src" $vIframe "mp4" $vMp4 "title" $project.video.title "autoplay" $project.video.autoplay }}
           {{ end }}
           {{ $links := dict "github" $project.links.github "demo" $project.links.demo "steam" $project.links.steam "bilibili" $project.links.bilibili }}
           {{ $modal := dict "id" $project.id "title" $title "subtitle" $subtitle "period" $project.period "description" $description "responsibility" $responsibility "team_size" $project.team_size "cover" $cover "tags" $project.tags "tech_stack" $project.tech_stack "video" $video "gallery" $gallery "links" $links }}
@@ -61,7 +64,7 @@
               {{ end }}
               <div class="project-links">
                 {{ if $project.video }}
-                  <button class="btn primary" type="button" data-project-play data-project-iframe="{{ $vIframe }}" data-project-bvid="{{ $vBvid }}" data-project-video-cover="{{ $videoCover }}">{{ if eq $vProvider "bilibili" }}Bilibili{{ else }}YouTube Link{{ end }}</button>
+                  <button class="btn primary" type="button" data-project-play data-project-iframe="{{ $vIframe }}" data-project-bvid="{{ $vBvid }}" data-project-mp4="{{ $vMp4 }}" data-project-video-cover="{{ $videoCover }}">{{ if $vMp4 }}{{ if $isEN }}Watch{{ else }}观看视频{{ end }}{{ else if eq $vProvider "bilibili" }}Bilibili{{ else }}YouTube Link{{ end }}</button>
                 {{ end }}
                 <button class="btn" type="button" data-project-detail>{{ if $isEN }}Details{{ else }}查看详情{{ end }}</button>
               </div>

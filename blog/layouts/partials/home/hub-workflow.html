@@ -122,7 +122,8 @@
             <span class="hub-feature-no">{{ add $i 1 }}</span>
             {{ $title }}
           </h3>
-          {{/* 中文版用 bilibili；英文版优先 YouTube，无 YouTube 时回落 bilibili（中英共用）；其余回落 gif / 占位 */}}
+          {{/* 优先自托管 MP4（中英共用，移动端可放）；否则中文 bilibili / 英文 YouTube；再回落 gif / 占位 */}}
+          {{ $mp4 := default "" $f.video_mp4 }}
           {{ $yt := default "" $f.video_youtube }}
           {{ $biliBvid := "" }}
           {{ if $isEN }}
@@ -131,7 +132,13 @@
             {{ $biliBvid = default "" $f.video_bilibili }}
           {{ end }}
           <div class="hub-feature-media">
-            {{ if and $biliBvid (ne $biliBvid "") }}
+            {{ if ne $mp4 "" }}
+              <div class="hub-feature-video-wrap">
+                <video class="hub-feature-video" controls playsinline preload="metadata"{{ with $f.poster }} poster="{{ . }}"{{ end }}>
+                  <source src="{{ $mp4 }}" type="video/mp4">
+                </video>
+              </div>
+            {{ else if and $biliBvid (ne $biliBvid "") }}
               <div class="hub-feature-video-wrap">
                 <iframe src="https://player.bilibili.com/player.html?bvid={{ $biliBvid }}&page=1&high_quality=1&danmaku=0&autoplay=0"
                         title="{{ $title }}"

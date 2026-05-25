@@ -1,5 +1,8 @@
 console.log('[home.js] loaded', location.href);
 document.addEventListener('DOMContentLoaded', () => {
+  // 自托管 MP4 注入（中文区 + 移动端可内联播放）
+  const mp4VideoHtml = (src, cover) =>
+    `<video class="self-hosted-video" controls autoplay playsinline preload="metadata"${cover ? ` poster="${cover}"` : ''}><source src="${src}" type="video/mp4"></video>`;
   const galleries = document.querySelectorAll('[data-pinned-gallery]');
   console.log('[pinned] boot', { galleryCount: galleries.length });
   galleries.forEach((gallery) => {
@@ -16,10 +19,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let pinnedYTPlayer = null;
     const playVideo = (playBtn) => {
       if (!main || !playBtn) return;
+      const cover = playBtn.dataset.videoCover || '';
+      const mp4 = playBtn.dataset.mp4 || '';
+      if (mp4) {
+        main.setAttribute('data-state', 'playing');
+        main.innerHTML = mp4VideoHtml(mp4, cover);
+        const fb = gallery.querySelector('.pinned-fallback');
+        if (fb) fb.hidden = true;
+        return;
+      }
       const rawSrc = playBtn.dataset.iframe
         || (playBtn.dataset.bvid ? `https://player.bilibili.com/player.html?bvid=${playBtn.dataset.bvid}&page=1&high_quality=1&danmaku=0` : '');
       if (!rawSrc) return;
-      const cover = playBtn.dataset.videoCover || '';
       const ytId = (typeof extractYouTubeId === 'function') ? extractYouTubeId(rawSrc) : '';
       main.setAttribute('data-state', 'playing');
 
@@ -187,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
     player.innerHTML = '';
     player.classList.remove('is-playing');
 
-    if (!iframeSrc) {
+    if (!iframeSrc && !(video && video.mp4)) {
       if (cover) {
         renderImage(modalEl, cover, `${project?.title || ''} cover`);
       }
@@ -214,6 +225,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!shouldPlay && cover) {
+      return;
+    }
+
+    if (video?.mp4) {
+      player.innerHTML = mp4VideoHtml(video.mp4, cover);
+      player.classList.add('is-playing');
       return;
     }
 
@@ -470,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>`;
   };
 
-  const openVideoPopup = (rawSrc, title, cover) => {
+  const openVideoPopup = (rawSrc, title, cover, opts = {}) => {
     if (!rawSrc) return;
     closeVideoPopup();
     const embedSrc = toEmbedUrl(rawSrc);
@@ -498,6 +515,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', onVideoPopupKey);
 
     const playerContainer = overlay.querySelector('.video-popup__player');
+    if (opts.mp4) {
+      const mount = overlay.querySelector('#video-popup-mount');
+      if (mount) mount.outerHTML = mp4VideoHtml(rawSrc, cover);
+      return;
+    }
     if (ytId) {
       loadYouTubeAPI().then((YT) => {
         if (!videoPopup || videoPopup !== overlay) return;
@@ -534,12 +556,14 @@ document.addEventListener('DOMContentLoaded', () => {
       playBtn.addEventListener('click', (event) => {
         event.preventDefault();
         event.stopPropagation();
+        const title = row.querySelector('.project-title')?.textContent?.trim() || 'Video';
+        const cover = playBtn.dataset.projectVideoCover || '';
+        const mp4 = playBtn.dataset.projectMp4 || '';
+        if (mp4) { openVideoPopup(mp4, title, cover, { mp4: true }); return; }
         const rawSrc = playBtn.dataset.projectIframe
           || (playBtn.dataset.projectBvid
             ? `https://player.bilibili.com/player.html?bvid=${playBtn.dataset.projectBvid}&page=1&high_quality=1&danmaku=0`
             : '');
-        const title = row.querySelector('.project-title')?.textContent?.trim() || 'Video';
-        const cover = playBtn.dataset.projectVideoCover || '';
         openVideoPopup(rawSrc, title, cover);
       });
     }

@@ -92,19 +92,22 @@ hub_media:
       gif: ""              # 例: /images/hub/feature-1-schema.gif
       video_youtube: "-ZJIJILfWaw"   # YouTube ID（英文版用）
       video_bilibili: "BV1YhGW6pEJH" # 中文版用 bilibili
-      # video_mp4_zh: "https://ebonor-cn-1314867432.cos.ap-beijing.myqcloud.com/videos/hub-heronew_chinese.mp4"  # COS 自托管备选（2026-05-25 决定改回 bilibili，保留备查）
+      # 自托管 MP4（中英共用，最高优先级，移动端可放）— 取代 bilibili/YouTube
+      video_mp4: "https://coacdn.online/soulmaster/cdn/custom/videos/hub-heronew_chinese_web.mp4"
       caption_zh: "hero / buff / skill —— Schema 定义 → Hub 生成 → Unity 与 archive 双份落地"
       caption_en: "hero / buff / skill — Schema defined → Hub generates → dual-write to Unity and archive"
     - title_zh: "行为树逻辑构建"
       title_en: "Behavior tree construction"
       gif: ""              # 例: /images/hub/feature-2-bt.gif
-      video_bilibili: "BV1ygGx6yEmV"  # 中英共用（无 video_youtube → 英文版回落 bilibili）
+      video_bilibili: "BV1ygGx6yEmV"  # 回落用（移动端放不了）
+      video_mp4: "https://coacdn.online/soulmaster/cdn/custom/videos/skill_tree_web.mp4"
       caption_zh: "技能树 + 怪物 AI 行为树 —— 节点级编辑，落地两端"
       caption_en: "Skill tree + Monster AI behavior tree — node-level editing, dual-write"
     - title_zh: "嵌入式 AI 工作流"
       title_en: "Embedded AI workflow"
       gif: ""              # 例: /images/hub/feature-3-tools.gif
-      video_bilibili: "BV1itGx6AExU"  # 中英共用（无 video_youtube → 英文版回落 bilibili）
+      video_bilibili: "BV1itGx6AExU"  # 回落用（移动端放不了）
+      video_mp4: "https://coacdn.online/soulmaster/cdn/custom/videos/howtouseai_web.mp4"
       caption_zh: "GC Audit · Schema 校验 · Profiler 桥接 —— 全链路自检"
       caption_en: "GC Audit · Schema validation · Profiler bridge — full-link self-check"
 video:
@@ -116,6 +119,8 @@ video:
   # 中文版走 bilibili（英文版继续用上面的 YouTube）
   bvid_zh: "BV1sWk5BHE2h"
   iframe_src_zh: "https://player.bilibili.com/player.html?isOutside=true&aid=115924640206899&bvid=BV1sWk5BHE2h&cid=25948986024&p=1&high_quality=1"
+  # 中文版自托管 MP4（移动端可放，优先于 bilibili）；EN 保持 YouTube
+  video_mp4_zh: "https://coacdn.online/soulmaster/cdn/custom/videos/ebonor_web.mp4"
   title: Pantheon Survivors — Roguelite Horde Survivor Gameplay
 gallery:
   - /images/pinned/ebonor-1.png
