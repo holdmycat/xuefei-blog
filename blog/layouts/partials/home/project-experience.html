@@ -42,7 +42,22 @@
             {{ $video = dict "provider" $vProvider "bvid" $vBvid "cover" $videoCover "iframe_src" $vIframe "mp4" $vMp4 "title" $project.video.title "autoplay" $project.video.autoplay }}
           {{ end }}
           {{ $links := dict "github" $project.links.github "demo" $project.links.demo "steam" $project.links.steam "bilibili" $project.links.bilibili }}
-          {{ $modal := dict "id" $project.id "title" $title "subtitle" $subtitle "period" $project.period "description" $description "responsibility" $responsibility "team_size" $project.team_size "cover" $cover "tags" $project.tags "tech_stack" $project.tech_stack "video" $video "gallery" $gallery "links" $links }}
+          {{ $techHighlights := slice }}
+          {{ range $project.tech_highlights }}
+            {{ $thTitle := cond (and $isEN (ne (default "" .title_en) "")) .title_en .title_zh }}
+            {{ $thCaption := cond (and $isEN (ne (default "" .caption_en) "")) .caption_en .caption_zh }}
+            {{ $thYt := default "" .video_youtube }}
+            {{ $thBili := "" }}
+            {{ if $isEN }}
+              {{ if eq $thYt "" }}{{ $thBili = default "" .video_bilibili }}{{ end }}
+            {{ else }}
+              {{ $thBili = default "" .video_bilibili }}
+            {{ end }}
+            {{ $thPoster := "" }}
+            {{ with .poster }}{{ $thPoster = strings.TrimPrefix "/" . | relURL }}{{ end }}
+            {{ $techHighlights = $techHighlights | append (dict "title" $thTitle "caption" $thCaption "mp4" (default "" .video_mp4) "youtube" $thYt "bilibili" $thBili "poster" $thPoster) }}
+          {{ end }}
+          {{ $modal := dict "id" $project.id "title" $title "subtitle" $subtitle "period" $project.period "description" $description "responsibility" $responsibility "team_size" $project.team_size "cover" $cover "tags" $project.tags "tech_stack" $project.tech_stack "video" $video "gallery" $gallery "links" $links "tech_highlights" $techHighlights }}
           <article class="project-row" data-project-id="{{ $project.id }}" data-project='{{ $modal | jsonify | safeHTMLAttr }}'>
             <div class="project-thumb" data-project-main>
               {{ with $cover }}

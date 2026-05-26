@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalTags = modal?.querySelector('[data-project-modal-tags]');
   const modalTech = modal?.querySelector('[data-project-modal-tech]');
   const modalTechWrap = modalTech?.closest('.pinned-tech');
+  const modalHighlights = modal?.querySelector('[data-project-modal-highlights]');
 
   let modalPlayer = null;
   const closeModal = () => {
@@ -149,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
       player.innerHTML = '';
       player.classList.remove('is-playing');
     }
+    if (modalHighlights) modalHighlights.innerHTML = '';
   };
 
   const getIframeSrc = (video) => {
@@ -370,6 +372,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
       modalThumbs.hidden = !modalThumbs.childElementCount;
+    }
+
+    if (modalHighlights) {
+      modalHighlights.innerHTML = '';
+      const highlights = project.tech_highlights || [];
+      highlights.forEach((h, i) => {
+        const article = document.createElement('article');
+        article.className = 'hub-feature';
+        let mediaHtml;
+        if (h.mp4) {
+          mediaHtml = `<div class="hub-feature-video-wrap"><video class="hub-feature-video" controls playsinline preload="metadata"${h.poster ? ` poster="${h.poster}"` : ''}><source src="${h.mp4}" type="video/mp4"></video></div>`;
+        } else if (h.bilibili) {
+          mediaHtml = `<div class="hub-feature-video-wrap"><iframe src="https://player.bilibili.com/player.html?bvid=${h.bilibili}&page=1&high_quality=1&danmaku=0&autoplay=0" title="${h.title || ''}" frameborder="0" loading="lazy" referrerpolicy="no-referrer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+        } else if (h.youtube) {
+          mediaHtml = `<div class="hub-feature-video-wrap"><iframe src="https://www.youtube.com/embed/${h.youtube}" title="${h.title || ''}" frameborder="0" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen></iframe></div>`;
+        } else {
+          mediaHtml = `<div class="hub-media-placeholder hub-media-placeholder--feature"><div class="placeholder-icon">▶</div><div class="placeholder-label">${h.title || ''}</div></div>`;
+        }
+        article.innerHTML =
+          `<h3 class="hub-feature-title"><span class="hub-feature-no">${i + 1}</span>${h.title || ''}</h3>` +
+          mediaHtml +
+          (h.caption ? `<p class="hub-feature-caption">${h.caption}</p>` : '');
+        modalHighlights.appendChild(article);
+      });
+      modalHighlights.hidden = highlights.length === 0;
     }
   };
 

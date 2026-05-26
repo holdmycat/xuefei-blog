@@ -43,6 +43,16 @@ projects:
       demo: ""
       steam: ""
       bilibili: https://www.bilibili.com/video/BV14nk5BWEPk
+    # 技术亮点（弹窗内复用 Hub feature 样式渲染）。video 三选一优先级：mp4 > bilibili(中) / youtube(英)
+    tech_highlights:
+      - title_zh: 联机技术验证 · 20 天 spike
+        title_en: Netcode spike · 20-day prototype
+        video_mp4: https://coacdn.online/soulmaster/cdn/custom/videos/ios_multiplayer_web.mp4
+        video_youtube: ""      # 备用：YouTube ID
+        video_bilibili: ""     # 备用：BVxxxx
+        poster: /images/projects/soulmaster/netcode-spike-cover.jpg
+        caption_zh: Mirror Client-Host · 大厅/Ready · 双人同屏 · RTT HUD —— 正式投产前的实时联机可行性验证
+        caption_en: Mirror client-host · lobby/ready · 2-player co-op · live RTT — de-risking real-time netcode before full production
   - id: longmarch
     title: 重走长征路
     title_en: Long March
