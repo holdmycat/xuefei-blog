@@ -90,24 +90,26 @@ hub_media:
     - title_zh: "数据结构搭建 & 填写"
       title_en: "Schema-driven config generation"
       gif: ""              # 例: /images/hub/feature-1-schema.gif
-      video_youtube: "-ZJIJILfWaw"   # YouTube ID（英文版用）
+      video_youtube: "ElGVOdAsjnA"   # YouTube ID（英文版用）
       video_bilibili: "BV1YhGW6pEJH" # 中文版用 bilibili
-      # 自托管 MP4（中英共用，最高优先级，移动端可放）— 取代 bilibili/YouTube
-      video_mp4: "https://coacdn.online/soulmaster/cdn/custom/videos/hub-heronew_chinese_web.mp4"
+      # ZH 自托管 MP4（仅中文版用，EN 走 video_youtube）
+      video_mp4_zh: "https://coacdn.online/soulmaster/cdn/custom/videos/hub-heronew_chinese_web.mp4"
       caption_zh: "hero / buff / skill —— Schema 定义 → Hub 生成 → Unity 与 archive 双份落地"
       caption_en: "hero / buff / skill — Schema defined → Hub generates → dual-write to Unity and archive"
     - title_zh: "行为树逻辑构建"
       title_en: "Behavior tree construction"
       gif: ""              # 例: /images/hub/feature-2-bt.gif
+      video_youtube: "9-zaJ_O67TY"   # YouTube ID（英文版用）
       video_bilibili: "BV1ygGx6yEmV"  # 回落用（移动端放不了）
-      video_mp4: "https://coacdn.online/soulmaster/cdn/custom/videos/skill_tree_web.mp4"
+      video_mp4_zh: "https://coacdn.online/soulmaster/cdn/custom/videos/skill_tree_web.mp4"
       caption_zh: "技能树 + 怪物 AI 行为树 —— 节点级编辑，落地两端"
       caption_en: "Skill tree + Monster AI behavior tree — node-level editing, dual-write"
     - title_zh: "嵌入式 AI 工作流"
       title_en: "Embedded AI workflow"
       gif: ""              # 例: /images/hub/feature-3-tools.gif
+      video_youtube: "KlWeIyVi0lk"   # YouTube ID（英文版用）
       video_bilibili: "BV1itGx6AExU"  # 回落用（移动端放不了）
-      video_mp4: "https://coacdn.online/soulmaster/cdn/custom/videos/howtouseai_web.mp4"
+      video_mp4_zh: "https://coacdn.online/soulmaster/cdn/custom/videos/howtouseai_web.mp4"
       caption_zh: "GC Audit · Schema 校验 · Profiler 桥接 —— 全链路自检"
       caption_en: "GC Audit · Schema validation · Profiler bridge — full-link self-check"
 video:

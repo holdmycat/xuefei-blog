@@ -122,8 +122,8 @@
             <span class="hub-feature-no">{{ add $i 1 }}</span>
             {{ $title }}
           </h3>
-          {{/* 优先自托管 MP4（中英共用，移动端可放）；否则中文 bilibili / 英文 YouTube；再回落 gif / 占位 */}}
-          {{ $mp4 := default "" $f.video_mp4 }}
+          {{/* ZH 优先自托管 MP4（video_mp4_zh）；EN 优先 YouTube（video_youtube）；再回落 bilibili / gif / 占位 */}}
+          {{ $mp4 := cond $isEN "" (default "" $f.video_mp4_zh) }}
           {{ $yt := default "" $f.video_youtube }}
           {{ $biliBvid := "" }}
           {{ if $isEN }}
