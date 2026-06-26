@@ -144,11 +144,13 @@
 
         <div class="pinned-actions-wrap pinned-footer-cell">
           <div class="pinned-actions">
+            {{ if $isEN }}
             {{ $apk := cond (and $isEN (ne (default "" $pinned.links.apk_en) "")) $pinned.links.apk_en $pinned.links.apk_zh }}
             {{ if and $apk (ne $apk "") }}
               <a class="btn primary apk-btn" href="{{ $apk }}" target="_blank" rel="noopener noreferrer" download>📱 {{ if $isEN }}Download APK{{ else }}试玩 APK 下载{{ end }}</a>
             {{ else }}
               <a class="btn primary apk-btn apk-btn-pending" href="javascript:void(0);" aria-disabled="true" title="{{ if $isEN }}APK coming soon{{ else }}APK 待补{{ end }}">📱 {{ if $isEN }}APK Coming{{ else }}APK 待补{{ end }}</a>
+            {{ end }}
             {{ end }}
             {{ with $pinned.links.taptap }}
               {{ if ne . "" }}<a class="btn" href="{{ . }}" target="_blank" rel="noopener noreferrer">{{ if $isEN }}TapTap Page{{ else }}TapTap 页面{{ end }}</a>{{ end }}
