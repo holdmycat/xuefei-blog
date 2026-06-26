@@ -24,6 +24,7 @@
       </div>
       {{ with .positions }}<p class="hero-positions">{{ . }}</p>{{ end }}
 
+      {{ if $isEN }}
       <div class="hero-cta">
         {{ $apk := cond $isEN (default "" site.Data.pinned.links.apk_en) (default "" site.Data.pinned.links.apk_zh) }}
         {{ if ne $apk "" }}
@@ -35,6 +36,7 @@
       </div>
       {{ with site.Data.pinned.apk_meta }}
         <p class="hero-apk-meta">{{ .size }} · {{ .platform }}{{ if .updated }} · {{ if $isEN }}updated {{ .updated }}{{ else }}更新于 {{ .updated }}{{ end }}{{ end }}</p>
+      {{ end }}
       {{ end }}
     </div>
   </section>
