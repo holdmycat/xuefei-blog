@@ -144,8 +144,8 @@
 
         <div class="pinned-actions-wrap pinned-footer-cell">
           <div class="pinned-actions">
-            {{ if $isEN }}
             {{ $apk := cond (and $isEN (ne (default "" $pinned.links.apk_en) "")) $pinned.links.apk_en $pinned.links.apk_zh }}
+            {{ if $isEN }}
             {{ if and $apk (ne $apk "") }}
               <a class="btn primary apk-btn" href="{{ $apk }}" target="_blank" rel="noopener noreferrer" download>📱 {{ if $isEN }}Download APK{{ else }}试玩 APK 下载{{ end }}</a>
             {{ else }}
