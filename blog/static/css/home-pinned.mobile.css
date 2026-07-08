@@ -42,6 +42,18 @@
     aspect-ratio: auto !important;
   }
 
+  /* 播放后注入的 <video> / <iframe> 需要自己撑起 16:9 高度：
+     封面移除后 .pinned-main 高度塌为 0，绝对定位的播放器不可见。 */
+  .home-page .pinned-main video,
+  .home-page .pinned-main iframe {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    object-fit: contain !important;
+    background: #000;
+  }
+
   .home-page .pinned-thumbs {
     display: flex !important;
     gap: 10px !important;
