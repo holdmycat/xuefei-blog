@@ -18,6 +18,13 @@
   {{ if not $isEN }}{{ $vMp4 = default "" $pinned.video.video_mp4_zh }}{{ end }}
 {{ end }}
 {{ if $pinned }}
+  {{/* 封面优化 URL：大图用于 pinned-main，缩略图用于 thumbs */}}
+  {{ $coverBig := "" }}
+  {{ $coverThumb := "" }}
+  {{ if and $pinned.video $pinned.video.cover }}
+    {{ $coverBig = partial "opt-img.html" (dict "path" $pinned.video.cover "spec" "720x webp q82") }}
+    {{ $coverThumb = partial "opt-img.html" (dict "path" $pinned.video.cover "spec" "360x webp q80") }}
+  {{ end }}
   <section id="pinned" class="pinned-only">
     <div class="pinned-container" data-pinned-gallery>
       {{ $title := cond (and $isEN (ne (default "" $pinned.title_en) "")) $pinned.title_en $pinned.title }}
@@ -31,22 +38,24 @@
         <div class="pinned-media">
           <div class="pinned-main" data-pinned-main>
             {{ if $pinned.video }}
-              <button class="pinned-video-cover" type="button" data-pinned-play data-provider="{{ $vProvider }}" data-bvid="{{ $vBvid }}" data-iframe="{{ $vIframe }}" data-mp4="{{ $vMp4 }}" data-video-cover="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}" aria-label="Play video">
-                <img src="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}" alt="{{ $pinned.title }} video cover" loading="lazy" decoding="async">
+              <button class="pinned-video-cover" type="button" data-pinned-play data-provider="{{ $vProvider }}" data-bvid="{{ $vBvid }}" data-iframe="{{ $vIframe }}" data-mp4="{{ $vMp4 }}" data-video-cover="{{ $coverBig }}" aria-label="Play video">
+                <img src="{{ $coverBig }}" alt="{{ $pinned.title }} video cover" loading="lazy" decoding="async">
                 <span class="play-icon" aria-hidden="true"></span>
               </button>
             {{ end }}
           </div>
           <div class="pinned-thumbs">
             {{ if $pinned.video }}
-              <button type="button" class="pinned-thumb pinned-thumb--video active" data-media-type="video" data-provider="{{ $vProvider }}" data-bvid="{{ $vBvid }}" data-iframe="{{ $vIframe }}" data-mp4="{{ $vMp4 }}" data-video-cover="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}">
-                <img src="{{ strings.TrimPrefix "/" $pinned.video.cover | relURL }}" alt="{{ $pinned.title }} video thumbnail" loading="lazy" decoding="async">
+              <button type="button" class="pinned-thumb pinned-thumb--video active" data-media-type="video" data-provider="{{ $vProvider }}" data-bvid="{{ $vBvid }}" data-iframe="{{ $vIframe }}" data-mp4="{{ $vMp4 }}" data-video-cover="{{ $coverBig }}">
+                <img src="{{ $coverThumb }}" alt="{{ $pinned.title }} video thumbnail" loading="lazy" decoding="async">
                 <span class="pinned-thumb-play" aria-hidden="true"></span>
               </button>
             {{ end }}
             {{ range $pinned.gallery }}
-              <button type="button" class="pinned-thumb" data-media-type="image" data-src="{{ strings.TrimPrefix "/" . | relURL }}">
-                <img src="{{ strings.TrimPrefix "/" . | relURL }}" alt="{{ $pinned.title }} thumbnail" loading="lazy" decoding="async">
+              {{ $full := partial "opt-img.html" (dict "path" . "spec" "1280x webp q82") }}
+              {{ $thumb := partial "opt-img.html" (dict "path" . "spec" "360x webp q80") }}
+              <button type="button" class="pinned-thumb" data-media-type="image" data-src="{{ $full }}">
+                <img src="{{ $thumb }}" alt="{{ $pinned.title }} thumbnail" loading="lazy" decoding="async">
               </button>
             {{ end }}
           </div>
@@ -55,7 +64,7 @@
         <aside class="pinned-info">
           {{ with $pinned.poster }}
             <div class="pinned-poster">
-              <img src="{{ strings.TrimPrefix "/" . | relURL }}" alt="{{ $pinned.title }} poster" loading="lazy" decoding="async">
+              <img src="{{ partial "opt-img.html" (dict "path" . "spec" "560x webp q82") }}" alt="{{ $pinned.title }} poster" loading="lazy" decoding="async">
             </div>
           {{ end }}
 

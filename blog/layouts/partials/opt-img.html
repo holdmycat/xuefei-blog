@@ -1,0 +1,15 @@
+{{- /*
+  图片优化 partial：把 assets/ 下的原图缩放并转 WebP，返回优化后 URL。
+  入参 dict：
+    path — 数据里的图片路径（如 /images/pinned/ebonor-cover.png，允许带前导 /）
+    spec — Hugo 图片处理规格（如 "640x webp q82"）
+  找不到资源时回退到原始 relURL，保证永不 404。
+*/ -}}
+{{- $path := .path -}}
+{{- $spec := .spec | default "800x webp q82" -}}
+{{- $rel := strings.TrimPrefix "/" $path -}}
+{{- $out := $path | relURL -}}
+{{- with resources.Get $rel -}}
+  {{- $out = (.Resize $spec).RelPermalink -}}
+{{- end -}}
+{{- $out -}}
