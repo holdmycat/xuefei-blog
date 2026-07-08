@@ -13,14 +13,14 @@
           {{ $subtitle := cond (and $isEN (ne (default "" $project.subtitle_en) "")) $project.subtitle_en $project.subtitle }}
           {{ $description := cond (and $isEN (ne (default "" $project.description_en) "")) $project.description_en $project.description }}
           {{ $responsibility := cond (and $isEN (ne (default "" $project.responsibility_en) "")) $project.responsibility_en $project.responsibility }}
-          {{ $cover := strings.TrimPrefix "/" $project.cover | relURL }}
+          {{ $cover := partial "opt-img.html" (dict "path" $project.cover "spec" "720x webp q82") }}
           {{ $videoCover := "" }}
           {{ if and $project.video $project.video.cover }}
-            {{ $videoCover = strings.TrimPrefix "/" $project.video.cover | relURL }}
+            {{ $videoCover = partial "opt-img.html" (dict "path" $project.video.cover "spec" "720x webp q82") }}
           {{ end }}
           {{ $gallery := slice }}
           {{ range $project.gallery }}
-            {{ $gallery = $gallery | append (strings.TrimPrefix "/" . | relURL) }}
+            {{ $gallery = $gallery | append (partial "opt-img.html" (dict "path" . "spec" "1080x webp q80")) }}
           {{ end }}
           {{ $video := dict }}
           {{ $vIframe := "" }}
@@ -54,7 +54,7 @@
               {{ $thBili = default "" .video_bilibili }}
             {{ end }}
             {{ $thPoster := "" }}
-            {{ with .poster }}{{ $thPoster = strings.TrimPrefix "/" . | relURL }}{{ end }}
+            {{ with .poster }}{{ $thPoster = partial "opt-img.html" (dict "path" . "spec" "720x webp q82") }}{{ end }}
             {{ $techHighlights = $techHighlights | append (dict "title" $thTitle "caption" $thCaption "mp4" (default "" .video_mp4) "youtube" $thYt "bilibili" $thBili "poster" $thPoster) }}
           {{ end }}
           {{ $modal := dict "id" $project.id "title" $title "subtitle" $subtitle "period" $project.period "description" $description "responsibility" $responsibility "team_size" $project.team_size "cover" $cover "tags" $project.tags "tech_stack" $project.tech_stack "video" $video "gallery" $gallery "links" $links "tech_highlights" $techHighlights }}
